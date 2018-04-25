@@ -1,3 +1,5 @@
 public class Program {
-    //View view = new View();
+    public void main(String[] args) {
+        //View view = new View();
+    }
 }
