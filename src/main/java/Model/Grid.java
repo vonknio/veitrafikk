@@ -73,12 +73,17 @@ public class Grid {
         }
         if (getNeighbourSize(x1, y1) == 0)
             vertices[x1 * size + y1] = null;
+        else {
+            if (getNeighbourSize(x1, y1) <= 2 && getVertex(x1, y1).getVertexType() == Vertex.VertexType.CROSSROAD)
+                vertices[x1 * size + y1].setVertexType(Vertex.VertexType.ROAD);
+        }
         if (getNeighbourSize(x2, y2) == 0)
             vertices[x2 * size + y2] = null;
-        if (getNeighbourSize(x1, y1) <= 2 && getVertex(x1, y1).getVertexType() == Vertex.VertexType.CROSSROAD)
-            vertices[x1 * size + y1].setVertexType(Vertex.VertexType.ROAD);
-        if (getNeighbourSize(x2, y2) <= 2 && getVertex(x1, y1).getVertexType() == Vertex.VertexType.CROSSROAD)
-            vertices[x2 * size + y2].setVertexType(Vertex.VertexType.ROAD);
+        else {
+            if (getNeighbourSize(x2, y2) <= 2 && getVertex(x1, y1).getVertexType() == Vertex.VertexType.CROSSROAD)
+                vertices[x2 * size + y2].setVertexType(Vertex.VertexType.ROAD);
+
+        }
     }
 
     public void addSink(int x, int y) {
