@@ -104,12 +104,10 @@ public abstract class God {
      * @return Possible destination for next timetick.
      */
     private static Vertex getRandomDestinationForNextTick(Vehicle vehicle) {
-        Collection<Vertex> candidates = grid.getNeighbours(vehicle.cur);
-        //TODO: change this when getNeighbours returns a List
-        List<Vertex> candidatesList = new LinkedList<>(candidates);
+        List<Vertex> candidates = grid.getNeighbours(vehicle.cur);
         if (candidates.isEmpty())
             return vehicle.cur;
-        return candidatesList.get((new Random()).nextInt(candidates.size()));
+        return candidates.get((new Random()).nextInt(candidates.size()));
     }
 
     /**
