@@ -23,6 +23,8 @@ public class Vertex {
         this.type = vertexType;
     }
 
+    public boolean hasVehicle() { return getVehicle() != null; }
+
     public Vehicle getVehicle() {
         return vehicle;
     }
@@ -30,6 +32,8 @@ public class Vertex {
     public void setVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
     }
+
+    public void removeVehicle() { this.vehicle = null; }
 
     public boolean isCrossroad() {
         return type != VertexType.ROAD;
@@ -40,9 +44,29 @@ public class Vertex {
     }
 
     public class VertexStatistics implements ObjectStatistics {
+        private long vehicleCount = 0;
+        private long noVehicleTicks = 0;
+
+        private Vehicle vehicleInPrevTick;
+
         @Override
         public void process() {
+            updateVehicleCount();
 
+            updateAuxiliaryVariables();
+        }
+
+        private void updateVehicleCount() {
+            if (vehicleInPrevTick == vehicle) {
+                vehicleCount++;
+            }
+            if (vehicle == null) {
+                noVehicleTicks++;
+            }
+        }
+
+        private void updateAuxiliaryVariables() {
+            vehicleInPrevTick = vehicle;
         }
     }
 }

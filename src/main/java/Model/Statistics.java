@@ -2,9 +2,9 @@ package Model;
 
 public class Statistics {
     public static void process(Vertex vertex) {
-        vertex.stats.process();
-        if (vertex.getVehicle() != null) {
+        if (vertex.stats != null)
+            vertex.stats.process();
+        if (vertex.getVehicle() != null && vertex.getVehicle().stats != null)
             vertex.getVehicle().stats.process();
-        }
     }
 }
