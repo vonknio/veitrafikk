@@ -1,5 +1,11 @@
+import Model.Menu;
+
 public class Program {
+
     public static void main(String[] args) {
-        //View view = new View();
+
+        Menu menu = new Menu();
+
     }
+
 }
