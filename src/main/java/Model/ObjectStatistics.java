@@ -1,5 +1,5 @@
 package Model;
 
-public interface ObjectStatistics {
+interface ObjectStatistics {
     public void process();
 }

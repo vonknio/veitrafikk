@@ -3,13 +3,13 @@ package Model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Vehicle {
-    public Vertex prev;
-    public Vertex cur;
-    public Vertex next;
-    public Vertex dest;
+class Vehicle {
+    Vertex prev;
+    Vertex cur;
+    Vertex next;
+    Vertex dest;
 
-    public final ObjectStatistics stats;
+    final ObjectStatistics stats;
 
     Vehicle(Vertex cur) {
         this(cur, null);
@@ -27,7 +27,7 @@ public class Vehicle {
         this.stats = stats;
     }
 
-    public class VehicleStatistics implements ObjectStatistics {
+    class VehicleStatistics implements ObjectStatistics {
         private long idleTicks = 0;
         private long ticksAlive = 0;
         private List<Vertex> path = new ArrayList<>();

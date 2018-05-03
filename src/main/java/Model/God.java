@@ -2,21 +2,24 @@ package Model;
 
 import java.util.*;
 
-public abstract class God {
+abstract class God {
     private static Mode mode = Mode.RANDOM;
     private static Grid grid;
 
     /**
      * Generate and handle all events for current timetick, e.g. move vehicles on the grid.
      * @param grid Grid to process.
+     * @return Whether any vehicles moved.
      */
-    public static void processGrid(Grid grid) {
+    static boolean processGrid(Grid grid) {
         setGrid(grid);
 
+        boolean update = false;
         Set<Vertex> visited = new HashSet<>();
         for (Vertex vertex : grid.getVertices()) {
             if (vertex.hasVehicle()) {
-                moveVehicle(vertex, visited);
+                if (moveVehicle(vertex, visited))
+                    update = true;
             }
             Statistics.process(vertex);
             if (vertex.hasVehicle() && vertex.getVehicle().cur == vertex.getVehicle().dest) {
@@ -24,6 +27,7 @@ public abstract class God {
                 vertex.removeVehicle();
             }
         }
+        return update;
     }
 
     /**
@@ -32,7 +36,7 @@ public abstract class God {
      * @param vehicles Vehicles to assign random destinations to.
      * @param availableDestinations List of destinations to choose from.
      */
-    public static void setRandomDestination(Collection<? extends Vehicle> vehicles, List<Vertex> availableDestinations) {
+    static void setRandomDestination(Collection<? extends Vehicle> vehicles, List<Vertex> availableDestinations) {
         for (Vehicle vehicle : vehicles) {
             setRandomDestination(vehicle, availableDestinations);
         }
@@ -44,12 +48,25 @@ public abstract class God {
      * @param vehicle Vehicles to assign a random destination to.
      * @param availableDestinations List of destinations to choose from.
      */
-    public static void setRandomDestination(Vehicle vehicle, List<Vertex> availableDestinations) {
+    static void setRandomDestination(Vehicle vehicle, List<Vertex> availableDestinations) {
             do {
             vehicle.dest = availableDestinations.get(
                     (new Random()).nextInt(availableDestinations.size())
             );
             } while (availableDestinations.size() > 1 && vehicle.dest == vehicle.cur);
+    }
+
+    /**
+     * Sets the 'next' field of given vehicles to a possible destination for next timetick.
+     * @param vehicles Vehicles to assign next tick destinations to.
+     * @param grid Grid to operate on.
+     */
+    public static void setDestinationForNextTick(Collection<? extends Vehicle> vehicles, Grid grid) {
+        setGrid(grid);
+
+        for (Vehicle vehicle : vehicles) {
+            vehicle.next = getDestinationForNextTick(vehicle);
+        }
     }
 
     /**

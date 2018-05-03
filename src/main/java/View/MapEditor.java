@@ -1,33 +1,36 @@
-package Model;
+package View;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
-public class MapEditor {
+class MapEditor {
 
     private int size;
     private int dist;
 
-    JFrame frame;
+    public JFrame frame;
     Container container;
     MapPlanner mapPlanner;
-    Grid grid;
 
-    MapEditor (int size, int dist){
+    private JButton start;
+    private JPanel drawingButtons;
+
+    public MapEditor (int size, int dist){
 
         this.size = size;
         this.dist = dist;
 
-        grid = new Grid(size);
-
-        mapPlanner = new MapPlanner(grid, size, dist);
+        mapPlanner = new MapPlanner(size, dist);
 
         setupFrame();
         setupContainer();
         setupMapPlanner();
 
-        frame.setVisible(true);
+    }
 
+    public void setVisible(boolean b) {
+        frame.setVisible(b);
     }
 
     private void setupFrame (){
@@ -45,7 +48,7 @@ public class MapEditor {
         container = frame.getContentPane();
         container.setLayout(new BorderLayout());
 
-        JPanel drawingButtons = new JPanel(new BorderLayout());
+        drawingButtons = new JPanel(new BorderLayout());
         JPanel simButtons = new JPanel(new BorderLayout());
         JPanel menu = new JPanel(new BorderLayout());
 
@@ -63,16 +66,7 @@ public class MapEditor {
             mapPlanner.startedDrawing = false;
         });
 
-        JButton start = new JButton("Start");
-        start.addActionListener(e -> {
-
-            mapPlanner.blockDrawing = true;
-            drawingButtons.setVisible(false);
-            start.setText("Next tick");
-
-            God.processGrid(grid);
-
-        });
+        start = new JButton("Start");
 
         drawingButtons.add(addSource, BorderLayout.EAST);
         drawingButtons.add(addSink, BorderLayout.WEST);
@@ -91,5 +85,31 @@ public class MapEditor {
         container.add(mapPlanner, BorderLayout.CENTER);
 
     }
+
+    public int[] getCoordinates() {
+        return mapPlanner.getCoordinates();
+    }
+
+
+    public void drawRoad(int x1, int y1, int x2, int y2) { mapPlanner.drawRoad(x1, y1, x2, y2); }
+
+    public void drawSource(int x1, int y1) { mapPlanner.drawSource(x1, y1); }
+
+    public void drawSink(int x1, int y1) { mapPlanner.drawSink(x1, y1); }
+
+
+    public void addNextTickListener(ActionListener listener) {
+        start.addActionListener(e -> {
+            mapPlanner.blockDrawing = true;
+            drawingButtons.setVisible(false);
+            start.setText("Next tick");
+            listener.actionPerformed(e);
+        });}
+
+    public void addNewRoadListener(ActionListener listener) { mapPlanner.addNewRoadListener(listener); }
+
+    public void addNewSourceListener(ActionListener listener) { mapPlanner.addNewSourceListener(listener); }
+
+    public void addNewSinkListener(ActionListener listener) { mapPlanner.addNewSinkListener(listener); }
 
 }

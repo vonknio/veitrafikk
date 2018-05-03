@@ -1,13 +1,17 @@
-package Model;
+package View;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
-public class Menu extends JFrame {
+class Menu extends JFrame {
 
     private JPanel menu;
     private JTextField sizeField;
     private JTextField distField;
+    private JButton start;
+    private JButton quit;
+
     MapEditor mapEditor;
 
     public Menu (){
@@ -22,9 +26,6 @@ public class Menu extends JFrame {
         setSize(200, 200);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        menu.setVisible(true);
-        this.setVisible(true);
 
     }
 
@@ -50,11 +51,8 @@ public class Menu extends JFrame {
         distPanel.add(distField, BorderLayout.EAST);
         distPanel.add(distDescription, BorderLayout.WEST);
 
-        JButton start = new JButton("Start");
-        start.addActionListener(e -> openEditor());
-
-        JButton quit = new JButton("Quit");
-        quit.addActionListener(e -> System.exit(0));
+        start = new JButton("Start");
+        quit = new JButton("Quit");
 
         textFields.add(sizePanel, BorderLayout.NORTH);
         textFields.add(distPanel, BorderLayout.SOUTH);
@@ -66,18 +64,22 @@ public class Menu extends JFrame {
         menu.add(buttons, BorderLayout.SOUTH);
 
         this.add(menu);
-
     }
 
-    public void openEditor () {
+    public int getGridSize() {
+        return Integer.parseInt(sizeField.getText());
+    }
 
-        setVisible(false);
-        Integer size = Integer.parseInt(sizeField.getText());
-        Integer dist = Integer.parseInt(distField.getText());
-        if (size <= 0) size = 10;
-        if (dist <= 14) dist = 15;
-        mapEditor = new MapEditor(size, dist);
+    public int getDistanceInPx() {
+        return Integer.parseInt(distField.getText());
+    }
 
+    public void addOpenEditorListener(ActionListener listener) {
+        start.addActionListener(listener);
+    }
+
+    public void addQuitListener(ActionListener listener) {
+        quit.addActionListener(listener);
     }
 
 }

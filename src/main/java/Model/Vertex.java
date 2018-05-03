@@ -1,11 +1,11 @@
 package Model;
 
-public class Vertex {
+class Vertex {
     private VertexType type;
     private Vehicle vehicle;
 
-    public final ObjectStatistics stats;
-    public final int x, y;
+    final ObjectStatistics stats;
+    final int x, y;
 
 
     public Vertex(int x, int y, VertexType vertexType, ObjectStatistics stats) {
@@ -15,27 +15,27 @@ public class Vertex {
         this.stats = stats;
     }
 
-    public VertexType getVertexType() {
+    VertexType getVertexType() {
         return type;
     }
 
-    public void setVertexType(VertexType vertexType) {
+    void setVertexType(VertexType vertexType) {
         this.type = vertexType;
     }
 
-    public boolean hasVehicle() { return getVehicle() != null; }
+    boolean hasVehicle() { return getVehicle() != null; }
 
-    public Vehicle getVehicle() {
+    Vehicle getVehicle() {
         return vehicle;
     }
 
-    public void setVehicle(Vehicle vehicle) {
+    void setVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
     }
 
-    public void removeVehicle() { this.vehicle = null; }
+    void removeVehicle() { this.vehicle = null; }
 
-    public boolean isCrossroad() {
+    boolean isCrossroad() {
         return type != VertexType.ROAD;
     }
 
@@ -43,7 +43,7 @@ public class Vertex {
         SOURCE, SINK, ROAD, CROSSROAD
     }
 
-    public class VertexStatistics implements ObjectStatistics {
+    class VertexStatistics implements ObjectStatistics {
         private long vehicleCount = 0;
         private long noVehicleTicks = 0;
 

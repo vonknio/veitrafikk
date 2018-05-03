@@ -103,6 +103,7 @@ public class GridTest {
         grid.addRoad(2, 1, 1, 1);
         grid.addRoad(1, 1, 1, 2);
         grid.addRoad(1, 1, 0, 1);
+        assertEquals(5, grid.getVertices().size());
         grid.removeRoad(1, 1, 1, 0);
         grid.removeRoad(1, 1, 2, 1);
         grid.removeRoad(1, 1, 1, 2);
@@ -112,9 +113,9 @@ public class GridTest {
     }
 
     @Test
-    public void testAddRoad() {
+    public void testAddLongRoad() {
         Grid grid = new Grid(5);
-        grid.addLongRoad(0, 0, 0, grid.getSize() - 1);
+        grid.addRoad(0, 0, 0, grid.getSize() - 1);
         for (int i = 0; i < grid.getSize() - 1; ++i) {
             assertTrue(grid.getNeighbours(0, i).contains(grid.getVertex(0, i+1)));
         }
