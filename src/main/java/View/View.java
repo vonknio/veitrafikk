@@ -48,13 +48,13 @@ public class View {
 
     public int[] getCoordinates() { return mapEditor.getCoordinates(); }
 
-    public int getXDimenstion() {
+    public int getXOriginCoordinate() {
         if (mapEditor != null)
             return mapEditor.frame.getX();
         throw new IllegalStateException();
     }
 
-    public int getYDimenstion() {
+    public int getYOriginCoordinate() {
         if (mapEditor != null)
             return mapEditor.frame.getY();
         throw new IllegalStateException();

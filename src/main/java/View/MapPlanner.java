@@ -30,7 +30,6 @@ class MapPlanner extends JComponent {
     private int curX = -1, curY = -1, prevX, prevY;
 
     MapPlanner (int size, int dist){
-
         this.size = size;
         this.dist = dist;
 
@@ -83,6 +82,7 @@ class MapPlanner extends JComponent {
                 graphics2D.fillRect(i-1, j-1, 3, 3);
 
         graphics2D.setPaint(Color.black);
+        graphics2D.setStroke(new BasicStroke(3));
         repaint();
 
     }
