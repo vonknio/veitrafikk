@@ -120,4 +120,21 @@ public class GridTest {
             assertTrue(grid.getNeighbours(0, i).contains(grid.getVertex(0, i+1)));
         }
     }
+
+    @Test
+    public void testRemoveLongRoad() {
+        Grid grid = new Grid(7);
+        grid.addRoad(0, 0, 0, grid.getSize() - 1);
+        for (int i = 0; i < grid.getSize() - 1; ++i) {
+            assertTrue(grid.getNeighbours(0, i).contains(grid.getVertex(0, i + 1)));
+        }
+        grid.removeRoad(0, 0, 0, 3);
+        assertTrue(grid.getNeighbours(0, 0).isEmpty());
+        assertTrue(grid.getNeighbours(0, 1).isEmpty());
+        assertFalse(grid.getNeighbours(0, 3).isEmpty());
+        assertEquals(1, grid.getNeighbours(0, 3).size());
+        assertEquals(2, grid.getNeighbours(0, 4).size());
+        grid.removeRoad(0, 3, 0, grid.getSize() - 1);
+        assertTrue(grid.getVertices().isEmpty());
+    }
 }
