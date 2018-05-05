@@ -3,6 +3,9 @@ package Model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class representing a vehicle.
+ */
 class Vehicle {
     Vertex prev;
     Vertex cur;
@@ -42,15 +45,13 @@ class Vehicle {
 
         private void updateTime() {
             ticksAlive++;
-            if (prev == cur) {
+            if (prev == cur)
                 idleTicks++;
-            }
         }
 
         private void updatePath() {
-            if (prev != cur) {
+            if (prev != cur)
                 path.add(cur);
-            }
         }
 
         private void updateAuxiliaryVariables() {

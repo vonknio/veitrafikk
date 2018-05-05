@@ -1,14 +1,28 @@
 package Model;
 
+/**
+ * Class representing an existing vertex of the grid.
+ */
 class Vertex {
-    private VertexType type;
-    private Vehicle vehicle;
-
+    static final VertexType defaultType = VertexType.CROSSROAD;
     final ObjectStatistics stats;
     final int x, y;
 
+    private VertexType type;
+    private Vehicle vehicle;
 
-    public Vertex(int x, int y, VertexType vertexType, ObjectStatistics stats) {
+    Vertex(int x, int y) {
+        this(x, y, defaultType);
+    }
+
+    Vertex(int x, int y, VertexType vertexType) {
+        this.x = x;
+        this.y = y;
+        this.type = vertexType;
+        this.stats = new VertexStatistics();
+    }
+
+    Vertex(int x, int y, VertexType vertexType, ObjectStatistics stats) {
         this.x = x;
         this.y = y;
         this.type = vertexType;
@@ -25,22 +39,19 @@ class Vertex {
 
     boolean hasVehicle() { return getVehicle() != null; }
 
-    Vehicle getVehicle() {
-        return vehicle;
-    }
+    Vehicle getVehicle() { return vehicle; }
 
-    void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
-    }
+    void setVehicle(Vehicle vehicle) { this.vehicle = vehicle; }
 
     void removeVehicle() { this.vehicle = null; }
 
-    boolean isCrossroad() {
-        return type != VertexType.ROAD;
-    }
+    boolean isCrossroad() { return type != VertexType.ROAD; }
 
-    public enum VertexType {
-        SOURCE, SINK, ROAD, CROSSROAD
+    enum VertexType {
+        SOURCE,     // spawns vehicles
+        SINK,       // swallows vehicles
+        ROAD,       // no turn possible
+        CROSSROAD   // turn possible
     }
 
     class VertexStatistics implements ObjectStatistics {
@@ -57,12 +68,11 @@ class Vertex {
         }
 
         private void updateVehicleCount() {
-            if (vehicleInPrevTick == vehicle) {
+            if (vehicleInPrevTick == vehicle)
                 vehicleCount++;
-            }
-            if (vehicle == null) {
+
+            if (vehicle == null)
                 noVehicleTicks++;
-            }
         }
 
         private void updateAuxiliaryVariables() {
