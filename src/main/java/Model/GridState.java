@@ -3,7 +3,7 @@ package Model;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class GridState {
+class GridState {
     private long timeTick=0;
     private Collection<Vehicle> vehicles = new LinkedList<>();
 
