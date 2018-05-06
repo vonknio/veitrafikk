@@ -49,6 +49,8 @@ class MapEditor {
         container.setLayout(new BorderLayout());
 
         drawingButtons = new JPanel(new BorderLayout());
+        JPanel gameButtons = new JPanel(new BorderLayout());
+        JPanel otherButtons = new JPanel(new BorderLayout());
         JPanel simButtons = new JPanel(new BorderLayout());
         JPanel menu = new JPanel(new BorderLayout());
 
@@ -85,6 +87,9 @@ class MapEditor {
             remove.setText("Delete");
         });
 
+        JButton exit = new JButton("Exit");
+        exit.addActionListener(e -> System.exit(0));
+
         start = new JButton("Start");
 
         drawingButtons.add(addSource, BorderLayout.EAST);
@@ -93,17 +98,20 @@ class MapEditor {
 
         simButtons.add(start, BorderLayout.WEST);
 
-        menu.add(drawingButtons, BorderLayout.EAST);
-        menu.add(simButtons, BorderLayout.WEST);
+        gameButtons.add(simButtons, BorderLayout.WEST);
+        gameButtons.add(drawingButtons, BorderLayout.EAST);
+
+        otherButtons.add(exit, BorderLayout.WEST);
+
+        menu.add(gameButtons, BorderLayout.EAST);
+        menu.add(otherButtons, BorderLayout.WEST);
 
         container.add(menu, BorderLayout.SOUTH);
 
     }
 
     private void setupMapPlanner (){
-
         container.add(mapPlanner, BorderLayout.CENTER);
-
     }
 
     public int[] getCoordinates() {

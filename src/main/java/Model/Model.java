@@ -26,6 +26,9 @@ public class Model {
 
     public void removeVertexClassifiers(int x1, int y1) { grid.removeVertexClassifiers(x1, y1); }
 
+    public boolean isLastRoad(int x1, int y1) {
+        return grid.getNeighbours(x1, y1) == null || grid.getNeighbours(x1, y1).size() == 1;
+    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Simulation

@@ -52,6 +52,14 @@ public class Controller {
         }
 
         logger.config("Removing road (" + x1 + ", " + y1 + ") <-> (" + x2 + ", " + y2 + ")");
+        if (model.isLastRoad(x1, y1)) {
+            logger.config("Removing vertex (" + x1 + ", " + y1 + ")");
+            view.removeSpecialVertex(x1, y1);
+        }
+        if (model.isLastRoad(x2, y2)) {
+            logger.config("Removing vertex (" + x2 + ", " + y2 + ")");
+            view.removeSpecialVertex(x2, y2);
+        }
         model.removeRoad(x1, y1, x2, y2);
         view.removeRoad(x1, y1, x2, y2);
     }
