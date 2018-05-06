@@ -13,6 +13,10 @@ public class Model {
 
     public void addRoad(int x1, int y1, int x2, int y2) { grid.addRoad(x1, y1, x2, y2); }
 
+    public void removeRoad(int x1, int y1, int x2, int y2) {
+        grid.removeRoad(x1, y1, x2, y2);
+    }
+
     public void addSource(int x1, int y1) { grid.addSource(x1, y1); }
 
     public void addSink(int x1, int y1) { grid.addSink(x1, y1); }
