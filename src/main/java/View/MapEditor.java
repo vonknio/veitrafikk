@@ -13,6 +13,7 @@ class MapEditor {
     Container container;
     MapPlanner mapPlanner;
 
+    private JButton quit;
     private JButton start;
     private JPanel drawingButtons;
 
@@ -87,8 +88,8 @@ class MapEditor {
             remove.setText("Delete");
         });
 
-        JButton exit = new JButton("Exit");
-        exit.addActionListener(e -> System.exit(0));
+        quit = new JButton("Quit");
+        quit.addActionListener(e -> System.exit(0));
 
         start = new JButton("Start");
 
@@ -101,7 +102,7 @@ class MapEditor {
         gameButtons.add(simButtons, BorderLayout.WEST);
         gameButtons.add(drawingButtons, BorderLayout.EAST);
 
-        otherButtons.add(exit, BorderLayout.WEST);
+        otherButtons.add(quit, BorderLayout.WEST);
 
         menu.add(gameButtons, BorderLayout.EAST);
         menu.add(otherButtons, BorderLayout.WEST);

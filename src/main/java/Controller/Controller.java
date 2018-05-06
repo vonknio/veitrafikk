@@ -36,7 +36,7 @@ public class Controller {
         view.drawRoad(x1, y1, x2, y2);
     }
 
-    public void remove(ActionEvent e) {
+    private void remove(ActionEvent e) {
         int[] coordinates = view.getCoordinates();
         if (coordinates.length != 4) {
             throw new IllegalStateException();
@@ -51,15 +51,34 @@ public class Controller {
             return;
         }
 
+        if (!model.hasRoad(x1, y1, x2, y2))
+            return;
+
+        coordinates = model.getEnclosingRoad(x1, y1, x2, y2);
+
+        x1 = coordinates[0];
+        y1 = coordinates[1];
+        x2 = coordinates[2];
+        y2 = coordinates[3];
+
         logger.config("Removing road (" + x1 + ", " + y1 + ") <-> (" + x2 + ", " + y2 + ")");
-        if (model.isLastRoad(x1, y1)) {
-            logger.config("Removing vertex (" + x1 + ", " + y1 + ")");
+
+        if (x1 == x2)
+            for (int i = 0; i < y2-y1; ++i)
+                removeUnitRoad(x1, y1+i, x1, y1+i+1);
+        else
+            for (int i = 0; i < x2-x1; ++i)
+                removeUnitRoad(x1+i, y1, x1+i+1, y1);
+
+    }
+
+    private void removeUnitRoad(int x1, int y1, int x2, int y2){
+
+        if (model.isLastRoad(x1, y1))
             view.removeSpecialVertex(x1, y1);
-        }
-        if (model.isLastRoad(x2, y2)) {
-            logger.config("Removing vertex (" + x2 + ", " + y2 + ")");
+        if (model.isLastRoad(x2, y2))
             view.removeSpecialVertex(x2, y2);
-        }
+
         model.removeRoad(x1, y1, x2, y2);
         view.removeRoad(x1, y1, x2, y2);
     }

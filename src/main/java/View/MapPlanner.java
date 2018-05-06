@@ -11,7 +11,6 @@ import java.util.stream.IntStream;
 
 /**
  * TODO: Add undo functionality
- * TODO: Allow removal of long roads
  * TODO: Change the way erasing source and sink is done
  */
 

@@ -81,36 +81,36 @@ public class Model {
         if (x1 == x2) {  // vertical
             p = min(y1, y2);
             while (p > 0 && hasRoad(x1, p, x1, p-1) ) {
-                p--;
                 if (grid.getNeighbours(x1, p).size() > 2)
                     break;
+                p--;
             }
             a1 = p;
             p = max(y1, y2);
             while (p < getGridSize() - 1 && hasRoad(x1, p, x1, p+1)) {
-                p++;
                 if (grid.getNeighbours(x1, p).size() > 2)
                     break;
+                p++;
             }
             a2 = p;
             res = new int[]{x1, a1, x1, a2};
 
         } else  {  // horizontal
             p = min(x1, x2);
-            while (p > 0 && hasRoad(p, x1, p-1, x1)) {
-                p--;
-                if (grid.getNeighbours(p, x1).size() > 2)
+            while (p > 0 && hasRoad(p, y1, p-1, y1)) {
+                if (grid.getNeighbours(p, y1).size() > 2)
                     break;
+                p--;
             }
             a1 = p;
             p = max(x1, x2);
-            while (p < getGridSize() - 1 && hasRoad(p, x1, p+1, x1)) {
-                p++;
-                if (grid.getNeighbours(p, x1).size() > 2)
+            while (p < getGridSize() - 1 && hasRoad(p, y1, p+1, y1)) {
+                if (grid.getNeighbours(p, y1).size() > 2)
                     break;
+                p++;
             }
             a2 = p;
-            res = new int[]{a1, x1, a2, x1};
+            res = new int[]{a1, y1, a2, y1};
         }
         
         return res;
