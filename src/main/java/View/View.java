@@ -71,6 +71,9 @@ public class View {
 
     public void drawSink(int x1, int y1) { mapEditor.drawSink(x1, y1); }
 
+    public void removeRoad(int x1, int y1, int x2, int y2) { mapEditor.removeRoad(x1, y1, x2, y2); }
+
+    public void removeSpecialVertex(int x1, int y1) { mapEditor.removeSpecialVertex(x1, y1); }
 
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Add listeners
@@ -91,6 +94,8 @@ public class View {
     public void addNewSourceListener(ActionListener listener) { mapEditor.addNewSourceListener(listener); }
 
     public void addNewSinkListener(ActionListener listener) { mapEditor.addNewSinkListener(listener); }
+
+    public void addRemoveListener(ActionListener listener) { mapEditor.addRemoveListener(listener); }
 
 }
 

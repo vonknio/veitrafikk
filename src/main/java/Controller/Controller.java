@@ -36,6 +36,26 @@ public class Controller {
         view.drawRoad(x1, y1, x2, y2);
     }
 
+    public void remove(ActionEvent e) {
+        int[] coordinates = view.getCoordinates();
+        if (coordinates.length != 4) {
+            throw new IllegalStateException();
+        }
+        int x1 = coordinates[0], y1 = coordinates[1],
+                x2 = coordinates[2], y2 = coordinates[3];
+
+        if (model.isSink(x1, y1) || model.isSource(x1, y1)){
+            logger.config("Removing vertex classifier (" + x1 + ", " + y1 + ")");
+            model.removeVertexClassifiers(x1, y1);
+            view.removeSpecialVertex(x1, y1);
+            return;
+        }
+
+        logger.config("Removing road (" + x1 + ", " + y1 + ") <-> (" + x2 + ", " + y2 + ")");
+        model.removeRoad(x1, y1, x2, y2);
+        view.removeRoad(x1, y1, x2, y2);
+    }
+
     private void newSource(ActionEvent e) {
         int[] coordinates = view.getCoordinates();
         if (coordinates.length != 2) {
@@ -46,6 +66,7 @@ public class Controller {
         logger.config("Adding source (" + x1 + ", " + y1 + ")");
         model.removeVertexClassifiers(x1, y1);
         model.addSource(x1, y1);
+        view.removeSpecialVertex(x1, y1);
         view.drawSource(x1, y1);
     }
 
@@ -59,6 +80,7 @@ public class Controller {
         logger.config("Adding sink (" + x1 + ", " + y1 + ")");
         model.removeVertexClassifiers(x1, y1);
         model.addSink(x1, y1);
+        view.removeSpecialVertex(x1, y1);
         view.drawSink(x1, y1);
     }
 
@@ -70,6 +92,7 @@ public class Controller {
         model.createGrid(size);
         view.openEditor(size, dist);
         view.addNewRoadListener(this::newRoad);
+        view.addRemoveListener(this::remove);
         view.addNewSourceListener(this::newSource);
         view.addNewSinkListener(this::newSink);
         view.addNextTickListener(this::nextTick);

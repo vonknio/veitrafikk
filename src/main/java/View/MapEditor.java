@@ -52,11 +52,28 @@ class MapEditor {
         JPanel simButtons = new JPanel(new BorderLayout());
         JPanel menu = new JPanel(new BorderLayout());
 
+        JButton remove = new JButton("Delete");
+        remove.addActionListener(e -> {
+            mapPlanner.drawSink = false;
+            mapPlanner.drawSource = false;
+            mapPlanner.startedDrawing = false;
+            if (mapPlanner.deleteMode) {
+                mapPlanner.deleteMode = false;
+                remove.setText("Delete");
+            }
+            else {
+                mapPlanner.deleteMode = true;
+                remove.setText("Add");
+            }
+        });
+
         JButton addSource = new JButton("Add source");
         addSource.addActionListener(e -> {
             mapPlanner.drawSink = false;
             mapPlanner.drawSource = true;
             mapPlanner.startedDrawing = false;
+            mapPlanner.deleteMode = false;
+            remove.setText("Delete");
         });
 
         JButton addSink = new JButton("Add sink");
@@ -64,12 +81,15 @@ class MapEditor {
             mapPlanner.drawSource = false;
             mapPlanner.drawSink = true;
             mapPlanner.startedDrawing = false;
+            mapPlanner.deleteMode = false;
+            remove.setText("Delete");
         });
 
         start = new JButton("Start");
 
         drawingButtons.add(addSource, BorderLayout.EAST);
-        drawingButtons.add(addSink, BorderLayout.WEST);
+        drawingButtons.add(addSink, BorderLayout.CENTER);
+        drawingButtons.add(remove, BorderLayout.WEST);
 
         simButtons.add(start, BorderLayout.WEST);
 
@@ -93,10 +113,13 @@ class MapEditor {
 
     public void drawRoad(int x1, int y1, int x2, int y2) { mapPlanner.drawRoad(x1, y1, x2, y2); }
 
-    public void drawSource(int x1, int y1) { mapPlanner.drawSource(x1, y1); }
+    public void drawSource(int x1, int y1) { mapPlanner.drawSpecialVertex(x1, y1, new Color(0,255,0)); }
 
-    public void drawSink(int x1, int y1) { mapPlanner.drawSink(x1, y1); }
+    public void drawSink(int x1, int y1) { mapPlanner.drawSpecialVertex(x1, y1, new Color(255,150,0)); }
 
+    public void removeRoad(int x1, int y1, int x2, int y2) { mapPlanner.removeRoad(x1, y1, x2, y2); }
+
+    public void removeSpecialVertex(int x1, int y1) { mapPlanner.removeSpecialVertex(x1, y1); }
 
     public void addNextTickListener(ActionListener listener) {
         start.addActionListener(e -> {
@@ -107,6 +130,8 @@ class MapEditor {
         });}
 
     public void addNewRoadListener(ActionListener listener) { mapPlanner.addNewRoadListener(listener); }
+
+    public void addRemoveListener(ActionListener listener) { mapPlanner.addRemoveListener(listener); }
 
     public void addNewSourceListener(ActionListener listener) { mapPlanner.addNewSourceListener(listener); }
 

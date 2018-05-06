@@ -19,31 +19,32 @@ class Menu extends JFrame {
     }
 
     private void create (){
-
         setup();
 
         setTitle("Veitrafikk");
         setSize(200, 200);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
     }
 
     private void setup () {
+        menu = new JPanel();
+        menu.setLayout(null);
 
-        menu = new JPanel(new BorderLayout());
+        JLabel nameLabel = new JLabel("VEITRAFIKK", SwingConstants.CENTER);
+        nameLabel.setFont(new Font("Monaco", Font.PLAIN, 25));
+        nameLabel.setBounds(5,5, 190, 40);
 
-        JPanel buttons = new JPanel(new BorderLayout());
         JPanel textFields = new JPanel(new BorderLayout());
 
         JPanel sizePanel = new JPanel(new BorderLayout());
-        JLabel sizeDescription = new JLabel("Set grid size:");
+        JLabel sizeDescription = new JLabel("Grid size:");
 
         JPanel distPanel = new JPanel(new BorderLayout());
-        JLabel distDescription = new JLabel("Set distance in px:");
+        JLabel distDescription = new JLabel("Distance:");
 
-        sizeField = new JTextField("10", 5);
-        distField = new JTextField("50", 5);
+        sizeField = new JTextField("10", 2);
+        distField = new JTextField("50", 2);
 
         sizePanel.add(sizeField, BorderLayout.EAST);
         sizePanel.add(sizeDescription, BorderLayout.WEST);
@@ -52,16 +53,18 @@ class Menu extends JFrame {
         distPanel.add(distDescription, BorderLayout.WEST);
 
         start = new JButton("Start");
+        start.setBounds(50, 50, 100, 25);
         quit = new JButton("Quit");
+        quit.setBounds(50, 125, 100, 25);
 
         textFields.add(sizePanel, BorderLayout.NORTH);
         textFields.add(distPanel, BorderLayout.SOUTH);
+        textFields.setBounds(50, 75, 100, 50);
 
-        buttons.add(textFields, BorderLayout.NORTH);
-        buttons.add(quit, BorderLayout.SOUTH);
-
-        menu.add(start, BorderLayout.CENTER);
-        menu.add(buttons, BorderLayout.SOUTH);
+        menu.add(nameLabel);
+        menu.add(start);
+        menu.add(quit);
+        menu.add(textFields);
 
         this.add(menu);
     }
