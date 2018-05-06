@@ -10,24 +10,110 @@ public class Model {
      *  Configure grid
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+    /**
+     * Create an empty grid of given size.
+     * @param size Size of grid's side in vertices.
+     */
     public void createGrid(int size) {
         grid = new Grid(size);
     }
 
+    /**
+     * Add a road to the grid.
+     * @param x1 X coordinate of first vertex.
+     * @param y1 Y coordinate of first vertex.
+     * @param x2 X coordinate of second vertex.
+     * @param y2 Y coordinate of second vertex.
+     */
     public void addRoad(int x1, int y1, int x2, int y2) { grid.addRoad(x1, y1, x2, y2); }
 
+    /**
+     * Remove given road from the grid.
+     * @param x1 X coordinate of first vertex.
+     * @param y1 Y coordinate of first vertex.
+     * @param x2 X coordinate of second vertex.
+     * @param y2 Y coordinate of second vertex.
+     */
     public void removeRoad(int x1, int y1, int x2, int y2) {
         grid.removeRoad(x1, y1, x2, y2);
     }
 
+    /**
+     * Add a source vertex to the grid.
+     * @param x1 X coordinate.
+     * @param y1 Y coordinate.
+     */
     public void addSource(int x1, int y1) { grid.addSource(x1, y1); }
 
+    /**
+     * Add a sink vertex to the grid.
+     * @param x1 X coordinate.
+     * @param y1 Y coordinate.
+     */
     public void addSink(int x1, int y1) { grid.addSink(x1, y1); }
 
+    /**
+     * Set vertex type to the default type.
+     * @param x1 X coordinate.
+     * @param y1 X coordinate.
+     */
     public void removeVertexClassifiers(int x1, int y1) { grid.removeVertexClassifiers(x1, y1); }
 
     public boolean isLastRoad(int x1, int y1) {
         return grid.getNeighbours(x1, y1) == null || grid.getNeighbours(x1, y1).size() == 1;
+    }
+
+    /**
+     * Get coordinates of the longest road that expands given road without crossing any crossroads.
+     * @param x1 X coordinate of the first vertex.
+     * @param y1 Y coordinate of the first vertex.
+     * @param x2 X coordinate of the second vertex.
+     * @param y2 X coordinate of the second vertex.
+     * @return (x1, y2, x2, y2) - coordinates of enclosing road
+     */
+    @SuppressWarnings("Duplicates")
+    public int[] getEnclosingRoad(int x1, int y1, int x2, int y2) {
+        if (!hasRoad(x1, y1, x2, y2))
+            throw new IllegalArgumentException();
+
+        int[] res;
+        int a1, a2, p;
+        if (x1 == x2) {  // vertical
+            p = min(y1, y2);
+            while (p > 0 && hasRoad(x1, p, x1, p-1) ) {
+                p--;
+                if (grid.getNeighbours(x1, p).size() > 2)
+                    break;
+            }
+            a1 = p;
+            p = max(y1, y2);
+            while (p < getGridSize() - 1 && hasRoad(x1, p, x1, p+1)) {
+                p++;
+                if (grid.getNeighbours(x1, p).size() > 2)
+                    break;
+            }
+            a2 = p;
+            res = new int[]{x1, a1, x1, a2};
+
+        } else  {  // horizontal
+            p = min(x1, x2);
+            while (p > 0 && hasRoad(p, x1, p-1, x1)) {
+                p--;
+                if (grid.getNeighbours(p, x1).size() > 2)
+                    break;
+            }
+            a1 = p;
+            p = max(x1, x2);
+            while (p < getGridSize() - 1 && hasRoad(p, x1, p+1, x1)) {
+                p++;
+                if (grid.getNeighbours(p, x1).size() > 2)
+                    break;
+            }
+            a2 = p;
+            res = new int[]{a1, x1, a2, x1};
+        }
+        
+        return res;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -66,13 +152,15 @@ public class Model {
                 if (!areNeighbours(x1, i, x1, i+1))
                     return false;
             }
+            return true;
         } else if (y1 == y2) {
             for (int i = min(x1, x2); i < max(x1, x2); i++) {
                 if (!areNeighbours(i, y1, i+1, y2))
                     return false;
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**

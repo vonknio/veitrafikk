@@ -7,20 +7,20 @@ class GridState {
     private long timeTick=0;
     private Collection<Vehicle> vehicles = new LinkedList<>();
 
-    public long getTime() {
+    long getTime() {
         return timeTick;
     }
 
-    public void play() {
+    void play() {
         timeTick++;
         //God.processGrid();
     }
 
-    public Collection<Vehicle> getVehicles() {
+    Collection<Vehicle> getVehicles() {
         return vehicles;
     }
 
-    public void addVehicle(Vehicle vehicle) {
+    void addVehicle(Vehicle vehicle) {
         vehicles.add(vehicle);
     }
 }

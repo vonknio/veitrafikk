@@ -4,5 +4,5 @@ interface ObjectStatistics {
     /**
      * Update statistics for current timetick.
      */
-    public void process();
+    void process();
 }

@@ -155,7 +155,7 @@ abstract class God {
      * @see God.Mode
      * @param mode Mode to set.
      */
-    public static void setMode(Mode mode) {
+    static void setMode(Mode mode) {
         if (mode == null)
             throw new IllegalArgumentException();
         God.mode = mode;
@@ -165,9 +165,9 @@ abstract class God {
      * Get current mode.
      * @see God.Mode
      */
-    public static Mode getMode() { return mode; }
+    static Mode getMode() { return mode; }
 
-    public enum Mode {
+    enum Mode {
         // Each vehicle's path is a random walk generated on the go.
         RANDOM
     }
