@@ -28,6 +28,11 @@ public class ModelTest {
         assertTrue(model.areNeighbours(0, 0, 0, 1));
         assertTrue(model.areNeighbours(0, 3, 0, 4));
         assertFalse(model.areNeighbours(0, 0, 1, 0));
+
+        assertTrue(model.hasRoad(0, 1, 0, 0));
+        assertTrue(model.hasRoad(0, 4, 0, 0));
+        assertFalse(model.hasRoad(0, 0, 0, 0));
+        assertFalse(model.hasRoad(1, 0, 1, 4));
     }
 
     @Test
@@ -38,11 +43,26 @@ public class ModelTest {
         model.addRoad(0, 1, 0, 4);
         model.addSink(0, 0);
         model.addSource(0, 3);
+
+        assertTrue(model.isSink(0, 0));
+        assertFalse(model.isSource(0, 0));
+        assertFalse(model.isSink(0, 3));
+        assertTrue(model.isSource(0, 3));
+        assertFalse(model.isSource(0, 4));
+        assertFalse(model.isSink(0, 4));
+
         model.removeVertexClassifiers(0, 0);
         model.removeVertexClassifiers(0, 4);
         assertTrue(model.areNeighbours(0, 0, 0, 1));
         assertTrue(model.areNeighbours(0, 3, 0, 4));
         assertFalse(model.areNeighbours(0, 0, 1, 0));
+
+        assertFalse(model.isSink(0, 0));
+        assertFalse(model.isSource(0, 0));
+        assertFalse(model.isSink(0, 3));
+        assertTrue(model.isSource(0, 3));
+        assertFalse(model.isSource(0, 4));
+        assertFalse(model.isSink(0, 4));
     }
 
     @Test
@@ -53,6 +73,7 @@ public class ModelTest {
         model.removeRoad(1, 0, 2, 0);
         assertFalse(model.areNeighbours(1, 0, 2, 0));
         assertTrue(model.areNeighbours(0, 0, 1, 0));
+        assertFalse(model.hasRoad(1, 0, 2, 0));
     }
 
     @Test

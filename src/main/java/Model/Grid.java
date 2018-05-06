@@ -27,7 +27,7 @@ class Grid {
     }
 
     /**
-     * @param size       Size of grid's side.
+     * @param size Size of grid's side.
      * @param roadLength Length of unit road.
      */
     Grid(int size, int roadLength) {
@@ -47,8 +47,8 @@ class Grid {
     /**
      * Add new vertex of given coordinates and type.
      *
-     * @param x    X coordinate.
-     * @param y    Y coordinate.
+     * @param x X coordinate.
+     * @param y Y coordinate.
      * @param type Vertex type.
      */
     private void addVertex(int x, int y, Vertex.VertexType type) {
@@ -233,6 +233,17 @@ class Grid {
     void removeVertexClassifiers(int x, int y) {
         if (vertices[x * size + y] == null) return;
         vertices[x * size + y].setVertexType(Vertex.VertexType.CROSSROAD);
+    }
+
+    /**
+     * @param x X coordinate.
+     * @param y Y coordinate.
+     * @return Whether the vertex under given coordinates has been initialised in the grid.
+     */
+    boolean hasVertex(int x, int y) {
+        if (x < 0 || y < 0 || x >= size || y >= size)
+            throw new IllegalArgumentException();
+        return (vertices[x * size + y] != null);
     }
 
     /**
