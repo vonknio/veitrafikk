@@ -51,6 +51,12 @@ public class MapEditorTest {
         robot.mouseMove(x+200,y+200);
         robot.mousePress(InputEvent.BUTTON1_MASK);
 
+        robot.mouseMove(x+50,y+200);
+        robot.mousePress(InputEvent.BUTTON1_MASK);
+        Thread.sleep(100);
+        robot.mouseMove(x+200,y+200);
+        robot.mousePress(InputEvent.BUTTON1_MASK);
+
         Thread.sleep(500);
 
         assertTrue(model.hasRoad(0, 1, 3, 1));
