@@ -43,7 +43,14 @@ public class Model {
      * @param x1 X coordinate.
      * @param y1 Y coordinate.
      */
-    public void addSource(int x1, int y1) { grid.addSource(x1, y1); }
+    public void addSource(int x1, int y1, long limit, float probability) {
+        grid.addSource(x1, y1, limit, probability);
+    }
+
+    public void addSource(int x1, int y1) {
+        grid.addSource(x1, y1, 10, 1);
+    }
+
 
     /**
      * Add a sink vertex to the grid.
@@ -135,7 +142,7 @@ public class Model {
      * @return Whether given vertices are connected by an edge in the grid.
      */
     public boolean areNeighbours(int x1, int y1, int x2, int y2) {
-        return grid.getNeighbours(x1, y1).contains(grid.getVertex(x2, y2));
+        return grid.getNeighbours(x1, y1).contains(grid.getVertexIn(x2, y2));
     }
 
     /**
@@ -170,7 +177,7 @@ public class Model {
      */
     public boolean isSource(int x1, int y1) {
         return grid.hasVertex(x1, y1) &&
-                grid.getVertex(x1, y1).getVertexType() == Vertex.VertexType.SOURCE;
+                grid.getVertexOut(x1, y1) instanceof Source;
     }
 
     /**
@@ -180,7 +187,7 @@ public class Model {
      */
     public boolean isSink(int x1, int y1) {
         return grid.hasVertex(x1, y1) &&
-                grid.getVertex(x1, y1).getVertexType() == Vertex.VertexType.SINK;
+                grid.getVertexIn(x1, y1) instanceof Sink;
     }
 
     /**

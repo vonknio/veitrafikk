@@ -25,8 +25,8 @@ public class GodTest {
         grid.addRoad(5, 5, 6, 5);
         grid.addRoad(5, 5, 4, 5);
 
-        Vehicle vehicle = new Vehicle(grid.getVertex(5, 5));
-        grid.getVertex(5, 5).setVehicle(vehicle);
+        Vehicle vehicle = new Vehicle(grid.getVertexOut(5, 5));
+        grid.getVertexOut(5, 5).setVehicle(vehicle);
 
         God.setRandomDestination(
                 vehicle,
@@ -40,7 +40,7 @@ public class GodTest {
     public void testSetRandomDestination() {
         List<Vertex> vertices = new ArrayList<>();
         for (int i = 0; i < 10; ++i)
-            vertices.add(new Vertex(i, i, Vertex.VertexType.ROAD));
+            vertices.add(new Vertex(i, i, Vertex.VertexType.OUT));
 
         Set<Vehicle> vehicleSet = new HashSet<>();
         for (int i = 0; i < 10; ++i)
@@ -73,7 +73,7 @@ public class GodTest {
             vehicles.add(vertex.getVehicle());
         }
 
-        grid.addSource(1, 1);
+        grid.addSource(1, 1, 10, 1);
         Vehicle lonelyVehicle = new Vehicle(grid.getVertex(1, 1));
         grid.getVertex(1, 1).setVehicle(lonelyVehicle);
         vehicles.add(lonelyVehicle);
@@ -84,7 +84,7 @@ public class GodTest {
             if (vehicle == lonelyVehicle) {
                 assertEquals(vehicle.cur, vehicle.next);
             } else
-                assertEquals(grid.getVertex(5, 5), vehicle.next);
+                assertEquals(grid.getVertexIn(5, 5), vehicle.next);
         }
 
     }

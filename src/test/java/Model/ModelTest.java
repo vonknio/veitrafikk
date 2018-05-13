@@ -26,7 +26,7 @@ public class ModelTest {
         model.addRoad(0, 0, 0, 1);
         model.addRoad(0, 1, 0, 4);
         model.addSink(0, 0);
-        model.addSource(0, 3);
+        model.addSource(0, 3, 10, 0.5f);
         assertTrue(model.areNeighbours(0, 0, 0, 1));
         assertTrue(model.areNeighbours(0, 3, 0, 4));
         assertFalse(model.areNeighbours(0, 0, 1, 0));
@@ -44,7 +44,7 @@ public class ModelTest {
         model.addRoad(0, 0, 0, 1);
         model.addRoad(0, 1, 0, 4);
         model.addSink(0, 0);
-        model.addSource(0, 3);
+        model.addSource(0, 3, 10, .4f);
 
         assertTrue(model.isSink(0, 0));
         assertFalse(model.isSource(0, 0));

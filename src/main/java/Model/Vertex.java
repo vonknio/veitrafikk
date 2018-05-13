@@ -4,16 +4,11 @@ package Model;
  * Class representing an existing vertex of the grid.
  */
 class Vertex {
-    static final VertexType defaultType = VertexType.CROSSROAD;
     final ObjectStatistics stats;
     final int x, y;
 
     private VertexType type;
     private Vehicle vehicle;
-
-    Vertex(int x, int y) {
-        this(x, y, defaultType);
-    }
 
     Vertex(int x, int y, VertexType vertexType) {
         this.x = x;
@@ -45,13 +40,9 @@ class Vertex {
 
     void removeVehicle() { this.vehicle = null; }
 
-    boolean isCrossroad() { return type != VertexType.ROAD; }
-
     enum VertexType {
-        SOURCE,     // spawns vehicles
-        SINK,       // swallows vehicles
-        ROAD,       // no turn possible
-        CROSSROAD   // turn possible
+        IN,
+        OUT
     }
 
     class VertexStatistics implements ObjectStatistics {

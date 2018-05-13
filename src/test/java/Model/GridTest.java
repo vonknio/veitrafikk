@@ -15,11 +15,11 @@ public class GridTest {
     public void test1() {
         Grid grid = new Grid(4);
         grid.addRoad(0, 0, 1, 0);
-        assertEquals(2, grid.getVertices().size());
+        assertEquals(4, grid.getVertices().size());
         grid.addRoad(1, 0, 2, 0);
-        assertEquals(3, grid.getVertices().size());
+        assertEquals(6, grid.getVertices().size());
         grid.addRoad(2, 0, 1, 0);
-        assertEquals(3, grid.getVertices().size());
+        assertEquals(6, grid.getVertices().size());
     }
 
     @Test
@@ -59,18 +59,18 @@ public class GridTest {
     public void test5() {
         Grid grid = new Grid(3);
         grid.addSink(0, 0);
-        assertEquals(Vertex.VertexType.SINK, grid.getVertex(0, 0).getVertexType());
+        assertTrue(grid.getVertexIn(0, 0) instanceof Sink);
         grid.addRoad(0, 0, 0, 1);
-        assertEquals(Vertex.VertexType.SINK, grid.getVertex(0, 0).getVertexType());
+        assertTrue(grid.getVertexIn(0, 0) instanceof Sink);
     }
 
     @Test
     public void test6() {
         Grid grid = new Grid(3);
-        grid.addSource(0, 0);
-        assertEquals(Vertex.VertexType.SOURCE, grid.getVertex(0, 0).getVertexType());
+        grid.addSource(0, 0, 10, 1);
+        assertTrue(grid.getVertex(0, 0) instanceof Source);
         grid.addRoad(0, 0, 0, 1);
-        assertEquals(Vertex.VertexType.SOURCE, grid.getVertex(0, 0).getVertexType());
+        assertTrue(grid.getVertex(0, 0) instanceof Source);
     }
 
     @Test()
@@ -90,10 +90,10 @@ public class GridTest {
         grid.addRoad(2, 1, 1, 1);
         grid.addRoad(1, 1, 1, 2);
         grid.addRoad(1, 1, 0, 1);
-        assertTrue(grid.getNeighbours(1, 1).contains(grid.getVertex(1, 0)));
-        assertTrue(grid.getNeighbours(1, 1).contains(grid.getVertex(0, 1)));
-        assertTrue(grid.getNeighbours(1, 1).contains(grid.getVertex(1, 2)));
-        assertTrue(grid.getNeighbours(1, 1).contains(grid.getVertex(2, 1)));
+        assertTrue(grid.getNeighbours(1, 1).contains(grid.getVertexIn(1, 0)));
+        assertTrue(grid.getNeighbours(1, 1).contains(grid.getVertexIn(0, 1)));
+        assertTrue(grid.getNeighbours(1, 1).contains(grid.getVertexIn(1, 2)));
+        assertTrue(grid.getNeighbours(1, 1).contains(grid.getVertexIn(2, 1)));
 
     }
     @Test
@@ -103,11 +103,11 @@ public class GridTest {
         grid.addRoad(2, 1, 1, 1);
         grid.addRoad(1, 1, 1, 2);
         grid.addRoad(1, 1, 0, 1);
-        assertEquals(5, grid.getVertices().size());
+        assertEquals(10, grid.getVertices().size());
         grid.removeRoad(1, 1, 1, 0);
         grid.removeRoad(1, 1, 2, 1);
         grid.removeRoad(1, 1, 1, 2);
-        assertEquals(2,grid.getVertices().size());
+        assertEquals(4, grid.getVertices().size());
         grid.removeRoad(0, 1, 1, 1);
         assertEquals(0,grid.getVertices().size());
     }
@@ -117,7 +117,7 @@ public class GridTest {
         Grid grid = new Grid(5);
         grid.addRoad(0, 0, 0, grid.getSize() - 1);
         for (int i = 0; i < grid.getSize() - 1; ++i) {
-            assertTrue(grid.getNeighbours(0, i).contains(grid.getVertex(0, i+1)));
+            assertTrue(grid.getNeighbours(0, i).contains(grid.getVertexIn(0, i + 1)));
         }
     }
 
@@ -126,7 +126,7 @@ public class GridTest {
         Grid grid = new Grid(7);
         grid.addRoad(0, 0, 0, grid.getSize() - 1);
         for (int i = 0; i < grid.getSize() - 1; ++i) {
-            assertTrue(grid.getNeighbours(0, i).contains(grid.getVertex(0, i + 1)));
+            assertTrue(grid.getNeighbours(0, i).contains(grid.getVertexIn(0, i + 1)));
         }
         grid.removeRoad(0, 0, 0, 3);
         assertTrue(grid.getNeighbours(0, 0).isEmpty());
