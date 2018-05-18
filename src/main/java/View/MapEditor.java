@@ -18,7 +18,6 @@ class MapEditor {
     private JPanel drawingButtons;
 
     public MapEditor (int size, int dist){
-
         this.size = size;
         this.dist = dist;
 
@@ -27,7 +26,6 @@ class MapEditor {
         setupFrame();
         setupContainer();
         setupMapPlanner();
-
     }
 
     public void setVisible(boolean b) {
@@ -35,17 +33,14 @@ class MapEditor {
     }
 
     private void setupFrame (){
-
         frame = new JFrame();
         frame.setSize(size * dist + dist, size * dist + 100);
         frame.setTitle("Veitrafikk - Map Editor");
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
     }
 
     private void setupContainer (){
-
         container = frame.getContentPane();
         container.setLayout(new BorderLayout());
 
@@ -108,7 +103,6 @@ class MapEditor {
         menu.add(otherButtons, BorderLayout.WEST);
 
         container.add(menu, BorderLayout.SOUTH);
-
     }
 
     private void setupMapPlanner (){

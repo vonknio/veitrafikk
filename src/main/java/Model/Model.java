@@ -1,21 +1,25 @@
 package Model;
 
+import java.util.Collection;
+
 import static java.lang.Integer.max;
 import static java.lang.Integer.min;
 
 public class Model {
     private Grid grid;
+    private GridState gridState;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Configure grid
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * Create an empty grid of given size.
+     * Create an empty grid of given size and accompanying GridState.
      * @param size Size of grid's side in vertices.
      */
     public void createGrid(int size) {
         grid = new Grid(size);
+        gridState = new GridState();
     }
 
     /**
@@ -45,6 +49,7 @@ public class Model {
      */
     public void addSource(int x1, int y1, long limit, float probability) {
         grid.addSource(x1, y1, limit, probability);
+        gridState.addSource((Source)grid.getVertexOut(x1, y1));
     }
 
     public void addSource(int x1, int y1) {
@@ -57,7 +62,10 @@ public class Model {
      * @param x1 X coordinate.
      * @param y1 Y coordinate.
      */
-    public void addSink(int x1, int y1) { grid.addSink(x1, y1); }
+    public void addSink(int x1, int y1) {
+        grid.addSink(x1, y1);
+        gridState.addSink((Sink)grid.getVertexIn(x1, y1));
+    }
 
     /**
      * Set vertex type to the default type.
@@ -66,9 +74,26 @@ public class Model {
      */
     public void removeVertexClassifiers(int x1, int y1) { grid.removeVertexClassifiers(x1, y1); }
 
+    /**
+     * @param x1 X coordinate of the vertex
+     * @param y1 Y coordinate of the vertex
+     * @return Whether given vertex has no more than one road - a dead end
+     */
     public boolean isLastRoad(int x1, int y1) {
         return grid.getNeighbours(x1, y1) == null || grid.getNeighbours(x1, y1).size() == 1;
     }
+
+    /**
+     * @param x1 X coordinate of the vertex
+     * @param y1 Y coordinate of the vertex
+     * @return Vertex at the given point of the grid or null if it does not exist
+     */
+    public Vertex getVertex(int x1, int y1) { return grid.getVertex(x1, y1); }
+
+    /**
+     * @return Grid on which the model is operating
+     */
+    public Grid getGrid() { return grid; }
 
     /**
      * Get coordinates of the longest road that expands given road without crossing any crossroads.
@@ -127,7 +152,12 @@ public class Model {
      *  Simulation
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    public void nextTick() { God.processGrid(grid); }
+    public void gridStateTick(){ gridState.play(); }
+
+    public void nextTick() {
+        gridStateTick();
+        God.processGrid(grid);
+    }
 
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -196,4 +226,9 @@ public class Model {
     public int getGridSize() {
         return grid.getSize();
     }
+
+    /**
+     * @return Collection of all vehicles currently in the grid.
+     */
+    public Collection<Vehicle> getVehicles() { return gridState.getVehicles(); }
 }

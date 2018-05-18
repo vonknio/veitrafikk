@@ -127,6 +127,7 @@ public class Controller {
 
     private void nextTick(ActionEvent e) {
         model.nextTick();
+        view.nextTick();
     }
 
 }
