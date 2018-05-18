@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 public class View {
     Menu menu;
     MapEditor mapEditor;
-    private Object active = null;
+    private Object active;
     private boolean isVisible = false;
 
     public View() {
@@ -36,6 +36,10 @@ public class View {
         active = mapEditor;
         if (isVisible)
             mapEditor.setVisible(true);
+    }
+
+    public void nextTick(){
+        //TODO
     }
 
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

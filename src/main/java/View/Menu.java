@@ -12,8 +12,6 @@ class Menu extends JFrame {
     private JButton start;
     private JButton quit;
 
-    MapEditor mapEditor;
-
     public Menu (){
         create();
     }
