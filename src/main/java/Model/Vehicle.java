@@ -7,10 +7,10 @@ import java.util.List;
  * Class representing a vehicle.
  */
 class Vehicle {
-    Vertex prev;
-    Vertex cur;
-    Vertex next;
-    Vertex dest;
+    private Vertex prev;
+    private Vertex cur;
+    private Vertex next;
+    private Vertex dest;
 
     final ObjectStatistics stats;
 
@@ -29,6 +29,38 @@ class Vehicle {
         this.dest = dest;
         this.stats = stats;
     }
+
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *  Getters and setters
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    Vertex getCur() { return cur; }
+
+    Vertex getNext() { return next; }
+
+    Vertex getPrev() { return prev; }
+
+    Vertex getDest() { return dest; }
+
+    void setCur(Vertex vertex) { cur = vertex; }
+
+    void setPrev(Vertex vertex) { prev = vertex; }
+
+    void setNext(Vertex vertex) {
+        if (vertex.getVertexType() != Vertex.VertexType.IN)
+            throw new IllegalArgumentException("Next field should always have IN type.");
+        next = vertex;
+    }
+
+    void setNextSafe(Vertex vertex, Grid grid) {
+        if (vertex.getVertexType() != Vertex.VertexType.IN)
+            next = grid.getOther(vertex);
+        else next = vertex;
+
+    }
+
+    void setDest(Vertex vertex) { dest = vertex; }
 
     class VehicleStatistics implements ObjectStatistics {
         private long idleTicks = 0;

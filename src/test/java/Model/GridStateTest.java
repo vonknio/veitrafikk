@@ -70,31 +70,31 @@ public class GridStateTest {
         model.getGridState().updateForNextTimetick();
         int i = 1;
         for (Vehicle v : model.getVehicles())
-            v.next = model.getGrid().getVertexIn(0, i--);
+             v.setNextSafe(model.getGrid().getVertexIn(0, i--), model.getGrid());
         God.processTimetick(model);
 
         model.getGridState().updateForNextTimetick();
         i = 2;
         for (Vehicle v : model.getVehicles())
-            v.next = model.getGrid().getVertexIn(0, i--);
+            v.setNextSafe(model.getGrid().getVertexIn(0, i--), model.getGrid());
         God.processTimetick(model);
 
         model.getGridState().updateForNextTimetick();
         i = 3;
         for (Vehicle v : model.getVehicles())
-            v.next = model.getGrid().getVertexIn(0, i--);
+            v.setNextSafe(model.getGrid().getVertexIn(0, i--), model.getGrid());
         God.processTimetick(model);
 
         model.getGridState().updateForNextTimetick();
         i = 4;
         for (Vehicle v : model.getVehicles())
-            v.next = model.getGrid().getVertexIn(0, i--);
+            v.setNextSafe(model.getGrid().getVertexIn(0, i--), model.getGrid());
         God.processTimetick(model);
 
         model.getGridState().updateForNextTimetick();
         i = 5;
         for (Vehicle v : model.getVehicles())
-            v.next = model.getGrid().getVertexIn(0, i--);
+            v.setNextSafe(model.getGrid().getVertexIn(0, i--), model.getGrid());
         God.processTimetick(model);
 
         assertEquals(5, model.getVehicles().size());

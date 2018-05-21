@@ -36,7 +36,7 @@ class GridState {
     void addSource(Source source) { sources.add(source); }
 
     void removeVehicle(Vehicle vehicle) {
-        vehicle.cur.removeVehicle();
+        vehicle.getCur().removeVehicle();
         vehicles.remove(vehicle);
     }
 

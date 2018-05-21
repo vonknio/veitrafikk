@@ -23,10 +23,10 @@ public class GodTest {
 
         God.setRandomDestination(
                 vehicle,
-                grid.getNeighbours(vehicle.cur)
+                grid.getNeighbours(vehicle.getCur())
         );
 
-        assertTrue(TestUtils.areNeighboursCompressed(vehicle.cur, vehicle.dest, grid));
+        assertTrue(TestUtils.areNeighboursCompressed(vehicle.getCur(), vehicle.getDest(), grid));
     }
 
     @Test
@@ -42,8 +42,8 @@ public class GodTest {
         God.setRandomDestination(vehicleSet, vertices);
 
         for (Vehicle vehicle : vehicleSet) {
-            assertTrue(vertices.contains(vehicle.dest));
-            assertNotSame(vehicle.dest, vehicle.cur);
+            assertTrue(vertices.contains(vehicle.getDest()));
+            assertNotSame(vehicle.getDest(), vehicle.getCur());
         }
     }
 
@@ -81,8 +81,8 @@ public class GodTest {
         God.setRandomDestination(vehicles, vertices);
 
         for (Vehicle vehicle : vehicles) {
-            assertTrue(vehicle.next.getVertexType() == Vertex.VertexType.IN);
-            assertEquals(grid.getVertexIn(5, 5), vehicle.next);
+            assertTrue(vehicle.getNext().getVertexType() == Vertex.VertexType.IN);
+            assertEquals(grid.getVertexIn(5, 5), vehicle.getNext());
         }
 
     }
@@ -94,8 +94,8 @@ public class GodTest {
         grid.getVertexIn(0, 0).setVehicle(vehicle);
         gridState.addVehicle(vehicle);
 
-        grid.getVertexIn(0, 0).getVehicle().dest = grid.getVertexIn(0, 2);
-        grid.getVertexIn(0, 0).getVehicle().next = grid.getVertexIn(0, 1);
+        grid.getVertexIn(0, 0).getVehicle().setDest(grid.getVertexIn(0, 2));
+        grid.getVertexIn(0, 0).getVehicle().setNextSafe(grid.getVertex(0, 1), grid);
 
         assertTrue(grid.getVertexIn(0, 0).hasVehicle() ||
                 grid.getVertexOut(0, 0).hasVehicle());
@@ -115,8 +115,8 @@ public class GodTest {
         Vehicle vehicle = new Vehicle(grid.getVertex(0, 0));
         gridState.addVehicle(vehicle);
         grid.getVertex(0, 0).setVehicle(vehicle);
-        vehicle.dest = grid.getVertexOut(0, 1);
-        vehicle.next = grid.getVertexIn(0, 1);
+        vehicle.setDest(grid.getVertexOut(0, 1));
+        vehicle.setNextSafe(grid.getVertexIn(0, 1), grid);
 
         assertTrue(God.processTimetick(model));
         assertFalse(TestUtils.compressedVertexHasVehicle(0, 0, grid));
@@ -131,7 +131,7 @@ public class GodTest {
             Vehicle vehicle = new Vehicle(grid.getVertexIn(0, i));
             grid.getVertexIn(0, i).setVehicle(vehicle);
             gridState.addVehicle(vehicle);
-            grid.getVertexIn(0, i).getVehicle().next = grid.getVertexIn(0, i+1);
+            grid.getVertexIn(0, i).getVehicle().setNextSafe(grid.getVertexIn(0, i+1), grid);
             assertTrue(grid.getVertexIn(0, i).hasVehicle());
         }
 
@@ -176,14 +176,14 @@ public class GodTest {
         gridState.addVehicle(vehicle3);
         gridState.addVehicle(vehicle4);
 
-        grid.getVertexIn(0, 0).getVehicle().next =
-                grid.getVertexIn(0, 1);
-        grid.getVertexIn(0, 1).getVehicle().next =
-                grid.getVertexIn(1, 1);
-        grid.getVertexIn(1, 1).getVehicle().next =
-                grid.getVertexIn(1, 2);
-        grid.getVertexIn(1, 2).getVehicle().next =
-                grid.getVertexIn(2, 2);
+        grid.getVertexIn(0, 0).getVehicle().setNextSafe(
+                grid.getVertex(0, 1), grid);
+        grid.getVertexIn(0, 1).getVehicle().setNextSafe(
+                grid.getVertex(1, 1), grid);
+        grid.getVertexIn(1, 1).getVehicle().setNextSafe(
+                grid.getVertex(1, 2), grid);
+        grid.getVertexIn(1, 2).getVehicle().setNextSafe(
+                grid.getVertex(2, 2), grid);
 
         assertTrue(God.processTimetick(model));
 
@@ -249,11 +249,11 @@ v       |
         gridState.addVehicle(vehicle1);
         gridState.addVehicle(vehicle2);
 
-        vehicle1.dest = grid.getVertexIn(6, 5);
-        vehicle2.dest = grid.getVertexIn(4, 5);
+        vehicle1.setDest(grid.getVertex(6, 5));
+        vehicle2.setDest(grid.getVertex(4, 5));
 
-        vehicle1.next = grid.getVertexIn(5, 5);
-        vehicle2.next = grid.getVertexIn(5, 5);
+        vehicle1.setNextSafe(grid.getVertexIn(5, 5) , grid);
+        vehicle2.setNextSafe(grid.getVertexIn(5, 5), grid);
 
         God.processTimetick(model);
 
@@ -264,8 +264,8 @@ v       |
                 grid.getVertexOut(5, 5).hasVehicle() &&
                 grid.getVertexIn(5, 5).getVehicle() != grid.getVertexOut(5, 5).getVehicle());
 
-        vehicle1.next = grid.getVertexIn(5, 4);
-        vehicle2.next = grid.getVertexIn(5, 6);
+        vehicle1.setNextSafe(grid.getVertexIn(5, 4), grid);
+        vehicle2.setNextSafe(grid.getVertexIn(5, 6), grid);
 
         God.processTimetick(model);
 
@@ -311,7 +311,7 @@ v       |
         God.setDestinationForNextTick(gridState.getVehicles(), model);
         God.processTimetick(model);
 
-        assertTrue(TestUtils.compressedEquals(grid.getVertex(0, 1), vehicle.cur));
+        assertTrue(TestUtils.compressedEquals(grid.getVertex(0, 1), vehicle.getCur()));
     }
 
     @Test
@@ -342,8 +342,8 @@ v       |
         God.setDestinationForNextTick(vehicles, model);
         God.processTimetick(model);
 
-        assertTrue(TestUtils.compressedEquals(grid.getVertex(0, 1), vehicle.cur));
-        assertTrue(TestUtils.compressedEquals(grid.getVertex(1, 0), vehicle2.cur));
-        assertTrue(TestUtils.compressedEquals(grid.getVertex(0, 0), vehicle3.cur));
+        assertTrue(TestUtils.compressedEquals(grid.getVertex(0, 1), vehicle.getCur()));
+        assertTrue(TestUtils.compressedEquals(grid.getVertex(1, 0), vehicle2.getCur()));
+        assertTrue(TestUtils.compressedEquals(grid.getVertex(0, 0), vehicle3.getCur()));
     }
 }

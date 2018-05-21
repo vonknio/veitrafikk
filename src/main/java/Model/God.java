@@ -26,9 +26,9 @@ abstract class God {
         List<Vehicle> vehicles = model.getGridState().getVehicles();
 
         vehicles.sort((x, y) -> {
-            if (x.cur.getVertexType() == y.cur.getVertexType())
+            if (x.getCur().getVertexType() == y.getCur().getVertexType())
                 return 0;
-            if (x.cur.getVertexType() == Vertex.VertexType.IN)
+            if (x.getCur().getVertexType() == Vertex.VertexType.IN)
                 return 1;
             return -1;
         });
@@ -41,7 +41,7 @@ abstract class God {
         for (Vertex vertex : grid.getVertices()) {
             Statistics.process(vertex);
             if (vertex.hasVehicle() &&
-                    TestUtils.vehicleIsInCompressedVertex(vertex.getVehicle(), vertex.getVehicle().dest, grid)) {
+                    TestUtils.vehicleIsInCompressedVertex(vertex.getVehicle(), vertex.getVehicle().getDest(), grid)) {
                 // celebrate this fact somehow
                 model.getGridState().removeVehicle(vertex.getVehicle());
             }
@@ -62,8 +62,8 @@ abstract class God {
             return false;
 
         processed.add(vehicle);
-        Vertex vertex = vehicle.cur;
-        Vertex next = vehicle.next;
+        Vertex vertex = vehicle.getCur();
+        Vertex next = vehicle.getNext();
 
         if (vertex.getVertexType() == Vertex.VertexType.IN) {
             swapInAndOut(vertex);
@@ -76,12 +76,12 @@ abstract class God {
         if (next.hasVehicle() && !moveVehicle(next.getVehicle(), processed))
             return false;
 
-        vehicle.prev = vehicle.cur;
-        vehicle.cur = vehicle.next;
-        vehicle.next = getDestinationForNextTick(vehicle);
+        vehicle.setPrev(vehicle.getCur());
+        vehicle.setCur(vehicle.getNext());
+        vehicle.setNext(getDestinationForNextTick(vehicle));
 
         vertex.removeVehicle();
-        vehicle.cur.setVehicle(vehicle);
+        vehicle.getCur().setVehicle(vehicle);
 
         return true;
     }
@@ -93,9 +93,9 @@ abstract class God {
         other.setVehicle(temp);
 
         if (vertex.hasVehicle())
-            vertex.getVehicle().cur = vertex;
+            vertex.getVehicle().setCur(vertex);
         if (other.hasVehicle())
-            other.getVehicle().cur = other;
+            other.getVehicle().setCur(other);
     }
 
 
@@ -124,10 +124,10 @@ abstract class God {
      */
     static void setRandomDestination(Vehicle vehicle, List<Vertex> availableDestinations) {
         do {
-            vehicle.dest = availableDestinations.get(
+            vehicle.setDest(availableDestinations.get(
                     (new Random()).nextInt(availableDestinations.size())
-            );
-        } while (availableDestinations.size() > 1 && vehicle.dest == vehicle.cur);
+            ));
+        } while (availableDestinations.size() > 1 && vehicle.getDest().equals(vehicle.getCur()));
     }
 
     /**
@@ -141,7 +141,7 @@ abstract class God {
         setGrid(model.getGrid());
 
         for (Vehicle vehicle : vehicles)
-            vehicle.next = getDestinationForNextTick(vehicle);
+            vehicle.setNext(getDestinationForNextTick(vehicle));
     }
 
     /**

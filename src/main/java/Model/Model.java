@@ -145,7 +145,6 @@ public class Model {
         return res;
     }
 
-
     /**
      * @return Grid on which the model is operating.
      */
