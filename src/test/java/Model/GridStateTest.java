@@ -1,6 +1,5 @@
 package Model;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,12 +41,15 @@ public class GridStateTest {
     @Test
     public void wrongAttemptsTest(){
         model.addSource(0, 0, 1, 1);
-        model.addSource(0, 0, 1, 0);
-        model.gridStateTick();
-        assertTrue(model.getVehicles().size() == 0);
+        try {
+            model.addSource(0, 0, 1, 0);
+            fail("No exception");
+        } catch (IllegalArgumentException e) {}
+        model.getGridState().updateForNextTimetick();
+        assertEquals(0, model.getVehicles().size());
         model.addSink(5, 6);
-        model.gridStateTick();
-        assertTrue(model.getVehicles().size() == 1);
+        model.getGridState().updateForNextTimetick();
+        assertEquals(1, model.getVehicles().size());
     }
 
     /*
@@ -65,40 +67,40 @@ public class GridStateTest {
         model.addSink(5, 6);
         model.addSource(0, 0, 5, 1);
 
-        model.gridStateTick();
+        model.getGridState().updateForNextTimetick();
         int i = 1;
         for (Vehicle v : model.getVehicles())
-            v.next = model.getVertex(0, i--);
-        God.processGrid(model.getGrid());
+            v.next = model.getGrid().getVertexIn(0, i--);
+        God.processTimetick(model);
 
-        model.gridStateTick();
+        model.getGridState().updateForNextTimetick();
         i = 2;
         for (Vehicle v : model.getVehicles())
-            v.next = model.getVertex(0, i--);
-        God.processGrid(model.getGrid());
+            v.next = model.getGrid().getVertexIn(0, i--);
+        God.processTimetick(model);
 
-        model.gridStateTick();
+        model.getGridState().updateForNextTimetick();
         i = 3;
         for (Vehicle v : model.getVehicles())
-            v.next = model.getVertex(0, i--);
-        God.processGrid(model.getGrid());
+            v.next = model.getGrid().getVertexIn(0, i--);
+        God.processTimetick(model);
 
-        model.gridStateTick();
+        model.getGridState().updateForNextTimetick();
         i = 4;
         for (Vehicle v : model.getVehicles())
-            v.next = model.getVertex(0, i--);
-        God.processGrid(model.getGrid());
+            v.next = model.getGrid().getVertexIn(0, i--);
+        God.processTimetick(model);
 
-        model.gridStateTick();
+        model.getGridState().updateForNextTimetick();
         i = 5;
         for (Vehicle v : model.getVehicles())
-            v.next = model.getVertex(0, i--);
-        God.processGrid(model.getGrid());
+            v.next = model.getGrid().getVertexIn(0, i--);
+        God.processTimetick(model);
 
-        assertTrue(model.getVehicles().size() == 5);
-        model.gridStateTick();
+        assertEquals(5, model.getVehicles().size());
+        model.getGridState().updateForNextTimetick();
 
-        assertTrue(model.getVehicles().size() == 5);
+        assertEquals(5, model.getVehicles().size());
     }
 
 }

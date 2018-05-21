@@ -1,8 +1,7 @@
 package Model;
-
 import java.util.Random;
 
-public class Source extends Vertex {
+class Source extends Vertex {
     private long fill;
     private long limit;
     private float probability;
@@ -13,23 +12,23 @@ public class Source extends Vertex {
         setProbability(probability);
     }
 
-    public void setLimit(long limit) {
+    void setLimit(long limit) {
         this.limit = limit;
     }
 
-    public long getLimit() { return limit; }
+    long getLimit() { return limit; }
 
-    public void setProbability(float probability) {
-        if (probability < 0 || probability > 1)
+    void setProbability(float probability) {
+        if (probability <= 0 || probability > 1)
             throw new IllegalArgumentException();
         this.probability = probability;
     }
 
-    public float getProbability() {
+    float getProbability() {
         return probability;
     }
 
-    public Vehicle spawnVehicle(Sink sink){
+    Vehicle spawnVehicle(Sink sink){
         Vehicle vehicle = new Vehicle(this, sink);
         setVehicle(vehicle);
         fill++;
@@ -38,6 +37,6 @@ public class Source extends Vertex {
 
     private float throwDice() { return new Random().nextFloat(); }
 
-    public boolean canSpawnVehicle(){ return fill < limit && !hasVehicle() && throwDice() <= probability; }
+    boolean canSpawnVehicle(){ return fill < limit && !hasVehicle() && throwDice() <= probability; }
 
 }

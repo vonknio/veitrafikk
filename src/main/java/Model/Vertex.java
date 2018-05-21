@@ -24,9 +24,7 @@ class Vertex {
         this.stats = stats;
     }
 
-    VertexType getVertexType() {
-        return type;
-    }
+    VertexType getVertexType() { return type; }
 
     void setVertexType(VertexType vertexType) {
         this.type = vertexType;
@@ -39,6 +37,11 @@ class Vertex {
     void setVehicle(Vehicle vehicle) { this.vehicle = vehicle; }
 
     void removeVehicle() { this.vehicle = null; }
+
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
 
     enum VertexType {
         IN,

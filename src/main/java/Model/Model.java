@@ -22,6 +22,8 @@ public class Model {
         gridState = new GridState();
     }
 
+    public void setGrid(Grid grid) { this.grid = grid; }
+
     /**
      * Add a road to the grid.
      * @param x1 X coordinate of first vertex.
@@ -56,7 +58,6 @@ public class Model {
         grid.addSource(x1, y1, 10, 1);
     }
 
-
     /**
      * Add a sink vertex to the grid.
      * @param x1 X coordinate.
@@ -74,26 +75,22 @@ public class Model {
      */
     public void removeVertexClassifiers(int x1, int y1) { grid.removeVertexClassifiers(x1, y1); }
 
-    /**
-     * @param x1 X coordinate of the vertex
-     * @param y1 Y coordinate of the vertex
-     * @return Whether given vertex has no more than one road - a dead end
-     */
-    public boolean isLastRoad(int x1, int y1) {
-        return grid.getNeighbours(x1, y1) == null || grid.getNeighbours(x1, y1).size() == 1;
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *  Simulation
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    public void nextTick() {
+        God.processTimetick(this);
     }
 
-    /**
-     * @param x1 X coordinate of the vertex
-     * @param y1 Y coordinate of the vertex
-     * @return Vertex at the given point of the grid or null if it does not exist
-     */
-    public Vertex getVertex(int x1, int y1) { return grid.getVertex(x1, y1); }
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *  Getters
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * @return Grid on which the model is operating
+     * @return Size of the grid's side in vertices.
      */
-    public Grid getGrid() { return grid; }
+    public int getGridSize() { return grid.getSize(); }
 
     /**
      * Get coordinates of the longest road that expands given road without crossing any crossroads.
@@ -144,20 +141,32 @@ public class Model {
             a2 = p;
             res = new int[]{a1, y1, a2, y1};
         }
-        
+
         return res;
     }
 
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *  Simulation
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    public void gridStateTick(){ gridState.play(); }
+    /**
+     * @return Grid on which the model is operating.
+     */
+    Grid getGrid() { return grid; }
 
-    public void nextTick() {
-        gridStateTick();
-        God.processGrid(grid);
-    }
+    /**
+     * @return GridState assotiated with the model.
+     */
+    GridState getGridState() { return gridState; }
+
+    /**
+     * @param x1 X coordinate of the vertex.
+     * @param y1 Y coordinate of the vertex.
+     * @return Vertex at the given point of the grid or null if it does not exist.
+     */
+    Vertex getVertex(int x1, int y1) { return grid.getVertex(x1, y1); }
+
+    /**
+     * @return Collection of all vehicles currently in the grid.
+     */
+    Collection<Vehicle> getVehicles() { return gridState.getVehicles(); }
 
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -172,7 +181,7 @@ public class Model {
      * @return Whether given vertices are connected by an edge in the grid.
      */
     public boolean areNeighbours(int x1, int y1, int x2, int y2) {
-        return grid.getNeighbours(x1, y1).contains(grid.getVertexIn(x2, y2));
+        return TestUtils.areNeighbours(x1, y1, x2, y2, grid);
     }
 
     /**
@@ -183,21 +192,16 @@ public class Model {
      * @return Whether there is a road connecting given vertices in the grid.
      */
     public boolean hasRoad(int x1, int y1, int x2, int y2) {
-        if (x1 == x2 && y1 == y2) return false;
-        if (x1 == x2) {
-            for (int i = min(y1, y2); i < max(y1, y2); i++) {
-                if (!areNeighbours(x1, i, x1, i+1))
-                    return false;
-            }
-            return true;
-        } else if (y1 == y2) {
-            for (int i = min(x1, x2); i < max(x1, x2); i++) {
-                if (!areNeighbours(i, y1, i+1, y2))
-                    return false;
-            }
-            return true;
-        }
-        return false;
+        return TestUtils.hasRoad(x1, y1, x2, y2, grid);
+    }
+
+    /**
+     * @param x1 X coordinate of the vertex
+     * @param y1 Y coordinate of the vertex
+     * @return Whether given vertex has no more than one road - a dead end.
+     */
+    public boolean isLastRoad(int x1, int y1) {
+        return grid.getNeighbours(x1, y1) == null || grid.getNeighbours(x1, y1).size() == 1;
     }
 
     /**
@@ -206,8 +210,7 @@ public class Model {
      * @return Whether given vertex is a source.
      */
     public boolean isSource(int x1, int y1) {
-        return grid.hasVertex(x1, y1) &&
-                grid.getVertexOut(x1, y1) instanceof Source;
+        return TestUtils.isSource(x1, y1, grid);
     }
 
     /**
@@ -216,19 +219,6 @@ public class Model {
      * @return Whether given vertex is a sink.
      */
     public boolean isSink(int x1, int y1) {
-        return grid.hasVertex(x1, y1) &&
-                grid.getVertexIn(x1, y1) instanceof Sink;
+       return TestUtils.isSink(x1, y1, grid);
     }
-
-    /**
-     * @return Size of the grid's side in vertices.
-     */
-    public int getGridSize() {
-        return grid.getSize();
-    }
-
-    /**
-     * @return Collection of all vehicles currently in the grid.
-     */
-    public Collection<Vehicle> getVehicles() { return gridState.getVehicles(); }
 }

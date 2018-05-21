@@ -1,9 +1,6 @@
 package Model;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 class GridState {
     private long timeTick = 0;
@@ -15,7 +12,7 @@ class GridState {
         return timeTick;
     }
 
-    void play() {
+    void updateForNextTimetick() {
         for (Source source : sources) {
             if (source.canSpawnVehicle()) {
                 Sink randomSink = getRandomSink();
@@ -26,13 +23,22 @@ class GridState {
         timeTick++;
     }
 
-    Collection<Vehicle> getVehicles() { return vehicles; }
+    List<Vehicle> getVehicles() { return vehicles; }
+
     Collection<Sink> getSinks() { return sinks; }
+
     Collection<Source> getSources() { return sources; }
 
     void addVehicle(Vehicle vehicle) { vehicles.add(vehicle); }
+
     void addSink(Sink sink) { sinks.add(sink); }
+
     void addSource(Source source) { sources.add(source); }
+
+    void removeVehicle(Vehicle vehicle) {
+        vehicle.cur.removeVehicle();
+        vehicles.remove(vehicle);
+    }
 
     private Sink getRandomSink(){
         if (sinks.isEmpty()) return null;

@@ -255,14 +255,37 @@ class Grid {
         return vertices[x * size + y][0];
     }
 
+    Vertex getVertexIn(Vertex out) {
+        if (out.getVertexType() != Vertex.VertexType.OUT)
+            throw new IllegalArgumentException();
+        return getVertexIn(out.x, out.y);
+    }
+
     Vertex getVertexOut(int x, int y) {
         if (x < 0 || y < 0 || x >= size || y >= size)
             throw new IllegalArgumentException();
         return vertices[x * size + y][1];
     }
 
+    Vertex getVertexOut(Vertex in) {
+        if (in.getVertexType() != Vertex.VertexType.IN)
+            throw new IllegalArgumentException();
+        return getVertexOut(in.x, in.y);
+    }
+
     Vertex getVertex(int x, int y) {
         return getVertexOut(x, y);
+    }
+
+    /**
+     * @return Corresponding IN/OUT vertex of given vertex.
+     */
+    Vertex getOther(Vertex vertex) {
+        if (vertex.getVertexType() == Vertex.VertexType.OUT)
+            return getVertexIn(vertex);
+        if (vertex.getVertexType() == Vertex.VertexType.IN)
+            return getVertexOut(vertex);
+        throw new IllegalStateException();
     }
 
     /**
