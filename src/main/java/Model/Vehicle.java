@@ -57,7 +57,6 @@ class Vehicle {
         if (vertex.getVertexType() != Vertex.VertexType.IN)
             next = grid.getOther(vertex);
         else next = vertex;
-
     }
 
     void setDest(Vertex vertex) { dest = vertex; }
@@ -77,12 +76,12 @@ class Vehicle {
 
         private void updateTime() {
             ticksAlive++;
-            if (prev == cur)
+            if (TestUtils.compressedEquals(prev, cur))
                 idleTicks++;
         }
 
         private void updatePath() {
-            if (prev != cur)
+            if (!TestUtils.compressedEquals(prev, cur))
                 path.add(cur);
         }
 
