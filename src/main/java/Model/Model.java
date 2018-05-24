@@ -1,6 +1,7 @@
 package Model;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 import static java.lang.Integer.max;
 import static java.lang.Integer.min;
@@ -48,6 +49,8 @@ public class Model {
      * Add a source vertex to the grid.
      * @param x1 X coordinate.
      * @param y1 Y coordinate.
+     * @param limit limit of vehicles spawned from source during whole simulation.
+     * @param probability probability of spawning a new vehicle in each tick.
      */
     public void addSource(int x1, int y1, long limit, float probability) {
         grid.addSource(x1, y1, limit, probability);
@@ -55,7 +58,7 @@ public class Model {
     }
 
     public void addSource(int x1, int y1) {
-        grid.addSource(x1, y1, 10, 1);
+        addSource(x1, y1, 10, 1);
     }
 
     /**
@@ -79,9 +82,7 @@ public class Model {
      *  Simulation
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    public void nextTick() {
-        God.processTimetick(this);
-    }
+    public void nextTick() { God.processTimetick(this); }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Getters
@@ -220,4 +221,25 @@ public class Model {
     public boolean isSink(int x1, int y1) {
        return TestUtils.isSink(x1, y1, grid);
     }
+
+    /**
+     * @return Linked list of coordinates of previous vertex, current vertex and id for each Vehicle
+     */
+    public Collection<int[]> getAllVehicleCoordinates() {
+        LinkedList<int[]> result = new LinkedList<>();
+        Collection<Vehicle> vehicles = getVehicles();
+        for (Vehicle v : vehicles){
+            int[] coords = new int[7];
+            coords[0] = v.getPrev().getXCoordinate();
+            coords[1] = v.getPrev().getYCoordinate();
+            coords[2] = v.getCur().getXCoordinate();
+            coords[3] = v.getCur().getYCoordinate();
+            coords[4] = v.getNext().getXCoordinate();
+            coords[5] = v.getNext().getYCoordinate();
+            coords[6] = v.getId();
+            result.add(coords);
+        }
+        return result;
+    }
+
 }

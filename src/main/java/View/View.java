@@ -1,6 +1,7 @@
 package View;
 
 import java.awt.event.ActionListener;
+import java.util.Collection;
 
 public class View {
     Menu menu;
@@ -64,6 +65,7 @@ public class View {
         throw new IllegalStateException();
     }
 
+    public void updateVehicles(Collection<int[]> coordinates){ mapEditor.updateVehicles(coordinates); }
 
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Draw

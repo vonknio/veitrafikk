@@ -8,7 +8,7 @@ import java.util.*;
  */
 abstract class God {
     private static Grid grid;
-    private static Mode mode = Mode.RANDOM;
+    private static Mode mode = Mode.SHORTEST_PATH;
     private static PathPlanner pathPlanner = mode.getPlanner();
 
     /**
@@ -64,6 +64,11 @@ abstract class God {
         processed.add(vehicle);
         Vertex vertex = vehicle.getCur();
         Vertex next = vehicle.getNext();
+
+        if (next == null) {
+            vehicle.setNext(getDestinationForNextTick(vehicle));
+            next = vehicle.getNext();
+        }
 
         if (vertex.getVertexType() == Vertex.VertexType.IN) {
             swapInAndOut(vertex);

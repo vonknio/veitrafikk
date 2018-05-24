@@ -11,6 +11,8 @@ class Vehicle {
     private Vertex cur;
     private Vertex next;
     private Vertex dest;
+    private int id;
+    private static int idCounter = 0;
 
     final ObjectStatistics stats;
 
@@ -19,15 +21,19 @@ class Vehicle {
     }
 
     Vehicle(Vertex cur, Vertex dest) {
+        this.prev = cur;
         this.cur = cur;
         this.dest = dest;
         this.stats = new VehicleStatistics();
+        this.id = idCounter++;
     }
 
     Vehicle(Vertex cur, Vertex dest, ObjectStatistics stats) {
+        this.prev = cur;
         this.cur = cur;
         this.dest = dest;
         this.stats = stats;
+        this.id = idCounter++;
     }
 
 
@@ -42,6 +48,8 @@ class Vehicle {
     Vertex getPrev() { return prev; }
 
     Vertex getDest() { return dest; }
+
+    int getId() { return id; }
 
     void setCur(Vertex vertex) { cur = vertex; }
 

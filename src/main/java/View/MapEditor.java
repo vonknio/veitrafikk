@@ -3,6 +3,7 @@ package View;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 
 class MapEditor {
 
@@ -124,9 +125,12 @@ class MapEditor {
 
     public void removeSpecialVertex(int x1, int y1) { mapPlanner.removeSpecialVertex(x1, y1); }
 
+    public void updateVehicles(Collection<int[]> coordinates) { mapPlanner.updateVehicles(coordinates); }
+
     public void addNextTickListener(ActionListener listener) {
         start.addActionListener(e -> {
             mapPlanner.blockDrawing = true;
+            mapPlanner.timer.start();
             drawingButtons.setVisible(false);
             start.setText("Next tick");
             listener.actionPerformed(e);

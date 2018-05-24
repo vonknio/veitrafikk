@@ -24,6 +24,17 @@ class Vertex {
         this.stats = stats;
     }
 
+    int[] getCoordinates () {
+        int[] coordinates = new int[2];
+        coordinates[0] = this.x;
+        coordinates[1] = this.y;
+        return coordinates;
+    }
+
+    int getXCoordinate () { return this.x; }
+
+    int getYCoordinate () { return this.y; }
+
     VertexType getVertexType() { return type; }
 
     void setVertexType(VertexType vertexType) {

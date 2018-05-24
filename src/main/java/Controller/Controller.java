@@ -2,6 +2,8 @@ package Controller;
 import Model.Model;
 import View.View;
 import java.awt.event.ActionEvent;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.logging.Logger;
 import static java.lang.Integer.max;
 
@@ -127,6 +129,8 @@ public class Controller {
 
     private void nextTick(ActionEvent e) {
         model.nextTick();
+        Collection<int[]> vehicleCoordinates = model.getAllVehicleCoordinates();
+        view.updateVehicles(vehicleCoordinates);
         view.nextTick();
     }
 
