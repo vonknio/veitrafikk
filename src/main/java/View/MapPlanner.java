@@ -435,7 +435,6 @@ class MapPlanner extends JPanel {
             VehicleImage vehicle = entry.getValue();
             g.drawImage(vehicle.bufferedImage, vehicle.currentPosition[0], vehicle.currentPosition[1], null);
         }
-        repaint();
     }
 
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
