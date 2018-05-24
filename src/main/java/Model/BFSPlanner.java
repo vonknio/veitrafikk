@@ -11,6 +11,7 @@ class BFSPlanner implements PathPlanner {
     // At any given moment such a path should connect vehicle's current position
     // and its destination.
     private Map<Vehicle, Stack<Vertex>> paths = new HashMap<>();
+    private Map<Vehicle, Vertex> dests = new HashMap<>();
 
     @Override @NotNull
     public Vertex getDestinationForNextTick(Vehicle vehicle, Grid grid) {
@@ -18,10 +19,14 @@ class BFSPlanner implements PathPlanner {
            return vehicle.getCur().getVertexType() == Vertex.VertexType.IN ?
                    vehicle.getCur() : grid.getOther(vehicle.getCur());
 
-        if (!paths.containsKey(vehicle) || paths.get(vehicle).isEmpty())
+        if (!dests.containsKey(vehicle) ||
+                !TestUtils.compressedEquals(dests.get(vehicle), vehicle.getDest()) ||
+                paths.get(vehicle).isEmpty())
             planPath(vehicle, grid);
 
-        return paths.get(vehicle).pop();
+        Stack<Vertex> path = paths.get(vehicle);
+        if (path.peek() == vehicle.getCur()) path.pop();
+        return paths.get(vehicle).peek();
     }
 
     /**
@@ -64,6 +69,8 @@ class BFSPlanner implements PathPlanner {
                 path.push(cur);
             cur = parents.get(cur);
         }
+
         paths.put(vehicle, path);
+        dests.put(vehicle, dest);
     }
 }

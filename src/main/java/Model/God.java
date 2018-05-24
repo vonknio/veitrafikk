@@ -91,6 +91,11 @@ abstract class God {
         return true;
     }
 
+
+
+    /**
+     * Swaps vehicles of given vertex and its corresponding IN/OUT vertex.
+     */
     private static void swapInAndOut(Vertex vertex) {
         Vertex other = grid.getOther(vertex);
         Vehicle temp = vertex.getVehicle();
@@ -132,12 +137,12 @@ abstract class God {
             vehicle.setDest(availableDestinations.get(
                     (new Random()).nextInt(availableDestinations.size())
             ));
-        } while (availableDestinations.size() > 1 && vehicle.getDest().equals(vehicle.getCur()));
+        } while (availableDestinations.size() > 1 &&
+                TestUtils.compressedEquals(vehicle.getDest(), vehicle.getCur()));
     }
 
     /**
      * Sets the 'next' field of given vehicles to a possible destination for next timetick.
-     * The type of the 'next' vertex will always be IN.
      * The type of the 'next' vertex will always be IN.
      *  @param vehicles Vehicles to assign next tick destinations to.
      * @param model     Grid to operate on.
@@ -146,7 +151,19 @@ abstract class God {
         setGrid(model.getGrid());
 
         for (Vehicle vehicle : vehicles)
-            vehicle.setNext(getDestinationForNextTick(vehicle));
+            setDestinationForNextTick(vehicle, model);
+    }
+
+    /**
+     * Sets the 'next' field of given vehicle to a possible destination for next timetick.
+     * The type of the 'next' vertex will always be IN.
+     * @param vehicle Vehicle to assign next tick destination to.
+     * @param model     Grid to operate on.
+     */
+    static void setDestinationForNextTick(Vehicle vehicle, Model model) {
+        setGrid(model.getGrid());
+
+        vehicle.setNext(getDestinationForNextTick(vehicle));
     }
 
     /**
@@ -171,9 +188,7 @@ abstract class God {
      *
      * @param grid Grid to set.
      */
-    private static void setGrid(Grid grid) {
-        God.grid = grid;
-    }
+    private static void setGrid(Grid grid) { God.grid = grid; }
 
     /**
      * Set God to operate in one of available modes. Mode determines path planning algorithms.
@@ -193,25 +208,18 @@ abstract class God {
      *
      * @see God.Mode
      */
-    static Mode getMode() {
-        return mode;
-    }
+    static Mode getMode() { return mode; }
 
     enum Mode {
         // Each vehicle's path is a random walk generated on the go.
         RANDOM {
-            PathPlanner getPlanner() {
-                return new RandomPlanner();
-            }
+            PathPlanner getPlanner() { return new RandomPlanner(); }
         },
         // Each vehicle's path is optimal but fixed.
         SHORTEST_PATH {
-            PathPlanner getPlanner() {
-                return new BFSPlanner();
-            }
+            PathPlanner getPlanner() { return new BFSPlanner(); }
         };
 
         abstract PathPlanner getPlanner();
     }
 }
-

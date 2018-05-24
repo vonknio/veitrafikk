@@ -42,13 +42,14 @@ V-------+
         grid.addRoad(0, 9, 9, 9);
         grid.addRoad(9, 0, 9, 9);
 
-        Vehicle vehicle = new Vehicle(grid.getVertex(0, 0), grid.getVertexOut(0, 9));
+        Vehicle vehicle = new Vehicle(grid.getVertex(0, 0), grid.getVertexIn(0, 9));
         grid.getVertex(0, 0).setVehicle(vehicle);
 
         for (int i = 1; i <= 9; ++i) {
-            System.out.println(i);
+            vehicle.setNext(planner.getDestinationForNextTick(vehicle, grid));
             assertTrue(TestUtils.compressedEquals(grid.getVertex(0, i),
-                    planner.getDestinationForNextTick(vehicle, grid)));
+                    vehicle.getNext()));
+            vehicle.setCur(vehicle.getNext());
         }
     }
 }

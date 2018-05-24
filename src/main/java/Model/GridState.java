@@ -31,9 +31,15 @@ class GridState {
 
     void addVehicle(Vehicle vehicle) { vehicles.add(vehicle); }
 
-    void addSink(Sink sink) { sinks.add(sink); }
+    void addSink(Sink sink) {
+        sinks.removeIf((x) -> TestUtils.compressedEquals(x, sink));
+        sinks.add(sink);
+    }
 
-    void addSource(Source source) { sources.add(source); }
+    void addSource(Source source) {
+        sources.removeIf((x) -> TestUtils.compressedEquals(x, source));
+        sources.add(source);
+    }
 
     void removeVehicle(Vehicle vehicle) {
         vehicle.getCur().removeVehicle();

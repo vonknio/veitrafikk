@@ -11,6 +11,12 @@ public class GodTest {
    private Grid grid = model.getGrid();
    private GridState gridState = model.getGridState();
 
+   private void turnEveryVertexIntoSink() {
+       for (Vertex vertex : grid.getVertices()) {
+         model.addSink(vertex.x, vertex.y);
+       }
+   }
+
     @Test
     public void testSetRandomDestinationForOneVehicle() {
         grid.addRoad(5, 5, 5, 6);
@@ -18,8 +24,10 @@ public class GodTest {
         grid.addRoad(5, 5, 6, 5);
         grid.addRoad(5, 5, 4, 5);
 
-        Vehicle vehicle = new Vehicle(grid.getVertexOut(5, 5));
-        grid.getVertexOut(5, 5).setVehicle(vehicle);
+       // Vehicle vehicle = new Vehicle(grid.getVertexOut(5, 5));
+       // grid.getVertexOut(5, 5).setVehicle(vehicle);
+        turnEveryVertexIntoSink();
+        Vehicle vehicle = TestUtils.createVehicleOnGrid(5, 5, model);
 
         God.setRandomDestination(
                 vehicle,
@@ -61,10 +69,10 @@ public class GodTest {
         vertices.add(grid.getVertex(6, 5));
         vertices.add(grid.getVertex(4, 5));
 
-        for(Vertex vertex : vertices) {
-            vertex.setVehicle(new Vehicle(vertex));
-            vehicles.add(vertex.getVehicle());
-        }
+        turnEveryVertexIntoSink();
+
+        for(Vertex vertex : vertices)
+            TestUtils.createVehicleOnGrid(vertex, model);
 
         grid.addSource(1, 1, 10, 1);
         Vehicle lonelyVehicle = new Vehicle(grid.getVertex(1, 1));
@@ -81,7 +89,7 @@ public class GodTest {
         God.setRandomDestination(vehicles, vertices);
 
         for (Vehicle vehicle : vehicles) {
-            assertTrue(vehicle.getNext().getVertexType() == Vertex.VertexType.IN);
+            assertSame(vehicle.getNext().getVertexType(), Vertex.VertexType.IN);
             assertEquals(grid.getVertexIn(5, 5), vehicle.getNext());
         }
 
@@ -90,17 +98,12 @@ public class GodTest {
     @Test
     public void testMoveOneVehicle() {
         model.addRoad(0, 0, 0, 2);
-        Vehicle vehicle = new Vehicle(grid.getVertexIn(0, 0));
-        grid.getVertexIn(0, 0).setVehicle(vehicle);
-        gridState.addVehicle(vehicle);
+        turnEveryVertexIntoSink();
+        Vehicle vehicle = TestUtils.createVehicleOnGrid(0, 0, model);
+        vehicle.setDest(grid.getVertexIn(0, 2));
 
-        grid.getVertexIn(0, 0).getVehicle().setDest(grid.getVertexIn(0, 2));
-        grid.getVertexIn(0, 0).getVehicle().setNextSafe(grid.getVertex(0, 1), grid);
-
-        assertTrue(grid.getVertexIn(0, 0).hasVehicle() ||
-                grid.getVertexOut(0, 0).hasVehicle());
-        assertFalse(grid.getVertexIn(0, 1).hasVehicle() ||
-                grid.getVertexOut(0, 1).hasVehicle());
+        assertTrue(TestUtils.compressedVertexHasVehicle(0, 0, grid));
+        assertFalse(TestUtils.compressedVertexHasVehicle(0, 1, grid));
 
         assertTrue(God.processTimetick(model));
 
@@ -112,11 +115,7 @@ public class GodTest {
     public void testYouHaveReachedYourDestination() {
         model.addSink(0, 1);
         model.addRoad(0, 0, 0, 1);
-        Vehicle vehicle = new Vehicle(grid.getVertex(0, 0));
-        gridState.addVehicle(vehicle);
-        grid.getVertex(0, 0).setVehicle(vehicle);
-        vehicle.setDest(grid.getVertexOut(0, 1));
-        vehicle.setNextSafe(grid.getVertexIn(0, 1), grid);
+        Vehicle vehicle = TestUtils.createVehicleOnGrid(0, 0, model);
 
         assertTrue(God.processTimetick(model));
         assertFalse(TestUtils.compressedVertexHasVehicle(0, 0, grid));
@@ -127,15 +126,15 @@ public class GodTest {
     @Test
     public void testMoveVehicleChainOnAStraightLine() {
         model.addRoad(0, 0, 0, grid.getSize() - 1);
+        turnEveryVertexIntoSink();
         for (int i = 0; i < grid.getSize() - 1; ++i) {
-            Vehicle vehicle = new Vehicle(grid.getVertexIn(0, i));
-            grid.getVertexIn(0, i).setVehicle(vehicle);
-            gridState.addVehicle(vehicle);
-            grid.getVertexIn(0, i).getVehicle().setNextSafe(grid.getVertexIn(0, i+1), grid);
-            assertTrue(grid.getVertexIn(0, i).hasVehicle());
+            Vehicle vehicle = TestUtils.createVehicleOnGrid(0, i, model);
+            vehicle.setNextSafe(grid.getVertexIn(0, i+1), grid);
+            vehicle.setDest(grid.getVertexIn(0, (i + 9)%9));
+            assertTrue(TestUtils.compressedVertexHasVehicle(0, i, grid));
         }
 
-        assertFalse(grid.getVertexIn(0, grid.getSize() - 1).hasVehicle());
+        assertFalse(TestUtils.compressedVertexHasVehicle(0, grid.getSize() - 1, grid));
 
         assertTrue(God.processTimetick(model));
 
@@ -160,30 +159,22 @@ public class GodTest {
         model.addRoad(0, 1, 1, 1);
         model.addRoad(1, 1, 1, 2);
         model.addRoad(1, 2, 2, 2);
+        turnEveryVertexIntoSink();
 
-        Vehicle vehicle1 = new Vehicle(grid.getVertexIn(0, 0));
-        Vehicle vehicle2 = new Vehicle(grid.getVertexIn(0, 1));
-        Vehicle vehicle3 = new Vehicle(grid.getVertexIn(1, 1));
-        Vehicle vehicle4 = new Vehicle(grid.getVertexIn(1, 2));
+        Vehicle vehicle1 = TestUtils.createVehicleOnGrid(0, 0, model);
+        Vehicle vehicle2 = TestUtils.createVehicleOnGrid(1, 1, model);
+        Vehicle vehicle3 = TestUtils.createVehicleOnGrid(1, 2, model);
+        Vehicle vehicle4 = TestUtils.createVehicleOnGrid(2, 2, model);
 
-        grid.getVertexIn(0, 0).setVehicle(vehicle1);
-        grid.getVertexIn(0, 1).setVehicle(vehicle2);
-        grid.getVertexIn(1, 1).setVehicle(vehicle3);
-        grid.getVertexIn(1, 2).setVehicle(vehicle4);
+        vehicle1.setNextSafe(grid.getVertex(0, 1), grid);
+        vehicle2.setNextSafe(grid.getVertex(1, 1), grid);
+        vehicle3.setNextSafe(grid.getVertex(1, 2), grid);
+        vehicle4.setNextSafe(grid.getVertex(2, 2), grid);
 
-        gridState.addVehicle(vehicle1);
-        gridState.addVehicle(vehicle2);
-        gridState.addVehicle(vehicle3);
-        gridState.addVehicle(vehicle4);
-
-        grid.getVertexIn(0, 0).getVehicle().setNextSafe(
-                grid.getVertex(0, 1), grid);
-        grid.getVertexIn(0, 1).getVehicle().setNextSafe(
-                grid.getVertex(1, 1), grid);
-        grid.getVertexIn(1, 1).getVehicle().setNextSafe(
-                grid.getVertex(1, 2), grid);
-        grid.getVertexIn(1, 2).getVehicle().setNextSafe(
-                grid.getVertex(2, 2), grid);
+        vehicle1.setDest(grid.getVertex(2, 2));
+        vehicle2.setDest(grid.getVertex(2, 2));
+        vehicle3.setDest(grid.getVertex(0, 0));
+        vehicle4.setDest(grid.getVertex(0, 0));
 
         assertTrue(God.processTimetick(model));
 
@@ -239,15 +230,11 @@ v       |
     public void testTwoVehiclesCrossSimultaneously() {
         model.addRoad(4, 5, 6, 5);
         model.addRoad(5, 4, 5, 6);
+        turnEveryVertexIntoSink();
 
-        Vehicle vehicle1 = new Vehicle(grid.getVertexIn(4, 5));
-        Vehicle vehicle2 = new Vehicle(grid.getVertexIn(6, 5));
+        Vehicle vehicle1 = TestUtils.createVehicleOnGrid(4, 5, model);
+        Vehicle vehicle2 = TestUtils.createVehicleOnGrid(6, 5, model);
 
-        grid.getVertexIn(4, 5).setVehicle(vehicle1);
-        grid.getVertexIn(6, 5).setVehicle(vehicle2);
-
-        gridState.addVehicle(vehicle1);
-        gridState.addVehicle(vehicle2);
 
         vehicle1.setDest(grid.getVertex(6, 5));
         vehicle2.setDest(grid.getVertex(4, 5));
@@ -301,12 +288,12 @@ v       |
         grid.addRoad(0, 0, 9, 0);
         grid.addRoad(0, 9, 9, 9);
         grid.addRoad(9, 0, 9, 9);
+        turnEveryVertexIntoSink();
 
         God.setMode(God.Mode.SHORTEST_PATH);
 
-        Vehicle vehicle = new Vehicle(grid.getVertex(0, 0), grid.getVertexOut(0, 9));
-        grid.getVertex(0, 0).setVehicle(vehicle);
-        gridState.addVehicle(vehicle);
+        Vehicle vehicle = TestUtils.createVehicleOnGrid(0, 0, model);
+        vehicle.setDest(grid.getVertexOut(0, 9));
 
         God.setDestinationForNextTick(gridState.getVehicles(), model);
         God.processTimetick(model);
@@ -320,22 +307,20 @@ v       |
         grid.addRoad(0, 0, 9, 0);
         grid.addRoad(0, 9, 9, 9);
         grid.addRoad(9, 0, 9, 9);
+        turnEveryVertexIntoSink();
 
         God.setMode(God.Mode.SHORTEST_PATH);
 
-        Vehicle vehicle = new Vehicle(grid.getVertexIn(0, 0), grid.getVertexOut(0, 9));
-        grid.getVertexIn(0, 0).setVehicle(vehicle);
-        gridState.addVehicle(vehicle);
+        Vehicle vehicle = TestUtils.createVehicleOnGrid(0, 0, model);
+        vehicle.setDest(grid.getVertex(0, 9));
 
-        Vehicle vehicle2 = new Vehicle(grid.getVertex(0, 0), grid.getVertexOut(9, 0));
-        grid.getVertexOut(0, 0).setVehicle(vehicle2);
-        gridState.addVehicle(vehicle2);
+        Vehicle vehicle2 = TestUtils.createVehicleOnGrid(0, 0, model);
+        vehicle2.setDest(grid.getVertex(9, 0));
 
-        Vehicle vehicle3 = new Vehicle(grid.getVertex(0, 1), grid.getVertexOut(9, 0));
-        grid.getVertex(0, 1).setVehicle(vehicle3);
-        gridState.addVehicle(vehicle3);
+        Vehicle vehicle3 = TestUtils.createVehicleOnGrid(0, 1, model);
+        vehicle3.setDest(grid.getVertex(9, 0));
 
-        List<Vehicle> vehicles = new ArrayList<Vehicle>();
+        List<Vehicle> vehicles = new ArrayList<>();
         vehicles.add(vehicle);
         vehicles.add(vehicle2);
         vehicles.add(vehicle3);

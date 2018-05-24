@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.ArrayList;
+
 import static java.lang.Integer.max;
 import static java.lang.Integer.min;
 
@@ -68,6 +70,8 @@ abstract class TestUtils {
      * @return Whether given vertices have the same coordinates;
      */
     static boolean compressedEquals(Vertex v1, Vertex v2) {
+        if (v1 == null || v2 == null)
+            return false;
         return v1.x == v2.x && v1.y == v2.y;
     }
 
@@ -134,5 +138,48 @@ abstract class TestUtils {
      */
     static boolean vehicleIsOnGrid(Vehicle vehicle, Model model) {
         return model.getGridState().getVehicles().contains(vehicle);
+    }
+
+    /**
+     * Create new vehicle and add it to the grid, so that the system
+     * state remains consistent. If one of the corresponding IN/OUT vertices
+     * is occupied, the new vehicle will be assigned to the other one.
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param model Model to operate on.
+     */
+    static Vehicle createVehicleOnGrid(int x, int y, Model model) {
+        Grid grid = model.getGrid();
+
+        Vertex vertex = grid.getVertexOut(x, y);
+        if (vertex.hasVehicle())
+            vertex = grid.getVertexIn(x, y);
+        if (vertex.hasVehicle())
+            throw new IllegalArgumentException("Vertex is already occupied.");
+
+        return createVehicleOnGrid(vertex, model);
+    }
+
+    /**
+     * Create new vehicle and add it to the grid, so that the system
+     * state remains consistent. Note that the vertex is NOT interpreted
+     * to be compressed here.
+     * @param vertex Vertex to add a vehicle to.
+     * @param model Model to operate on.
+     */
+    static Vehicle createVehicleOnGrid(Vertex vertex, Model model) {
+        Grid grid = model.getGrid();
+        GridState gridState = model.getGridState();
+
+        if (vertex.hasVehicle())
+            throw new IllegalArgumentException("Vertex is already occupied.");
+
+        Vehicle vehicle = new Vehicle(vertex);
+        vertex.setVehicle(vehicle);
+        gridState.addVehicle(vehicle);
+        God.setRandomDestination(vehicle, new ArrayList<>(gridState.getSinks()));
+        God.setDestinationForNextTick(vehicle, model);
+
+        return vehicle;
     }
 }
