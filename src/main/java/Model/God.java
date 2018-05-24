@@ -78,8 +78,10 @@ abstract class God {
         if (!grid.getVertexOut(next).hasVehicle())
             swapInAndOut(next);
 
-        if (next.hasVehicle() && !moveVehicle(next.getVehicle(), processed))
+        if (next.hasVehicle() && !moveVehicle(next.getVehicle(), processed)) {
+            vehicle.setPrev(vehicle.getCur());
             return false;
+        }
 
         vehicle.setPrev(vehicle.getCur());
         vehicle.setCur(vehicle.getNext());

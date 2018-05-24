@@ -30,7 +30,6 @@ class MapPlanner extends JPanel {
     private int[] latestCoordinates;
     private int curX = -1, curY = -1, prevX, prevY;
 
-    private int timerTicks;
     private int pixelsPerTimer;
     private int animationTime = 2000;
     private int animationSmoothness = 20;
@@ -55,7 +54,7 @@ class MapPlanner extends JPanel {
         this.size = size;
         this.dist = dist;
 
-        pixelsPerTimer = dist/ animationSmoothness;
+        pixelsPerTimer = dist/animationSmoothness;
 
         setupLayers();
 
@@ -103,7 +102,6 @@ class MapPlanner extends JPanel {
             }
         });
 
-        timerTicks = 0;
         timer = new Timer(animationTime / animationSmoothness, e -> {
             for (Map.Entry<Integer, VehicleImage> entry : vehicleLayers.entrySet()){
                 VehicleImage vehicle = entry.getValue();
@@ -169,11 +167,9 @@ class MapPlanner extends JPanel {
 
             repaint();
 
-            if (timerTicks++ > animationSmoothness + 5) {
-                timerTicks = 0;
-                timer.stop();
-            }
         });
+
+        timer.start();
 
     }
 
@@ -280,6 +276,8 @@ class MapPlanner extends JPanel {
     public void updateVehicles(Collection<int[]> data){
         ArrayList<Integer> toRemove = new ArrayList<>();
 
+        /*System.out.println("Next:");*/
+
         for (Map.Entry<Integer, VehicleImage> entry : vehicleLayers.entrySet()) {
             if (!entry.getValue().updated)
                 toRemove.add(entry.getKey());
@@ -290,42 +288,47 @@ class MapPlanner extends JPanel {
             vehicleLayers.remove(integer);
 
         for (int[] v : data){
+
+            /*System.out.println("V[" + v[6] + "]: (" + v[0] + ", " + v[1]
+                    + ")->(" + v[2] + ", " + v[3]
+                    + ")->(" + v[4] + ", " + v[5] + ")");*/
+
             if (!vehicleLayers.containsKey(v[6]))
                 addVehicleLayer(v[6]);
-            VehicleImage vi = vehicleLayers.get(v[6]);
-            vi.path[0] = v[0];
-            vi.path[1] = v[1];
-            vi.path[2] = v[2];
-            vi.path[3] = v[3];
-            vi.path[4] = v[4];
-            vi.path[5] = v[5];
+            VehicleImage vehicle = vehicleLayers.get(v[6]);
+            vehicle.path[0] = v[0];
+            vehicle.path[1] = v[1];
+            vehicle.path[2] = v[2];
+            vehicle.path[3] = v[3];
+            vehicle.path[4] = v[4];
+            vehicle.path[5] = v[5];
 
-            int[] curDirection = new int[2];
-            curDirection[0] = v[2] - v[0];
-            curDirection[1] = v[3] - v[1];
+            int[] direction = new int[2];
+            direction[0] = v[2] - v[0];
+            direction[1] = v[3] - v[1];
 
             int[] nextDirection = new int[2];
             nextDirection[0] = v[4] - v[2];
             nextDirection[1] = v[5] - v[3];
 
-            if (curDirection[0] > 0){
-                vi.currentPosition[0] = getPixelPosition(vi.path[0]) + 1;
-                vi.currentPosition[1] = getPixelPosition(vi.path[1]) + 1;
+            if (direction[0] > 0){
+                vehicle.currentPosition[0] = getPixelPosition(vehicle.path[0]) + 1;
+                vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1]) + 1;
             }
-            else if (curDirection[0] < 0){
-                vi.currentPosition[0] = getPixelPosition(vi.path[0]) - 4;
-                vi.currentPosition[1] = getPixelPosition(vi.path[1]) - 4;
+            else if (direction[0] < 0){
+                vehicle.currentPosition[0] = getPixelPosition(vehicle.path[0]) - 4;
+                vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1]) - 4;
             }
-            else if (curDirection[1] > 0){
-                vi.currentPosition[0] = getPixelPosition(vi.path[0]) - 4;
-                vi.currentPosition[1] = getPixelPosition(vi.path[1]) + 1;
+            else if (direction[1] > 0){
+                vehicle.currentPosition[0] = getPixelPosition(vehicle.path[0]) - 4;
+                vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1]) + 1;
             }
-            else if (curDirection[1] < 0){
-                vi.currentPosition[0] = getPixelPosition(vi.path[0]) + 1;
-                vi.currentPosition[1] = getPixelPosition(vi.path[1]) - 4;
+            else if (direction[1] < 0){
+                vehicle.currentPosition[0] = getPixelPosition(vehicle.path[0]) + 1;
+                vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1]) - 4;
             }
 
-            vi.updated = true;
+            vehicle.updated = true;
         }
 
         for (Map.Entry<Integer, VehicleImage> entry : vehicleLayers.entrySet()){

@@ -130,7 +130,6 @@ class MapEditor {
     public void addNextTickListener(ActionListener listener) {
         start.addActionListener(e -> {
             mapPlanner.blockDrawing = true;
-            mapPlanner.timer.start();
             drawingButtons.setVisible(false);
             start.setText("Next tick");
             listener.actionPerformed(e);
