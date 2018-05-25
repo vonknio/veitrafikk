@@ -1,5 +1,6 @@
 package View;
 
+import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 
@@ -53,6 +54,8 @@ public class View {
 
     public int[] getCoordinates() { return mapEditor.getCoordinates(); }
 
+    public String getMode() { return mapEditor.getMode(); }
+
     public int getXOriginCoordinate() {
         if (mapEditor != null)
             return mapEditor.frame.getX();
@@ -85,9 +88,11 @@ public class View {
      *  Add listeners
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    public void addOpenEditorListener(ActionListener listener) {
-        menu.addOpenEditorListener(listener);
-    }
+    public void addOpenEditorListener(ActionListener listener) { menu.addOpenEditorListener(listener); }
+
+    public void addModeChangeListener(ActionListener listener) { mapEditor.addModeChangeListener(listener); }
+
+    public void addFirstTickListener(ActionListener listener) { mapEditor.addFirstTickListener(listener); }
 
     public void addNextTickListener(ActionListener listener) { mapEditor.addNextTickListener(listener); }
 
@@ -102,6 +107,18 @@ public class View {
     public void addNewSinkListener(ActionListener listener) { mapEditor.addNewSinkListener(listener); }
 
     public void addRemoveListener(ActionListener listener) { mapEditor.addRemoveListener(listener); }
+
+    /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *  Helper methods for communicating with the user
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    public void removeFirstTickListener() { mapEditor.removeFirstTickListener(); }
+
+    public void showDisconnectedGraphError() {
+        JOptionPane.showMessageDialog(null,
+                "Each sink needs to be reachable from every single source!",
+                "Warning", JOptionPane.INFORMATION_MESSAGE);
+    }
 
 }
 

@@ -84,6 +84,8 @@ public class Model {
 
     public void nextTick() { God.processTimetick(this); }
 
+    public void changeMode(String string) { God.setMode(God.Mode.valueOf(string)); }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Getters
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -168,6 +170,26 @@ public class Model {
      */
     Collection<Vehicle> getVehicles() { return gridState.getVehicles(); }
 
+    /**
+     * @return Linked list of coordinates of previous vertex, current vertex and id for each Vehicle
+     */
+    public Collection<int[]> getAllVehicleCoordinates() {
+        LinkedList<int[]> result = new LinkedList<>();
+        Collection<Vehicle> vehicles = getVehicles();
+        for (Vehicle v : vehicles){
+            int[] coords = new int[7];
+            coords[0] = v.getPrev().getXCoordinate();
+            coords[1] = v.getPrev().getYCoordinate();
+            coords[2] = v.getCur().getXCoordinate();
+            coords[3] = v.getCur().getYCoordinate();
+            coords[4] = v.getNext().getXCoordinate();
+            coords[5] = v.getNext().getYCoordinate();
+            coords[6] = v.getId();
+            result.add(coords);
+        }
+        return result;
+    }
+
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Test
@@ -220,26 +242,6 @@ public class Model {
      */
     public boolean isSink(int x1, int y1) {
        return TestUtils.isSink(x1, y1, grid);
-    }
-
-    /**
-     * @return Linked list of coordinates of previous vertex, current vertex and id for each Vehicle
-     */
-    public Collection<int[]> getAllVehicleCoordinates() {
-        LinkedList<int[]> result = new LinkedList<>();
-        Collection<Vehicle> vehicles = getVehicles();
-        for (Vehicle v : vehicles){
-            int[] coords = new int[7];
-            coords[0] = v.getPrev().getXCoordinate();
-            coords[1] = v.getPrev().getYCoordinate();
-            coords[2] = v.getCur().getXCoordinate();
-            coords[3] = v.getCur().getYCoordinate();
-            coords[4] = v.getNext().getXCoordinate();
-            coords[5] = v.getNext().getYCoordinate();
-            coords[6] = v.getId();
-            result.add(coords);
-        }
-        return result;
     }
 
     /**
