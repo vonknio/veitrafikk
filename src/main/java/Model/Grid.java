@@ -347,4 +347,31 @@ class Grid {
         result.remove(null);
         return result;
     }
+
+    private void visitVertex(Vertex vertex, HashMap<Vertex, Boolean> visited) {
+        visited.put(vertex, true);
+        for (Vertex vertex1 : getNeighbours(vertex)) {
+            if (!visited.get(vertex1))
+                visitVertex(vertex1, visited);
+        }
+    }
+
+    /**
+     * @return Whether there is path path between any pair of vertices.
+     */
+    boolean isConnected() {
+        Collection<Vertex> vertices = getVertices();
+        if (vertices.isEmpty())
+            return true;
+        HashMap<Vertex, Boolean> visited = new HashMap<Vertex, Boolean>();
+        for (Vertex vertex : vertices) {
+            visited.put(vertex, false);
+        }
+        visitVertex(vertices.iterator().next(), visited);
+        for (Vertex vertex1 : vertices) {
+            if (!visited.get(vertex1))
+                return false;
+        }
+        return true;
+    }
 }

@@ -136,4 +136,18 @@ public class ModelTest {
         assertFalse(model.hasRoad(-1, -3, 0, 5));
         assertFalse(model.hasRoad(666, 666, 3, 4));
     }
+
+    @Test
+    public void isReadyToStart() {
+        Model model = new Model();
+        model.createGrid(10);
+        model.addRoad(0, 0, 0, 7);
+        assertFalse(model.isReadyToStart());
+        model.addSink(0, 0);
+        assertFalse(model.isReadyToStart());
+        model.addSource(0, 7);
+        assertTrue(model.isReadyToStart());
+        model.removeRoad(0, 1, 0, 2);
+        assertFalse(model.isReadyToStart());
+    }
 }

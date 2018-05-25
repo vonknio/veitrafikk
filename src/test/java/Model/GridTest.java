@@ -137,4 +137,18 @@ public class GridTest {
         grid.removeRoad(0, 3, 0, grid.getSize() - 1);
         assertTrue(grid.getVertices().isEmpty());
     }
+
+    @Test
+    public void testConnectivity() {
+        Grid grid = new Grid(7);
+        assertTrue(grid.isConnected());
+        grid.addRoad(0, 0, 0, 5);
+        assertTrue(grid.isConnected());
+        grid.addRoad(1, 0, 1, 5);
+        assertFalse(grid.isConnected());
+        grid.addRoad(0, 0, 3, 0);
+        assertTrue(grid.isConnected());
+        grid.addRoad(4, 0, 4, 1);
+        assertFalse(grid.isConnected());
+    }
 }

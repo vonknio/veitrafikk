@@ -242,4 +242,11 @@ public class Model {
         return result;
     }
 
+    /**
+     * @return Whether simulation can be started.
+     */
+    public boolean isReadyToStart() {
+        return grid.isConnected() && !gridState.getSinks().isEmpty() && !gridState.getSources().isEmpty();
+    }
+
 }
