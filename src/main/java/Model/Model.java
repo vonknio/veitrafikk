@@ -20,7 +20,7 @@ public class Model {
      */
     public void createGrid(int size) {
         grid = new Grid(size);
-        gridState = new GridState();
+        gridState = new GridState(grid);
     }
 
     public void setGrid(Grid grid) { this.grid = grid; }
@@ -53,8 +53,7 @@ public class Model {
      * @param probability probability of spawning a new vehicle in each tick.
      */
     public void addSource(int x1, int y1, long limit, float probability) {
-        grid.addSource(x1, y1, limit, probability);
-        gridState.addSource((Source)grid.getVertexOut(x1, y1));
+        gridState.addSource(x1, y1, limit, probability);
     }
 
     public void addSource(int x1, int y1) {
@@ -67,8 +66,7 @@ public class Model {
      * @param y1 Y coordinate.
      */
     public void addSink(int x1, int y1) {
-        grid.addSink(x1, y1);
-        gridState.addSink((Sink)grid.getVertexIn(x1, y1));
+        gridState.addSink(x1, y1);
     }
 
     /**

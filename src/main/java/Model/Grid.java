@@ -208,9 +208,11 @@ class Grid {
      * @param x X coordinate.
      * @param y Y coordinate.
      */
-    void addSink(int x, int y) {
-        vertices[x * size + y][0] = new Sink(x, y, Vertex.VertexType.IN);
+    Sink addSink(int x, int y) {
+        Sink s = new Sink(x, y, Vertex.VertexType.IN);
         vertices[x * size + y][1] = new Vertex(x, y, Vertex.VertexType.OUT);
+        vertices[x * size + y][0] = s;
+        return s;
     }
 
     /**
@@ -219,9 +221,11 @@ class Grid {
      * @param x X coordinate.
      * @param y Y coordinate.
      */
-    void addSource(int x, int y, long limit, float probability) {
+    Source addSource(int x, int y, long limit, float probability) {
         vertices[x * size + y][0] = new Vertex(x, y, Vertex.VertexType.IN);
-        vertices[x * size + y][1] = new Source(x, y, Vertex.VertexType.OUT, limit, probability);
+        Source s = new Source(x, y, Vertex.VertexType.OUT, limit, probability);
+        vertices[x * size + y][1] = s;
+        return s;
     }
 
     /**
@@ -348,6 +352,22 @@ class Grid {
         return result;
     }
 
+    /**
+     * Get all existing vertices of the grid sorted by type.
+     */
+    Collection<Vertex> getVerticesSorted() {
+        LinkedList<Vertex> result = new LinkedList<>();
+        for (int i = 0; i < size * size; i++) {
+            if (vertices[i][1] != null)
+                result.add(vertices[i][1]);
+        }
+        for (int i = 0; i < size * size; i++) {
+            if (vertices[i][0] != null)
+                result.add(vertices[i][0]);
+        }
+        return result;
+    }
+
     private void visitVertex(Vertex vertex, HashMap<Vertex, Boolean> visited) {
         visited.put(vertex, true);
         for (Vertex vertex1 : getNeighbours(vertex)) {
@@ -357,7 +377,7 @@ class Grid {
     }
 
     /**
-     * @return Whether there is path path between any pair of vertices.
+     * @return Whether there is a path between any pair of vertices.
      */
     boolean isConnected() {
         Collection<Vertex> vertices = getVertices();

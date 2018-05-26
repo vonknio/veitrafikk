@@ -1,12 +1,20 @@
 package Model;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 class GridState {
     private long timeTick = 0;
     private List<Vehicle> vehicles = new LinkedList<>();
     private List<Sink> sinks = new LinkedList<>();
     private List<Source> sources = new LinkedList<>();
+    private final Grid grid;
+
+    GridState(Grid grid) {
+        this.grid = grid;
+    }
 
     long getTime() {
         return timeTick;
@@ -23,21 +31,40 @@ class GridState {
         timeTick++;
     }
 
-    List<Vehicle> getVehicles() { return vehicles; }
+    List<Vehicle> getVehicles() {
+        return vehicles;
+    }
 
-    Collection<Sink> getSinks() { return sinks; }
+    List<Vehicle> getVehiclesSorted() {
+        LinkedList<Vehicle> vehicles = new LinkedList<>();
+        for (Vertex v : grid.getVerticesSorted()) {
+            if (v.hasVehicle())
+                vehicles.add(v.getVehicle());
+        }
+        return vehicles;
+    }
 
-    Collection<Source> getSources() { return sources; }
+    Collection<Sink> getSinks() {
+        return sinks;
+    }
 
-    void addVehicle(Vehicle vehicle) { vehicles.add(vehicle); }
+    Collection<Source> getSources() {
+        return sources;
+    }
 
-    void addSink(Sink sink) {
-        sinks.removeIf((x) -> TestUtils.compressedEquals(x, sink));
+    void addVehicle(Vehicle vehicle) {
+        vehicles.add(vehicle);
+    }
+
+    void addSink(int x, int y) {
+        Sink sink = grid.addSink(x, y);
+        sinks.removeIf((z) -> TestUtils.compressedEquals(z, sink));
         sinks.add(sink);
     }
 
-    void addSource(Source source) {
-        sources.removeIf((x) -> TestUtils.compressedEquals(x, source));
+    void addSource(int x, int y, long limit, float probability) {
+        Source source = grid.addSource(x, y, limit, probability);
+        sources.removeIf((z) -> TestUtils.compressedEquals(z, source));
         sources.add(source);
     }
 
@@ -46,7 +73,7 @@ class GridState {
         vehicles.remove(vehicle);
     }
 
-    private Sink getRandomSink(){
+    private Sink getRandomSink() {
         if (sinks.isEmpty()) return null;
         return sinks.get(new Random().nextInt(sinks.size()));
     }

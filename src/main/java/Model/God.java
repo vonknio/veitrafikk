@@ -23,15 +23,7 @@ abstract class God {
 
         boolean update = false;
         Set<Vehicle> processed = new HashSet<>();
-        List<Vehicle> vehicles = model.getGridState().getVehicles();
-
-        vehicles.sort((x, y) -> {
-            if (x.getCur().getVertexType() == y.getCur().getVertexType())
-                return 0;
-            if (x.getCur().getVertexType() == Vertex.VertexType.IN)
-                return 1;
-            return -1;
-        });
+        List<Vehicle> vehicles = model.getGridState().getVehiclesSorted();
 
         for (Vehicle vehicle : vehicles) {
             if (moveVehicle(vehicle, processed))
