@@ -2,6 +2,7 @@ package View;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 
@@ -10,13 +11,17 @@ class MapEditor {
     private int size;
     private int dist;
 
+    private ActionListener firstTickListener;
+
     public JFrame frame;
     Container container;
     MapPlanner mapPlanner;
 
     private JButton quit;
     private JButton start;
+    private JComboBox modesMenu;
     private JPanel drawingButtons;
+    private String[] modes = {"SHORTEST_PATH", "RANDOM"};
 
     public MapEditor (int size, int dist){
         this.size = size;
@@ -29,13 +34,11 @@ class MapEditor {
         setupMapPlanner();
     }
 
-    public void setVisible(boolean b) {
-        frame.setVisible(b);
-    }
+    public void setVisible(boolean b) { frame.setVisible(b); }
 
     private void setupFrame (){
         frame = new JFrame();
-        frame.setSize(size * dist + dist, size * dist + 100);
+        frame.setSize(size * dist + dist, size * dist + 125);
         frame.setTitle("Veitrafikk - Map Editor");
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -87,16 +90,19 @@ class MapEditor {
         quit = new JButton("Quit");
         quit.addActionListener(e -> System.exit(0));
 
+        modesMenu = new JComboBox<>(modes);
+
         start = new JButton("Start");
 
         drawingButtons.add(addSource, BorderLayout.EAST);
         drawingButtons.add(addSink, BorderLayout.CENTER);
         drawingButtons.add(remove, BorderLayout.WEST);
 
-        simButtons.add(start, BorderLayout.WEST);
+        simButtons.add(drawingButtons, BorderLayout.NORTH);
+        simButtons.add(modesMenu, BorderLayout.CENTER);
 
-        gameButtons.add(simButtons, BorderLayout.WEST);
-        gameButtons.add(drawingButtons, BorderLayout.EAST);
+        gameButtons.add(simButtons, BorderLayout.EAST);
+        gameButtons.add(start, BorderLayout.CENTER);
 
         otherButtons.add(quit, BorderLayout.WEST);
 
@@ -106,13 +112,9 @@ class MapEditor {
         container.add(menu, BorderLayout.SOUTH);
     }
 
-    private void setupMapPlanner (){
-        container.add(mapPlanner, BorderLayout.CENTER);
-    }
+    private void setupMapPlanner (){ container.add(mapPlanner, BorderLayout.CENTER); }
 
-    public int[] getCoordinates() {
-        return mapPlanner.getCoordinates();
-    }
+    public int[] getCoordinates() { return mapPlanner.getCoordinates(); }
 
 
     public void drawRoad(int x1, int y1, int x2, int y2) { mapPlanner.drawRoad(x1, y1, x2, y2); }
@@ -127,10 +129,24 @@ class MapEditor {
 
     public void updateVehicles(Collection<int[]> coordinates) { mapPlanner.updateVehicles(coordinates); }
 
+    public String getMode() { return (String) modesMenu.getSelectedItem(); }
+
+    public void addModeChangeListener(ActionListener listener) { modesMenu.addActionListener(listener); }
+
+    public void addFirstTickListener(ActionListener listener) {
+        start.addActionListener(listener);
+        firstTickListener = listener;
+    }
+
+    public void removeFirstTickListener() {
+        mapPlanner.blockDrawing = true;
+        drawingButtons.setVisible(false);
+        start.setText("First tick");
+        start.removeActionListener(firstTickListener);
+    }
+
     public void addNextTickListener(ActionListener listener) {
         start.addActionListener(e -> {
-            mapPlanner.blockDrawing = true;
-            drawingButtons.setVisible(false);
             start.setText("Next tick");
             listener.actionPerformed(e);
         });}

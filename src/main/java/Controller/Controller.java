@@ -120,11 +120,21 @@ public class Controller {
 
         model.createGrid(size);
         view.openEditor(size, dist);
+        view.addModeChangeListener(this::changeMode);
         view.addNewRoadListener(this::newRoad);
         view.addRemoveListener(this::remove);
         view.addNewSourceListener(this::newSource);
         view.addNewSinkListener(this::newSink);
-        view.addNextTickListener(this::nextTick);
+        view.addFirstTickListener(this::firstTick);
+    }
+
+    private void firstTick(ActionEvent e) {
+        if (!model.isReadyToStart())
+            view.showDisconnectedGraphError();
+        else {
+            view.removeFirstTickListener();
+            view.addNextTickListener(this::nextTick);
+        }
     }
 
     private void nextTick(ActionEvent e) {
@@ -132,6 +142,12 @@ public class Controller {
         Collection<int[]> vehicleCoordinates = model.getAllVehicleCoordinates();
         view.updateVehicles(vehicleCoordinates);
         view.nextTick();
+    }
+
+    private void changeMode(ActionEvent e) {
+        String mode = view.getMode();
+        System.out.println(mode);
+        model.changeMode(mode);
     }
 
 }
