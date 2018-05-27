@@ -10,10 +10,14 @@ import java.util.Random;
 class RandomPlanner implements PathPlanner {
     @Override @NotNull
     public Vertex getDestinationForNextTick(Vehicle vehicle, Grid grid) {
-        Vertex cur = vehicle.getCur().getVertexType() == Vertex.VertexType.OUT ?
+        Vertex vertex;
+        if (vehicle.getNext() == null)
+            vertex = vehicle.getCur().getVertexType() == Vertex.VertexType.OUT ?
                 vehicle.getCur() : grid.getVertexOut(vehicle.getCur());
+        else vertex = vehicle.getNext().getVertexType() == Vertex.VertexType.OUT ?
+                vehicle.getNext() : grid.getVertexOut(vehicle.getNext());
 
-        List<Vertex> candidates = grid.getNeighbours(cur);
+        List<Vertex> candidates = grid.getNeighbours(vertex);
         if (candidates.isEmpty())
             throw new IllegalStateException("Disconnected graph");
         return candidates.get((new Random()).nextInt(candidates.size()));
