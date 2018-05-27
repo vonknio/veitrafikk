@@ -1,6 +1,7 @@
 package Model;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Deus ex machina, one and only. Manages the runtime state of the simulation.
@@ -10,6 +11,7 @@ abstract class God {
     private static Grid grid;
     private static Mode mode = Mode.SHORTEST_PATH;
     private static PathPlanner pathPlanner = mode.getPlanner();
+    private final static Logger logger = Logger.getLogger(God.class.getName());
 
     /**
      * Generate and handle all events for current timetick, e.g. move vehicles on the grid.
@@ -18,6 +20,7 @@ abstract class God {
      * @return Whether any vehicles moved.
      */
     static boolean processTimetick(Model model) {
+        logger.config("\n\n\n-----------------------------");
         setGrid(model.getGrid());
         model.getGridState().updateForNextTimetick();
 
@@ -28,6 +31,9 @@ abstract class God {
         for (Vehicle vehicle : vehicles) {
             if (moveVehicle(vehicle, processed))
                 update = true;
+            else logger.config("Vehicle " + vehicle.getId() +
+                            " in vertex " + vehicle.getCur()+vehicle.getCur().getVertexType() +
+                    " couldn't move to " + vehicle.getNext()+vehicle.getNext().getVertexType());
         }
 
         for (Vertex vertex : grid.getVertices()) {
@@ -35,6 +41,7 @@ abstract class God {
             if (vertex.hasVehicle() &&
                     TestUtils.vehicleIsInCompressedVertex(vertex.getVehicle(), vertex.getVehicle().getDest(), grid)) {
                 // celebrate this fact somehow
+                logger.config("Vehicle " + vertex.getVehicle().getId() + " has reached its destination.");
                 model.getGridState().removeVehicle(vertex.getVehicle());
             }
         }
@@ -56,10 +63,16 @@ abstract class God {
         processed.add(vehicle);
         Vertex vertex = vehicle.getCur();
         Vertex next = vehicle.getNext();
+        Vertex nextNext = vehicle.getNextNext();
 
         if (next == null) {
             vehicle.setNext(getDestinationForNextTick(vehicle));
             next = vehicle.getNext();
+        }
+
+        if (nextNext == null) {
+            vehicle.setNextNext(getDestinationForNextTick(vehicle));
+            nextNext = vehicle.getNextNext();
         }
 
         if (vertex.getVertexType() == Vertex.VertexType.IN) {
@@ -69,6 +82,14 @@ abstract class God {
 
         if (!grid.getVertexOut(next).hasVehicle())
             swapInAndOut(next);
+
+        if (grid.getVertexOut(next).hasVehicle()
+                && TestUtils.compressedEquals(
+                        grid.getVertexOut(next).getVehicle().getNext(),
+                        nextNext)
+                && !moveVehicle(grid.getVertexOut(next).getVehicle(), processed)
+                )
+            return false;
 
         if (next.hasVehicle() && !moveVehicle(next.getVehicle(), processed)) {
             vehicle.setPrev(vehicle.getCur());
@@ -82,6 +103,9 @@ abstract class God {
         vertex.removeVehicle();
         vehicle.getCur().setVehicle(vehicle);
 
+        logger.config("Vehicle " + vehicle.getId() + " moved from "
+                + vehicle.getPrev()+vehicle.getPrev().getVertexType()
+                + " to " + vehicle.getCur()+vehicle.getCur().getVertexType());
         return true;
     }
 

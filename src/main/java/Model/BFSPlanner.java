@@ -2,6 +2,7 @@ package Model;
 
 import org.jetbrains.annotations.NotNull;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Planner that uses BFS to plan paths for vertices.
@@ -12,6 +13,7 @@ class BFSPlanner implements PathPlanner {
     // and its destination.
     private Map<Vehicle, Stack<Vertex>> paths = new HashMap<>();
     private Map<Vehicle, Vertex> dests = new HashMap<>();
+    private final static Logger logger = Logger.getLogger(BFSPlanner.class.getName());
 
     @Override @NotNull
     public Vertex getDestinationForNextTick(Vehicle vehicle, Grid grid) {
@@ -25,8 +27,9 @@ class BFSPlanner implements PathPlanner {
             planPath(vehicle, grid);
 
         Stack<Vertex> path = paths.get(vehicle);
-        if (path.peek() == vehicle.getCur()) path.pop();
-        return paths.get(vehicle).peek();
+        //if (TestUtils.compressedEquals(path.peek(), vehicle.getCur()))
+        //    path.pop();
+        return paths.get(vehicle).pop();
     }
 
     /**
@@ -70,6 +73,7 @@ class BFSPlanner implements PathPlanner {
             cur = parents.get(cur);
         }
 
+        logger.config("Path for vehicle " + vehicle.getId() + " is " + path);
         paths.put(vehicle, path);
         dests.put(vehicle, dest);
     }

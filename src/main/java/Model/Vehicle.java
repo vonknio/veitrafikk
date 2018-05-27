@@ -10,6 +10,7 @@ class Vehicle {
     private Vertex prev;
     private Vertex cur;
     private Vertex next;
+    private Vertex nextNext;
     private Vertex dest;
     private int id;
     private static int idCounter = 0;
@@ -45,6 +46,8 @@ class Vehicle {
 
     Vertex getNext() { return next; }
 
+    public Vertex getNextNext() { return nextNext; }
+
     Vertex getPrev() { return prev; }
 
     Vertex getDest() { return dest; }
@@ -62,6 +65,18 @@ class Vehicle {
     }
 
     void setNextSafe(Vertex vertex, Grid grid) {
+        if (vertex.getVertexType() != Vertex.VertexType.IN)
+            next = grid.getOther(vertex);
+        else next = vertex;
+    }
+
+    public void setNextNext(Vertex vertex) {
+        if (vertex.getVertexType() != Vertex.VertexType.IN)
+            throw new IllegalArgumentException("Next field should always have IN type.");
+        this.nextNext = vertex;
+    }
+
+    void setNextNextSafe(Vertex vertex, Grid grid) {
         if (vertex.getVertexType() != Vertex.VertexType.IN)
             next = grid.getOther(vertex);
         else next = vertex;

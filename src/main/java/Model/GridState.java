@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Logger;
 
 class GridState {
     private long timeTick = 0;
@@ -11,6 +12,7 @@ class GridState {
     private List<Sink> sinks = new LinkedList<>();
     private List<Source> sources = new LinkedList<>();
     private final Grid grid;
+    private final static Logger logger = Logger.getLogger(GridState.class.getName());
 
     GridState(Grid grid) {
         this.grid = grid;
@@ -24,8 +26,11 @@ class GridState {
         for (Source source : sources) {
             if (source.canSpawnVehicle()) {
                 Sink randomSink = getRandomSink();
-                if (randomSink != null)
-                    addVehicle(source.spawnVehicle(randomSink));
+                if (randomSink != null) {
+                    Vehicle vehicle = source.spawnVehicle(randomSink);
+                    addVehicle(vehicle);
+                    logger.config("Source " + source + " has spawned vehicle " + vehicle.getId());
+                }
             }
         }
         timeTick++;
