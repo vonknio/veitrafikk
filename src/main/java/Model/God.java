@@ -31,9 +31,14 @@ abstract class God {
         for (Vehicle vehicle : vehicles) {
             if (moveVehicle(vehicle, processed))
                 update = true;
-            else logger.config("Vehicle " + vehicle.getId() +
-                            " in vertex " + vehicle.getCur()+vehicle.getCur().getVertexType() +
-                    " couldn't move to " + vehicle.getNext()+vehicle.getNext().getVertexType());
+            else {
+                logger.config("Vehicle " + vehicle.getId() +
+                        " in vertex " + vehicle.getCur() + vehicle.getCur().getVertexType() +
+                        " couldn't move to " + vehicle.getNext() + vehicle.getNext().getVertexType());
+
+                if (mode == Mode.RANDOM)
+                    vehicle.setNextNext(getDestinationForNextTick(vehicle));
+            }
         }
 
         for (Vertex vertex : grid.getVertices()) {

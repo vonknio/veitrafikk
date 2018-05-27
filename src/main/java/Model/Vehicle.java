@@ -78,8 +78,8 @@ class Vehicle {
 
     void setNextNextSafe(Vertex vertex, Grid grid) {
         if (vertex.getVertexType() != Vertex.VertexType.IN)
-            next = grid.getOther(vertex);
-        else next = vertex;
+            nextNext = grid.getOther(vertex);
+        else nextNext = vertex;
     }
 
     void setDest(Vertex vertex) { dest = vertex; }
