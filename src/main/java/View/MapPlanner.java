@@ -318,16 +318,13 @@ class MapPlanner extends JPanel {
             else if (direction[0] < 0){
                 vehicle.currentPosition[0] = getPixelPosition(vehicle.path[0]) - 4;
                 vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1]) - 4;
-            }
-            else if (direction[1] > 0){
+            } else if (direction[1] >= 0) {
                 vehicle.currentPosition[0] = getPixelPosition(vehicle.path[0]) - 4;
                 vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1]) + 1;
-            }
-            else if (direction[1] < 0){
+            } else {
                 vehicle.currentPosition[0] = getPixelPosition(vehicle.path[0]) + 1;
                 vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1]) - 4;
             }
-
             vehicle.updated = true;
         }
 
