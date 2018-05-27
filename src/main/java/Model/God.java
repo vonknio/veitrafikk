@@ -98,7 +98,8 @@ abstract class God {
 
         vehicle.setPrev(vehicle.getCur());
         vehicle.setCur(vehicle.getNext());
-        vehicle.setNext(getDestinationForNextTick(vehicle));
+        vehicle.setNext(vehicle.getNextNext());
+        vehicle.setNextNext(getDestinationForNextTick(vehicle));
 
         vertex.removeVehicle();
         vehicle.getCur().setVehicle(vehicle);
