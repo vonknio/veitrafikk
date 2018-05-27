@@ -22,7 +22,6 @@ public class MapEditorTest {
         Robot robot = new Robot();
 
         while (view.menu == null) {}
-
         int x = view.menu.getX();
         int y = view.menu.getY();
 
