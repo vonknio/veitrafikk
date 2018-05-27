@@ -26,7 +26,7 @@ abstract class God {
 
         boolean update = false;
         Set<Vehicle> processed = new HashSet<>();
-        List<Vehicle> vehicles = model.getGridState().getVehiclesSorted();
+        List<Vehicle> vehicles = model.getGridState().getVehiclesShuffled();
 
         for (Vehicle vehicle : vehicles) {
             if (moveVehicle(vehicle, processed))

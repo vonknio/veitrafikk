@@ -1,9 +1,6 @@
 package Model;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.Logger;
 
 class GridState {
@@ -47,6 +44,12 @@ class GridState {
                 vehicles.add(v.getVehicle());
         }
         return vehicles;
+    }
+
+    List<Vehicle> getVehiclesShuffled() {
+        LinkedList<Vehicle> shuffled = new LinkedList<>(vehicles);
+        Collections.shuffle(shuffled);
+        return shuffled;
     }
 
     Collection<Sink> getSinks() {
