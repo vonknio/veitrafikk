@@ -116,8 +116,8 @@ public class View {
 
     public void showDisconnectedGraphError() {
         JOptionPane.showMessageDialog(null,
-                "Each sink needs to be reachable from every single source!",
-                "Warning", JOptionPane.INFORMATION_MESSAGE);
+                "All roads have to be connected and contain at least one sink and one source!",
+                "Warning", JOptionPane.PLAIN_MESSAGE);
     }
 
 }

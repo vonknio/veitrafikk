@@ -276,7 +276,7 @@ class MapPlanner extends JPanel {
     public void updateVehicles(Collection<int[]> data){
         ArrayList<Integer> toRemove = new ArrayList<>();
 
-        /*System.out.println("Next:");*/
+        //System.out.println("Next:");
 
         for (Map.Entry<Integer, VehicleImage> entry : vehicleLayers.entrySet()) {
             if (!entry.getValue().updated)
@@ -296,8 +296,15 @@ class MapPlanner extends JPanel {
             if (!vehicleLayers.containsKey(v[6]))
                 addVehicleLayer(v[6]);
             VehicleImage vehicle = vehicleLayers.get(v[6]);
-            vehicle.path[0] = v[0];
-            vehicle.path[1] = v[1];
+
+            if (vehicle.path[2] == v[2] && vehicle.path[3] == v[3]){
+                vehicle.path[0] = v[2];
+                vehicle.path[1] = v[3];
+            }
+            else {
+                vehicle.path[0] = v[0];
+                vehicle.path[1] = v[1];
+            }
             vehicle.path[2] = v[2];
             vehicle.path[3] = v[3];
             vehicle.path[4] = v[4];
