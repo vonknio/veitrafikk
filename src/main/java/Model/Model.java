@@ -169,6 +169,13 @@ public class Model {
     Collection<Vehicle> getVehicles() { return gridState.getVehicles(); }
 
     /**
+     * @return Size of the underlying grid.
+     */
+    int getSize() {
+        return grid.getSize();
+    }
+
+    /**
      * @return Linked list of coordinates of previous vertex, current vertex and id for each Vehicle
      */
     public Collection<int[]> getAllVehicleCoordinates() {
@@ -214,6 +221,13 @@ public class Model {
     public boolean hasRoad(int x1, int y1, int x2, int y2) {
         return TestUtils.hasRoad(x1, y1, x2, y2, grid);
     }
+
+    /**
+     * @param x1 X coordinate of the vertex
+     * @param y1 Y coordinate of the vertex
+     * @return Whether there exists a vertex at given position.
+     */
+    public boolean isVertex(int x1, int y1) { return getVertex(x1, y1) != null; }
 
     /**
      * @param x1 X coordinate of the vertex

@@ -100,6 +100,10 @@ public class View {
 
     public void addNextTickListener(ActionListener listener) { mapEditor.addNextTickListener(listener); }
 
+    public void addSaveListener(ActionListener listener) {
+        mapEditor.addSaveListener(listener);
+    }
+
     public void addQuitListener(ActionListener listener) {
         menu.addQuitListener(listener);
     }
@@ -117,6 +121,8 @@ public class View {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     public void removeFirstTickListener() { mapEditor.removeFirstTickListener(); }
+
+    public JComponent getMapPlanner() { return mapEditor.mapPlanner; }
 
     public void showDisconnectedGraphError() {
         JOptionPane.showMessageDialog(null,

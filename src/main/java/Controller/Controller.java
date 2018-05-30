@@ -1,9 +1,17 @@
 package Controller;
 import Model.Model;
 import View.View;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Logger;
+
+import static java.lang.Integer.compareUnsigned;
 import static java.lang.Integer.max;
 
 public class Controller {
@@ -125,6 +133,7 @@ public class Controller {
         view.addNewSourceListener(this::newSource);
         view.addNewSinkListener(this::newSink);
         view.addFirstTickListener(this::firstTick);
+        view.addSaveListener(this::save);
     }
 
     private void firstTick(ActionEvent e) {
@@ -157,6 +166,70 @@ public class Controller {
         String mode = view.getMode();
         System.out.println(mode);
         model.changeMode(mode);
+    }
+
+    private void save(ActionEvent e) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Choose/create file to save the grid");
+        if (fileChooser.showSaveDialog(view.getMapPlanner()) != JFileChooser.APPROVE_OPTION)
+            return;
+        File file = fileChooser.getSelectedFile();
+
+        StringBuilder grid = new StringBuilder();
+        int size = model.getGridSize();
+
+        for (int j = 0; j < size; ++j){
+            StringBuilder current = new StringBuilder();
+            StringBuilder next = new StringBuilder();
+            for (int i = 0; i < size; ++i){
+                if (model.isVertex(i, j)){
+                    if (model.isSource(i, j))
+                        current.append('s');
+                    else if (model.isSink(i, j))
+                        current.append('t');
+                    else
+                        current.append('.');
+
+                    if (i < size-1){
+                        if (model.areNeighbours(i, j, i+1, j))
+                            current.append('-');
+                        else
+                            current.append(' ');
+                    }
+                    else
+                        current.append(' ');
+
+                    if (j < size-1){
+                        if (model.areNeighbours(i, j, i, j+1))
+                            next.append("| ");
+                        else
+                            next.append("  ");
+                    }
+                    else
+                        next.append("  ");
+                }
+                else {
+                    current.append("  ");
+                    next.append("  ");
+                }
+            }
+            grid.append(current.toString())
+                    .append(System.lineSeparator())
+                    .append(next.toString())
+                    .append(System.lineSeparator());
+        }
+
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(grid.toString());
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        logger.config("Saving into: " + file.getAbsolutePath()
+                + System.lineSeparator() + grid.toString());
+
     }
 
 }

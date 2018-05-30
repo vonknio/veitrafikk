@@ -19,10 +19,13 @@ class MapEditor {
 
     private JButton quit;
     private JButton play;
+    private JButton save;
     private JButton pause;
     private JButton start;
-    private JComboBox modesMenu;
+    private JPanel playButtons;
+    private JPanel gameButtons;
     private JPanel drawingButtons;
+    private JComboBox modesMenu;
     private String[] modes = {"SHORTEST_PATH", "RANDOM"};
 
     public MapEditor (int size, int dist){
@@ -51,10 +54,10 @@ class MapEditor {
         container.setLayout(new BorderLayout());
 
         drawingButtons = new JPanel(new BorderLayout());
-        JPanel gameButtons = new JPanel(new BorderLayout());
+        gameButtons = new JPanel(new BorderLayout());
         JPanel otherButtons = new JPanel(new BorderLayout());
         JPanel simButtons = new JPanel(new BorderLayout());
-        JPanel playButtons = new JPanel(new BorderLayout());
+        playButtons = new JPanel(new BorderLayout());
         JPanel menu = new JPanel(new BorderLayout());
 
         JButton remove = new JButton("Delete");
@@ -93,6 +96,8 @@ class MapEditor {
         quit = new JButton("Quit");
         quit.addActionListener(e -> System.exit(0));
 
+        save = new JButton("Save");
+
         modesMenu = new JComboBox<>(modes);
 
         start = new JButton("Start");
@@ -104,7 +109,7 @@ class MapEditor {
         pause.setVisible(false);
 
         playButtons.add(play, BorderLayout.WEST);
-        playButtons.add(pause, BorderLayout.EAST);
+        playButtons.add(pause, BorderLayout.CENTER);
 
         drawingButtons.add(addSource, BorderLayout.EAST);
         drawingButtons.add(addSink, BorderLayout.CENTER);
@@ -115,8 +120,9 @@ class MapEditor {
 
         gameButtons.add(simButtons, BorderLayout.EAST);
         gameButtons.add(start, BorderLayout.CENTER);
-        gameButtons.add(playButtons, BorderLayout.WEST);
+        gameButtons.add(playButtons, BorderLayout.NORTH);
 
+        otherButtons.add(save, BorderLayout.EAST);
         otherButtons.add(quit, BorderLayout.WEST);
 
         menu.add(gameButtons, BorderLayout.EAST);
@@ -154,6 +160,8 @@ class MapEditor {
     public void removeFirstTickListener() {
         mapPlanner.blockDrawing = true;
         drawingButtons.setVisible(false);
+        gameButtons.remove(start);
+        playButtons.add(start, BorderLayout.EAST);
         play.setVisible(true);
         pause.setVisible(true);
         start.setText("First tick");
@@ -178,6 +186,10 @@ class MapEditor {
             start.setText("Next tick");
             listener.actionPerformed(e);
         });}
+
+    public void addSaveListener(ActionListener listener) {
+        save.addActionListener(listener);
+    }
 
     public void addNewRoadListener(ActionListener listener) { mapPlanner.addNewRoadListener(listener); }
 
