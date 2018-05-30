@@ -18,6 +18,8 @@ class MapEditor {
     MapPlanner mapPlanner;
 
     private JButton quit;
+    private JButton play;
+    private JButton pause;
     private JButton start;
     private JComboBox modesMenu;
     private JPanel drawingButtons;
@@ -52,6 +54,7 @@ class MapEditor {
         JPanel gameButtons = new JPanel(new BorderLayout());
         JPanel otherButtons = new JPanel(new BorderLayout());
         JPanel simButtons = new JPanel(new BorderLayout());
+        JPanel playButtons = new JPanel(new BorderLayout());
         JPanel menu = new JPanel(new BorderLayout());
 
         JButton remove = new JButton("Delete");
@@ -94,6 +97,15 @@ class MapEditor {
 
         start = new JButton("Start");
 
+        play = new JButton("Play");
+        play.setVisible(false);
+
+        pause = new JButton("Pause");
+        pause.setVisible(false);
+
+        playButtons.add(play, BorderLayout.WEST);
+        playButtons.add(pause, BorderLayout.EAST);
+
         drawingButtons.add(addSource, BorderLayout.EAST);
         drawingButtons.add(addSink, BorderLayout.CENTER);
         drawingButtons.add(remove, BorderLayout.WEST);
@@ -103,6 +115,7 @@ class MapEditor {
 
         gameButtons.add(simButtons, BorderLayout.EAST);
         gameButtons.add(start, BorderLayout.CENTER);
+        gameButtons.add(playButtons, BorderLayout.WEST);
 
         otherButtons.add(quit, BorderLayout.WEST);
 
@@ -141,8 +154,23 @@ class MapEditor {
     public void removeFirstTickListener() {
         mapPlanner.blockDrawing = true;
         drawingButtons.setVisible(false);
+        play.setVisible(true);
+        pause.setVisible(true);
         start.setText("First tick");
         start.removeActionListener(firstTickListener);
+    }
+
+    public void addPlayListener(ActionListener listener) {
+        play.addActionListener(e -> {
+            start.setText("Next tick");
+            listener.actionPerformed(e);
+        });
+    }
+
+    public void addPauseListener(ActionListener listener) {
+        pause.addActionListener(e -> {
+            listener.actionPerformed(e);
+        });
     }
 
     public void addNextTickListener(ActionListener listener) {

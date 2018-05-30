@@ -133,7 +133,17 @@ public class Controller {
         else {
             view.removeFirstTickListener();
             view.addNextTickListener(this::nextTick);
+            view.addPlayListener(this::play);
+            view.addPauseListener(this::pause);
         }
+    }
+
+    private void play(ActionEvent e) {
+        logger.config("PLAY");
+    }
+
+    private void pause(ActionEvent e) {
+        logger.config("PAUSE");
     }
 
     private void nextTick(ActionEvent e) {

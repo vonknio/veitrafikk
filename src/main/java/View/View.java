@@ -94,6 +94,10 @@ public class View {
 
     public void addFirstTickListener(ActionListener listener) { mapEditor.addFirstTickListener(listener); }
 
+    public void addPlayListener(ActionListener listener) { mapEditor.addPlayListener(listener); }
+
+    public void addPauseListener(ActionListener listener) { mapEditor.addPauseListener(listener); }
+
     public void addNextTickListener(ActionListener listener) { mapEditor.addNextTickListener(listener); }
 
     public void addQuitListener(ActionListener listener) {
