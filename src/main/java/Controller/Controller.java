@@ -175,12 +175,24 @@ public class Controller {
             return;
         File file = fileChooser.getSelectedFile();
 
-        StringBuilder grid = new StringBuilder();
+        int minLine = 23;
         int size = model.getGridSize();
 
+        StringBuilder grid = new StringBuilder();
+        StringBuilder top = new StringBuilder();
+        for (int i = 0; i < max(minLine, size*2 + 3); ++i)
+            top.append("@");
+        StringBuilder wall = new StringBuilder("@@");
+        for (int i = 0; i < minLine - (size*2) - 3; ++i)
+            wall.append("@");
+
+        grid.append(top).append(System.lineSeparator())
+                .append(top).append(System.lineSeparator());
         for (int j = 0; j < size; ++j){
-            StringBuilder current = new StringBuilder();
+            StringBuilder current = new StringBuilder("@@");
             StringBuilder next = new StringBuilder();
+            if (j < size-1)
+                next.append("@@");
             for (int i = 0; i < size; ++i){
                 if (model.isVertex(i, j)){
                     if (model.isSource(i, j))
@@ -194,30 +206,54 @@ public class Controller {
                         if (model.areNeighbours(i, j, i+1, j))
                             current.append('-');
                         else
-                            current.append(' ');
+                            current.append('#');
                     }
-                    else
-                        current.append(' ');
 
                     if (j < size-1){
                         if (model.areNeighbours(i, j, i, j+1))
-                            next.append("| ");
+                            next.append("|");
                         else
-                            next.append("  ");
+                            next.append("#");
+                        if (i < size - 1)
+                            next.append("#");
                     }
-                    else
-                        next.append("  ");
                 }
                 else {
-                    current.append("  ");
-                    next.append("  ");
+                    if (i < size - 1)
+                        current.append("#");
+                    current.append("#");
+                    if (j < size - 1) {
+                        if (i < size - 1)
+                            next.append("#");
+                        next.append("#");
+                    }
                 }
             }
-            grid.append(current.toString())
-                    .append(System.lineSeparator())
-                    .append(next.toString())
-                    .append(System.lineSeparator());
+            current.append(wall);
+            if (j < size - 1) next.append(wall);
+            grid.append(current.toString()).append(System.lineSeparator());
+            if (j < size - 1) grid.append(next.toString()).append(System.lineSeparator());
         }
+
+        grid.append(top).append(System.lineSeparator())
+                .append(top).append(System.lineSeparator());
+
+        String[] car = {"     _______       "  ,
+                        "    / /||  \\\\      ",
+                        " __/ /_||___\\\\_____",
+                        "/   _VEITRAFIKK_  ("  ,
+                        "|__/ \\________/ \\_|",
+                        "   \\_/        \\_/  "};
+
+        StringBuilder diff = new StringBuilder();
+        for (int i = 0; i < (max(size*2+3, minLine) - 19)/2; ++i)
+            diff.append("@");
+
+        for (int i = 0; i < 6; ++i)
+            grid.append(diff).append(car[i]).append(diff).append(System.lineSeparator());
+
+        grid.append(top).append(System.lineSeparator())
+                .append(top).append(System.lineSeparator());
 
         try {
             FileWriter fileWriter = new FileWriter(file);
