@@ -238,19 +238,54 @@ public class Controller {
         grid.append(top).append(System.lineSeparator())
                 .append(top).append(System.lineSeparator());
 
-        String[] car = {"     _______       "  ,
-                        "    / /||  \\\\      ",
-                        " __/ /_||___\\\\_____",
-                        "/   _VEITRAFIKK_  ("  ,
-                        "|__/ \\________/ \\_|",
-                        "   \\_/        \\_/  "};
+        String[] car = {" ","   _______     "  ,"   "  ,
+                        " ","  / /||  \\\\    ","   ",
+                        " ","_/ /_||___\\\\___","___",
+                        "/","  _VEITRAFIKK_ "  ,"  ("  ,
+                        "|","_/ \\________/ \\","__|",
+                        " "," \\_/        \\_/","   "};
+
+        String[] whl = {"    " ,
+                        "    " ,
+                        "____" ,
+                        "  _ " ,
+                        "_/ \\",
+                        " \\_/"};
+
+        int carLen = 19;
+        ArrayList<StringBuilder> carBuilder = new ArrayList<>();
+        for (int i = 0; i < 6; ++i) {
+            carBuilder.add(new StringBuilder());
+            carBuilder.get(i).append(car[3 * i]);
+        }
+
+        ArrayList<StringBuilder> backBuilder = new ArrayList<>();
+        ArrayList<StringBuilder> frontBuilder = new ArrayList<>();
+        for (int i = 0; i < 6; ++i) {
+            backBuilder.add(new StringBuilder());
+            frontBuilder.add(new StringBuilder());
+        }
+
+        while (carLen + 8 <= max(minLine-4, size*2-1)) {
+            for (int i = 0; i < 6; ++i) {
+                backBuilder.get(i).append(whl[i]);
+                frontBuilder.get(i).append(whl[i]);
+            }
+            carLen += 8;
+        }
+
+        for (int i = 0; i < 6; ++i)
+            carBuilder.get(i).append(backBuilder.get(i))
+                    .append(car[3 * i + 1])
+                    .append(frontBuilder.get(i))
+                    .append(car[3 * i + 2]);
 
         StringBuilder diff = new StringBuilder();
-        for (int i = 0; i < (max(size*2+3, minLine) - 19)/2; ++i)
+        for (int i = 0; i < (max(size*2+3, minLine) - carLen)/2; ++i)
             diff.append("@");
 
         for (int i = 0; i < 6; ++i)
-            grid.append(diff).append(car[i]).append(diff).append(System.lineSeparator());
+            grid.append(diff).append(carBuilder.get(i)).append(diff).append(System.lineSeparator());
 
         grid.append(top).append(System.lineSeparator())
                 .append(top).append(System.lineSeparator());
