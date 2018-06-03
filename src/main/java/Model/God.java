@@ -39,6 +39,8 @@ abstract class God {
                 if (mode == Mode.RANDOM)
                     vehicle.setNextNext(getDestinationForNextTick(vehicle));
             }
+            Statistics.process(vehicle);
+
         }
 
         for (Vertex vertex : grid.getVertices()) {
@@ -47,6 +49,7 @@ abstract class God {
                     TestUtils.vehicleIsInCompressedVertex(vertex.getVehicle(), vertex.getVehicle().getDest(), grid)) {
                 // celebrate this fact somehow
                 logger.config("Vehicle " + vertex.getVehicle().getId() + " has reached its destination.");
+                Statistics.processRemoved(vertex.getVehicle());
                 model.getGridState().removeVehicle(vertex.getVehicle());
             }
         }

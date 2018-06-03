@@ -8,6 +8,7 @@ class GridState {
     private List<Vehicle> vehicles = new LinkedList<>();
     private List<Sink> sinks = new LinkedList<>();
     private List<Source> sources = new LinkedList<>();
+    private TrafficLight light = new TrafficLight();
     private final Grid grid;
     private final static Logger logger = Logger.getLogger(GridState.class.getName());
 
@@ -27,6 +28,7 @@ class GridState {
                     Vehicle vehicle = source.spawnVehicle(randomSink);
                     addVehicle(vehicle);
                     logger.config("Source " + source + " has spawned vehicle " + vehicle.getId());
+                    Statistics.process(vehicle);
                 }
             }
         }

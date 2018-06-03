@@ -1,6 +1,8 @@
 package Model;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -15,7 +17,7 @@ class Vehicle {
     private int id;
     private static int idCounter = 0;
 
-    final ObjectStatistics stats;
+    final VehicleStatistics stats;
 
     Vehicle(Vertex cur) {
         this(cur, null);
@@ -29,7 +31,7 @@ class Vehicle {
         this.id = idCounter++;
     }
 
-    Vehicle(Vertex cur, Vertex dest, ObjectStatistics stats) {
+    Vehicle(Vertex cur, Vertex dest, VehicleStatistics stats) {
         this.prev = cur;
         this.cur = cur;
         this.dest = dest;
@@ -42,21 +44,37 @@ class Vehicle {
      *  Getters and setters
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    Vertex getCur() { return cur; }
+    Vertex getCur() {
+        return cur;
+    }
 
-    Vertex getNext() { return next; }
+    void setCur(Vertex vertex) {
+        cur = vertex;
+    }
 
-    public Vertex getNextNext() { return nextNext; }
+    Vertex getNext() {
+        return next;
+    }
 
-    Vertex getPrev() { return prev; }
+    public Vertex getNextNext() {
+        return nextNext;
+    }
 
-    Vertex getDest() { return dest; }
+    Vertex getPrev() {
+        return prev;
+    }
 
-    int getId() { return id; }
+    void setPrev(Vertex vertex) {
+        prev = vertex;
+    }
 
-    void setCur(Vertex vertex) { cur = vertex; }
+    Vertex getDest() {
+        return dest;
+    }
 
-    void setPrev(Vertex vertex) { prev = vertex; }
+    void setDest(Vertex vertex) {
+        dest = vertex;
+    }
 
     void setNext(Vertex vertex) {
         if (vertex.getVertexType() != Vertex.VertexType.IN)
@@ -82,8 +100,11 @@ class Vehicle {
         else nextNext = vertex;
     }
 
-    void setDest(Vertex vertex) { dest = vertex; }
+    int getId() {
+        return id;
+    }
 
+    //TODO idleTicks
     class VehicleStatistics implements ObjectStatistics {
         private long idleTicks = 0;
         private long ticksAlive = 0;
@@ -99,17 +120,36 @@ class Vehicle {
 
         private void updateTime() {
             ticksAlive++;
-            if (TestUtils.compressedEquals(prev, cur))
+            if (TestUtils.compressedEquals(prev, cur) && !path.isEmpty())
                 idleTicks++;
         }
 
         private void updatePath() {
+            if (path.isEmpty()) {
+                if (cur instanceof Source)
+                    path.add(cur);
+            }
             if (!TestUtils.compressedEquals(prev, cur))
                 path.add(cur);
         }
 
         private void updateAuxiliaryVariables() {
+        }
 
+        long ticksAlive() {
+            return ticksAlive;
+        }
+
+        int pathLength() {
+            return path.size();
+        }
+
+        Collection<Vertex> verticesVisited() {
+            return new HashSet<>(path);
+        }
+
+        double velocity() {
+            return pathLength() / ticksAlive();
         }
     }
 }

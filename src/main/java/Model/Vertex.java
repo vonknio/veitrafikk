@@ -4,7 +4,7 @@ package Model;
  * Class representing an existing vertex of the grid.
  */
 class Vertex {
-    final ObjectStatistics stats;
+    final VertexStatistics stats;
     final int x, y;
 
     private VertexType type;
@@ -17,7 +17,7 @@ class Vertex {
         this.stats = new VertexStatistics();
     }
 
-    Vertex(int x, int y, VertexType vertexType, ObjectStatistics stats) {
+    Vertex(int x, int y, VertexType vertexType, VertexStatistics stats) {
         this.x = x;
         this.y = y;
         this.type = vertexType;
@@ -62,26 +62,39 @@ class Vertex {
     class VertexStatistics implements ObjectStatistics {
         private long vehicleCount = 0;
         private long noVehicleTicks = 0;
-
+        private long ticks = 0;
         private Vehicle vehicleInPrevTick;
 
         @Override
         public void process() {
+            updateTime();
             updateVehicleCount();
-
             updateAuxiliaryVariables();
         }
+
+        private void updateTime() {
+            if (vehicle == null)
+                noVehicleTicks++;
+            ticks++;
+        }
+
 
         private void updateVehicleCount() {
             if (vehicleInPrevTick == vehicle)
                 vehicleCount++;
-
-            if (vehicle == null)
-                noVehicleTicks++;
         }
 
         private void updateAuxiliaryVariables() {
             vehicleInPrevTick = vehicle;
         }
+
+        long vehicleCount() {
+            return vehicleCount;
+        }
+
+        double timeEmpty() {
+            return noVehicleTicks / ticks;
+        }
+
     }
 }

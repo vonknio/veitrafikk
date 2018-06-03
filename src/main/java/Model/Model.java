@@ -9,6 +9,7 @@ import static java.lang.Integer.min;
 public class Model {
     private Grid grid;
     private GridState gridState;
+    private Statistics statistics;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Configure grid
@@ -21,6 +22,7 @@ public class Model {
     public void createGrid(int size) {
         grid = new Grid(size);
         gridState = new GridState(grid);
+        statistics = new Statistics(grid, gridState);
     }
 
     public void setGrid(Grid grid) { this.grid = grid; }
@@ -263,4 +265,40 @@ public class Model {
         return grid.isConnected() && !gridState.getSinks().isEmpty() && !gridState.getSources().isEmpty();
     }
 
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *  Statistics
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    public LinkedList<Vehicle.VehicleStatistics> vehiclesStatistics() {
+        return statistics.vehiclesStatistics();
+    }
+
+    public LinkedList<Vertex.VertexStatistics> verticesStatistics() {
+        return statistics.verticesStatistics();
+    }
+
+    public double averageVelocity() {
+        return statistics.averageVelocity();
+    }
+
+    public int verticesVisited() {
+        return statistics.verticesVisited();
+    }
+
+    public double averagePathLength() {
+        return statistics.averagePathLength();
+    }
+
+    public double averageTimeEmpty() {
+        return statistics.averageTimeEmpty();
+    }
+
+    public double averageVehicleCount() {
+        return statistics.averageVehicleCount();
+    }
+
+    public Statistics getStatistics() {
+        return statistics;
+    }
 }
