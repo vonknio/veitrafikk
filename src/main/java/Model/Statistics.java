@@ -79,7 +79,11 @@ class Statistics {
         for (Vehicle vehicle : gridState.getVehicles()) {
             result += (vehicle.stats.pathLength() - 1);
         }
-        return result / gridState.getVehicles().size();
+        for (Vehicle.VehicleStatistics statistics : removedVehiclesStatistics) {
+            result += (statistics.pathLength() - 1);
+        }
+        return result * grid.getRoadLength() /
+                (gridState.getVehicles().size() + removedVehiclesStatistics.size());
     }
 
     double averageTimeEmpty() {

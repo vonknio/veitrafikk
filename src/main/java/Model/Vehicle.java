@@ -141,7 +141,14 @@ class Vehicle {
         }
 
         int pathLength() {
-            return path.size();
+            Vertex prev = null;
+            int result = 0;
+            for (Vertex vertex : path) {
+                if (!TestUtils.compressedEquals(prev, vertex))
+                    result++;
+                prev = vertex;
+            }
+            return result;
         }
 
         Collection<Vertex> verticesVisited() {

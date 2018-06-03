@@ -394,4 +394,8 @@ class Grid {
         }
         return true;
     }
+
+    int getRoadLength() {
+        return roadLength;
+    }
 }

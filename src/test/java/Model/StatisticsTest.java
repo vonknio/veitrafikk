@@ -23,6 +23,9 @@ public class StatisticsTest {
         model.nextTick();
         assertEquals(4, model.getStatistics().verticesVisited());
         assertEquals(1, model.getStatistics().averageVelocity(), 0.1);
+        model.nextTick();
+        model.nextTick();
+        assertEquals(3, model.getStatistics().averagePathLength(), 0.01);
     }
 
     @Test

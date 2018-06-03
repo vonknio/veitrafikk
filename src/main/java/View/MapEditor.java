@@ -2,7 +2,6 @@ package View;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 
@@ -46,7 +45,7 @@ class MapEditor {
         frame.setSize(size * dist + dist, size * dist + 125);
         frame.setTitle("Veitrafikk - Map Editor");
         frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     private void setupContainer (){
@@ -176,9 +175,7 @@ class MapEditor {
     }
 
     public void addPauseListener(ActionListener listener) {
-        pause.addActionListener(e -> {
-            listener.actionPerformed(e);
-        });
+        pause.addActionListener(listener);
     }
 
     public void addNextTickListener(ActionListener listener) {
