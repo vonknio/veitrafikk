@@ -139,7 +139,7 @@ public class Controller {
 
     private void showStatistics(ActionEvent event) {
         view.showStatistics(model.averagePathLength(), model.averageTicksAlive(), model.averageTimeEmpty(),
-                model.averagePathLength(), model.averageVelocity(), model.verticesVisited());
+                model.averageVehicleCount(), model.averageVelocity(), model.verticesVisited());
     }
 
     private void firstTick(ActionEvent e) {
