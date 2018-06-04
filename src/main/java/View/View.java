@@ -7,6 +7,7 @@ import java.util.Collection;
 public class View {
     Menu menu;
     MapEditor mapEditor;
+    StatisticsWindow statisticsWindow;
     private Object active;
     private boolean isVisible = false;
 
@@ -22,6 +23,8 @@ public class View {
                 menu.setVisible(true);
             else if (active == mapEditor)
                 mapEditor.setVisible(true);
+            else if (active == statisticsWindow)
+                statisticsWindow.setVisible(true);
         }
         else {
             if (menu != null)
@@ -38,6 +41,18 @@ public class View {
         active = mapEditor;
         if (isVisible)
             mapEditor.setVisible(true);
+    }
+
+    public void showStatistics(double path, double ticks, double time, double vehicles, double velocity, int vertices) {
+        statisticsWindow = new StatisticsWindow();
+        statisticsWindow.setPath(path);
+        statisticsWindow.setTicks(ticks);
+        statisticsWindow.setTime(time);
+        statisticsWindow.setVehicles(vehicles);
+        statisticsWindow.setVelocity(velocity);
+        statisticsWindow.setVertices(vertices);
+        statisticsWindow.update();
+        statisticsWindow.setVisible(true);
     }
 
     public void nextTick(){
@@ -89,6 +104,10 @@ public class View {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     public void addOpenEditorListener(ActionListener listener) { menu.addOpenEditorListener(listener); }
+
+    public void addStatsListener(ActionListener listener) {
+        mapEditor.addStatsListener(listener);
+    }
 
     public void addModeChangeListener(ActionListener listener) { mapEditor.addModeChangeListener(listener); }
 

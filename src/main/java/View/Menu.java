@@ -15,7 +15,7 @@ class Menu extends JFrame {
     private JButton load;
     private JButton quit;
 
-    public Menu (){
+    Menu() {
         create();
     }
 
@@ -25,7 +25,7 @@ class Menu extends JFrame {
         setTitle("Veitrafikk");
         setSize(200, 225);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     private void setup () {
@@ -100,19 +100,19 @@ class Menu extends JFrame {
         this.add(menu);
     }
 
-    public int getGridSize() {
+    int getGridSize() {
         return Integer.parseInt(sizeField.getText());
     }
 
-    public int getDistanceInPx() {
+    int getDistanceInPx() {
         return Integer.parseInt(distField.getText());
     }
 
-    public void addOpenEditorListener(ActionListener listener) {
+    void addOpenEditorListener(ActionListener listener) {
         start.addActionListener(listener);
     }
 
-    public void addQuitListener(ActionListener listener) {
+    void addQuitListener(ActionListener listener) {
         quit.addActionListener(listener);
     }
 

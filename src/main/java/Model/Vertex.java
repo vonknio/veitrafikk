@@ -17,6 +17,7 @@ class Vertex {
         this.stats = new VertexStatistics();
     }
 
+    @Deprecated
     Vertex(int x, int y, VertexType vertexType, VertexStatistics stats) {
         this.x = x;
         this.y = y;
@@ -93,6 +94,8 @@ class Vertex {
         }
 
         double timeEmpty() {
+            if (ticks == 0)
+                return 0;
             return noVehicleTicks / ticks;
         }
 

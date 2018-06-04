@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Logger;
 
-import static java.lang.Integer.compareUnsigned;
 import static java.lang.Integer.max;
 
 public class Controller {
@@ -134,6 +133,13 @@ public class Controller {
         view.addNewSinkListener(this::newSink);
         view.addFirstTickListener(this::firstTick);
         view.addSaveListener(this::save);
+        view.addStatsListener(this::showStatistics);
+
+    }
+
+    private void showStatistics(ActionEvent event) {
+        view.showStatistics(model.averagePathLength(), model.averageTicksAlive(), model.averageTimeEmpty(),
+                model.averagePathLength(), model.averageVelocity(), model.verticesVisited());
     }
 
     private void firstTick(ActionEvent e) {

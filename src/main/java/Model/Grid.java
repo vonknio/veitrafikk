@@ -51,8 +51,8 @@ class Grid {
      * @param y Y coordinate.
      */
     private void addVertex(int x, int y) {
-        vertices[x * size + y][0] = new Vertex(x, y, Vertex.VertexType.IN, null);
-        vertices[x * size + y][1] = new Vertex(x, y, Vertex.VertexType.OUT, null);
+        vertices[x * size + y][0] = new Vertex(x, y, Vertex.VertexType.IN);
+        vertices[x * size + y][1] = new Vertex(x, y, Vertex.VertexType.OUT);
     }
 
     private void removeVertex(int x, int y) {

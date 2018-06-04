@@ -12,7 +12,7 @@ class MapEditor {
 
     private ActionListener firstTickListener;
 
-    public JFrame frame;
+    JFrame frame;
     Container container;
     MapPlanner mapPlanner;
 
@@ -21,13 +21,14 @@ class MapEditor {
     private JButton save;
     private JButton pause;
     private JButton start;
+    private JButton stats;
     private JPanel playButtons;
     private JPanel gameButtons;
     private JPanel drawingButtons;
     private JComboBox modesMenu;
     private String[] modes = {"SHORTEST_PATH", "RANDOM"};
 
-    public MapEditor (int size, int dist){
+    MapEditor(int size, int dist) {
         this.size = size;
         this.dist = dist;
 
@@ -38,11 +39,13 @@ class MapEditor {
         setupMapPlanner();
     }
 
-    public void setVisible(boolean b) { frame.setVisible(b); }
+    void setVisible(boolean b) {
+        frame.setVisible(b);
+    }
 
     private void setupFrame (){
         frame = new JFrame();
-        frame.setSize(size * dist + dist, size * dist + 125);
+        frame.setSize(size * dist + dist + 11, size * dist + 125);
         frame.setTitle("Veitrafikk - Map Editor");
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -97,6 +100,8 @@ class MapEditor {
 
         save = new JButton("Save");
 
+        stats = new JButton("Stats");
+
         modesMenu = new JComboBox<>(modes);
 
         start = new JButton("Start");
@@ -121,8 +126,9 @@ class MapEditor {
         gameButtons.add(start, BorderLayout.CENTER);
         gameButtons.add(playButtons, BorderLayout.NORTH);
 
-        otherButtons.add(save, BorderLayout.EAST);
+        otherButtons.add(save, BorderLayout.CENTER);
         otherButtons.add(quit, BorderLayout.WEST);
+        otherButtons.add(stats, BorderLayout.EAST);
 
         menu.add(gameButtons, BorderLayout.EAST);
         menu.add(otherButtons, BorderLayout.WEST);
@@ -132,31 +138,49 @@ class MapEditor {
 
     private void setupMapPlanner (){ container.add(mapPlanner, BorderLayout.CENTER); }
 
-    public int[] getCoordinates() { return mapPlanner.getCoordinates(); }
+    int[] getCoordinates() {
+        return mapPlanner.getCoordinates();
+    }
 
 
-    public void drawRoad(int x1, int y1, int x2, int y2) { mapPlanner.drawRoad(x1, y1, x2, y2); }
+    void drawRoad(int x1, int y1, int x2, int y2) {
+        mapPlanner.drawRoad(x1, y1, x2, y2);
+    }
 
-    public void drawSource(int x1, int y1) { mapPlanner.drawSpecialVertex(x1, y1, new Color(0,255,0)); }
+    void drawSource(int x1, int y1) {
+        mapPlanner.drawSpecialVertex(x1, y1, new Color(0, 255, 0));
+    }
 
-    public void drawSink(int x1, int y1) { mapPlanner.drawSpecialVertex(x1, y1, new Color(255,150,0)); }
+    void drawSink(int x1, int y1) {
+        mapPlanner.drawSpecialVertex(x1, y1, new Color(255, 150, 0));
+    }
 
-    public void removeRoad(int x1, int y1, int x2, int y2) { mapPlanner.removeRoad(x1, y1, x2, y2); }
+    void removeRoad(int x1, int y1, int x2, int y2) {
+        mapPlanner.removeRoad(x1, y1, x2, y2);
+    }
 
-    public void removeSpecialVertex(int x1, int y1) { mapPlanner.removeSpecialVertex(x1, y1); }
+    void removeSpecialVertex(int x1, int y1) {
+        mapPlanner.removeSpecialVertex(x1, y1);
+    }
 
-    public void updateVehicles(Collection<int[]> coordinates) { mapPlanner.updateVehicles(coordinates); }
+    void updateVehicles(Collection<int[]> coordinates) {
+        mapPlanner.updateVehicles(coordinates);
+    }
 
-    public String getMode() { return (String) modesMenu.getSelectedItem(); }
+    String getMode() {
+        return (String) modesMenu.getSelectedItem();
+    }
 
-    public void addModeChangeListener(ActionListener listener) { modesMenu.addActionListener(listener); }
+    void addModeChangeListener(ActionListener listener) {
+        modesMenu.addActionListener(listener);
+    }
 
-    public void addFirstTickListener(ActionListener listener) {
+    void addFirstTickListener(ActionListener listener) {
         start.addActionListener(listener);
         firstTickListener = listener;
     }
 
-    public void removeFirstTickListener() {
+    void removeFirstTickListener() {
         mapPlanner.blockDrawing = true;
         drawingButtons.setVisible(false);
         gameButtons.remove(start);
@@ -167,33 +191,45 @@ class MapEditor {
         start.removeActionListener(firstTickListener);
     }
 
-    public void addPlayListener(ActionListener listener) {
+    void addPlayListener(ActionListener listener) {
         play.addActionListener(e -> {
             start.setText("Next tick");
             listener.actionPerformed(e);
         });
     }
 
-    public void addPauseListener(ActionListener listener) {
+    void addPauseListener(ActionListener listener) {
         pause.addActionListener(listener);
     }
 
-    public void addNextTickListener(ActionListener listener) {
+    void addNextTickListener(ActionListener listener) {
         start.addActionListener(e -> {
             start.setText("Next tick");
             listener.actionPerformed(e);
         });}
 
-    public void addSaveListener(ActionListener listener) {
+    void addStatsListener(ActionListener listener) {
+        stats.addActionListener(listener);
+    }
+
+    void addSaveListener(ActionListener listener) {
         save.addActionListener(listener);
     }
 
-    public void addNewRoadListener(ActionListener listener) { mapPlanner.addNewRoadListener(listener); }
+    void addNewRoadListener(ActionListener listener) {
+        mapPlanner.addNewRoadListener(listener);
+    }
 
-    public void addRemoveListener(ActionListener listener) { mapPlanner.addRemoveListener(listener); }
+    void addRemoveListener(ActionListener listener) {
+        mapPlanner.addRemoveListener(listener);
+    }
 
-    public void addNewSourceListener(ActionListener listener) { mapPlanner.addNewSourceListener(listener); }
+    void addNewSourceListener(ActionListener listener) {
+        mapPlanner.addNewSourceListener(listener);
+    }
 
-    public void addNewSinkListener(ActionListener listener) { mapPlanner.addNewSinkListener(listener); }
+    void addNewSinkListener(ActionListener listener) {
+        mapPlanner.addNewSinkListener(listener);
+    }
 
 }

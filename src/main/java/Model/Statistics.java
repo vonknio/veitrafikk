@@ -5,9 +5,6 @@ import java.util.LinkedList;
 
 class Statistics {
     private static LinkedList<Vehicle.VehicleStatistics> removedVehiclesStatistics = new LinkedList<>();
-    /**
-     * Update all statistics related to given vertex for current timetick.
-     */
     private GridState gridState;
     private Grid grid;
 
@@ -17,9 +14,21 @@ class Statistics {
         removedVehiclesStatistics = new LinkedList<>();
     }
 
+    /**
+     * Update all statistics related to given vertex for current timetick.
+     */
+
     static void process(Vehicle vehicle) {
         if (vehicle.stats != null)
             vehicle.stats.process();
+    }
+
+    void setGridState(GridState gridState) {
+        this.gridState = gridState;
+    }
+
+    void setGrid(Grid grid) {
+        this.grid = grid;
     }
 
     static void processRemoved(Vehicle vehicle) {
@@ -31,13 +40,10 @@ class Statistics {
             vertex.stats.process();
     }
 
-    void setGridState(GridState gridState) {
-        this.gridState = gridState;
-    }
 
-    void setGrid(Grid grid) {
-        this.grid = grid;
-    }
+     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *  Results
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     LinkedList<Vehicle.VehicleStatistics> vehiclesStatistics() {
         LinkedList<Vehicle.VehicleStatistics> statistics = new LinkedList<>();
