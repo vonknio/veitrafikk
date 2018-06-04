@@ -56,7 +56,7 @@ class Vehicle {
         return next;
     }
 
-    public Vertex getNextNext() {
+    Vertex getNextNext() {
         return nextNext;
     }
 
@@ -88,7 +88,7 @@ class Vehicle {
         else next = vertex;
     }
 
-    public void setNextNext(Vertex vertex) {
+    void setNextNext(Vertex vertex) {
         if (vertex.getVertexType() != Vertex.VertexType.IN)
             throw new IllegalArgumentException("Next field should always have IN type.");
         this.nextNext = vertex;
@@ -137,10 +137,10 @@ class Vehicle {
         }
 
         long ticksAlive() {
-            return ticksAlive;
+            return ticksAlive - 1;
         }
 
-        int pathLength() {
+        double pathLength() {
             Vertex prev = null;
             int result = 0;
             for (Vertex vertex : path) {
@@ -156,7 +156,7 @@ class Vehicle {
         }
 
         double velocity() {
-            return pathLength() / ticksAlive();
+            return pathLength() / (ticksAlive() + 1);
         }
     }
 }

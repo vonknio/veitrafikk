@@ -17,6 +17,7 @@ public class Model {
 
     /**
      * Create an empty grid of given size and accompanying GridState.
+     *
      * @param size Size of grid's side in vertices.
      */
     public void createGrid(int size) {
@@ -25,19 +26,21 @@ public class Model {
         statistics = new Statistics(grid, gridState);
     }
 
-    public void setGrid(Grid grid) { this.grid = grid; }
-
     /**
      * Add a road to the grid.
+     *
      * @param x1 X coordinate of first vertex.
      * @param y1 Y coordinate of first vertex.
      * @param x2 X coordinate of second vertex.
      * @param y2 Y coordinate of second vertex.
      */
-    public void addRoad(int x1, int y1, int x2, int y2) { grid.addRoad(x1, y1, x2, y2); }
+    public void addRoad(int x1, int y1, int x2, int y2) {
+        grid.addRoad(x1, y1, x2, y2);
+    }
 
     /**
      * Remove given road from the grid.
+     *
      * @param x1 X coordinate of first vertex.
      * @param y1 Y coordinate of first vertex.
      * @param x2 X coordinate of second vertex.
@@ -49,21 +52,19 @@ public class Model {
 
     /**
      * Add a source vertex to the grid.
-     * @param x1 X coordinate.
-     * @param y1 Y coordinate.
-     * @param limit limit of vehicles spawned from source during whole simulation.
+     *
+     * @param x1          X coordinate.
+     * @param y1          Y coordinate.
+     * @param limit       limit of vehicles spawned from source during whole simulation.
      * @param probability probability of spawning a new vehicle in each tick.
      */
     public void addSource(int x1, int y1, long limit, float probability) {
         gridState.addSource(x1, y1, limit, probability);
     }
 
-    public void addSource(int x1, int y1) {
-        addSource(x1, y1, 10, 1);
-    }
-
     /**
      * Add a sink vertex to the grid.
+     *
      * @param x1 X coordinate.
      * @param y1 Y coordinate.
      */
@@ -71,32 +72,46 @@ public class Model {
         gridState.addSink(x1, y1);
     }
 
+    public void addSource(int x1, int y1) {
+        addSource(x1, y1, 10, 1);
+    }
+
     /**
      * Set vertex type to the default type.
+     *
      * @param x1 X coordinate.
      * @param y1 X coordinate.
      */
-    public void removeVertexClassifiers(int x1, int y1) { grid.removeVertexClassifiers(x1, y1); }
+    public void removeVertexClassifiers(int x1, int y1) {
+        grid.removeVertexClassifiers(x1, y1);
+    }
+
+    public void nextTick() {
+        God.processTimetick(this);
+    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Simulation
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    public void nextTick() { God.processTimetick(this); }
+    public void changeMode(String string) {
+        God.setMode(God.Mode.valueOf(string));
+    }
 
-    public void changeMode(String string) { God.setMode(God.Mode.valueOf(string)); }
+    /**
+     * @return Size of the grid's side in vertices.
+     */
+    public int getGridSize() {
+        return grid.getSize();
+    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Getters
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * @return Size of the grid's side in vertices.
-     */
-    public int getGridSize() { return grid.getSize(); }
-
-    /**
      * Get coordinates of the longest road that expands given road without crossing any crossroads.
+     *
      * @param x1 X coordinate of the first vertex.
      * @param y1 Y coordinate of the first vertex.
      * @param x2 X coordinate of the second vertex.
@@ -112,14 +127,14 @@ public class Model {
         int a1, a2, p;
         if (x1 == x2) {  // vertical
             p = min(y1, y2);
-            while (p > 0 && hasRoad(x1, p, x1, p-1) ) {
+            while (p > 0 && hasRoad(x1, p, x1, p - 1)) {
                 if (grid.getNeighbours(x1, p).size() > 2)
                     break;
                 p--;
             }
             a1 = p;
             p = max(y1, y2);
-            while (p < getGridSize() - 1 && hasRoad(x1, p, x1, p+1)) {
+            while (p < getGridSize() - 1 && hasRoad(x1, p, x1, p + 1)) {
                 if (grid.getNeighbours(x1, p).size() > 2)
                     break;
                 p++;
@@ -127,16 +142,16 @@ public class Model {
             a2 = p;
             res = new int[]{x1, a1, x1, a2};
 
-        } else  {  // horizontal
+        } else {  // horizontal
             p = min(x1, x2);
-            while (p > 0 && hasRoad(p, y1, p-1, y1)) {
+            while (p > 0 && hasRoad(p, y1, p - 1, y1)) {
                 if (grid.getNeighbours(p, y1).size() > 2)
                     break;
                 p--;
             }
             a1 = p;
             p = max(x1, x2);
-            while (p < getGridSize() - 1 && hasRoad(p, y1, p+1, y1)) {
+            while (p < getGridSize() - 1 && hasRoad(p, y1, p + 1, y1)) {
                 if (grid.getNeighbours(p, y1).size() > 2)
                     break;
                 p++;
@@ -151,24 +166,36 @@ public class Model {
     /**
      * @return Grid on which the model is operating.
      */
-    Grid getGrid() { return grid; }
+    Grid getGrid() {
+        return grid;
+    }
+
+    public void setGrid(Grid grid) {
+        this.grid = grid;
+    }
 
     /**
      * @return GridState assotiated with the model.
      */
-    GridState getGridState() { return gridState; }
+    GridState getGridState() {
+        return gridState;
+    }
 
     /**
      * @param x1 X coordinate of the vertex.
      * @param y1 Y coordinate of the vertex.
      * @return Vertex at the given point of the grid or null if it does not exist.
      */
-    Vertex getVertex(int x1, int y1) { return grid.getVertex(x1, y1); }
+    Vertex getVertex(int x1, int y1) {
+        return grid.getVertex(x1, y1);
+    }
 
     /**
      * @return Collection of all vehicles currently in the grid.
      */
-    Collection<Vehicle> getVehicles() { return gridState.getVehicles(); }
+    Collection<Vehicle> getVehicles() {
+        return gridState.getVehicles();
+    }
 
     /**
      * @return Size of the underlying grid.
@@ -183,7 +210,7 @@ public class Model {
     public Collection<int[]> getAllVehicleCoordinates() {
         LinkedList<int[]> result = new LinkedList<>();
         Collection<Vehicle> vehicles = getVehicles();
-        for (Vehicle v : vehicles){
+        for (Vehicle v : vehicles) {
             int[] coords = new int[7];
             coords[0] = v.getPrev().getXCoordinate();
             coords[1] = v.getPrev().getYCoordinate();
@@ -229,7 +256,9 @@ public class Model {
      * @param y1 Y coordinate of the vertex
      * @return Whether there exists a vertex at given position.
      */
-    public boolean isVertex(int x1, int y1) { return getVertex(x1, y1) != null; }
+    public boolean isVertex(int x1, int y1) {
+        return getVertex(x1, y1) != null;
+    }
 
     /**
      * @param x1 X coordinate of the vertex
@@ -255,7 +284,7 @@ public class Model {
      * @return Whether given vertex is a sink.
      */
     public boolean isSink(int x1, int y1) {
-       return TestUtils.isSink(x1, y1, grid);
+        return TestUtils.isSink(x1, y1, grid);
     }
 
     /**
@@ -298,7 +327,11 @@ public class Model {
         return statistics.averageVehicleCount();
     }
 
-    public Statistics getStatistics() {
+    public double averageTicksAlive() {
+        return statistics.averageTicksAlive();
+    }
+
+    Statistics getStatistics() {
         return statistics;
     }
 }

@@ -2,7 +2,11 @@ package Model;
 
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import static org.junit.Assert.*;
 
 public class GodTest {
@@ -87,7 +91,7 @@ public class GodTest {
             God.setRandomDestination(vehicles, vertices);
             God.setDestinationForNextTick(vehicles, model);
             fail("Successful operation on a disconnected graph.");
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException ignored) {
         }
 
         vehicles.remove(lonelyVehicle);
@@ -275,7 +279,7 @@ v       |
         try {
             God.setMode(null);
             fail("No exception");
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         God.setMode(God.Mode.SHORTEST_PATH);

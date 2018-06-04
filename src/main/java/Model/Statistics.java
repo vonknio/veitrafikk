@@ -60,7 +60,11 @@ class Statistics {
         for (Vehicle vehicle : gridState.getVehicles()) {
             result += vehicle.stats.velocity();
         }
-        return result / gridState.getVehicles().size();
+        for (Vehicle.VehicleStatistics statistics : removedVehiclesStatistics) {
+            result += (statistics.velocity());
+        }
+        return result /
+                (gridState.getVehicles().size() + removedVehiclesStatistics.size());
     }
 
     int verticesVisited() {
@@ -100,6 +104,18 @@ class Statistics {
             result += vertex.stats.vehicleCount();
         }
         return result / grid.getVertices().size();
+    }
+
+    double averageTicksAlive() {
+        double result = 0;
+        for (Vehicle vehicle : gridState.getVehicles()) {
+            result += (vehicle.stats.ticksAlive());
+        }
+        for (Vehicle.VehicleStatistics statistics : removedVehiclesStatistics) {
+            result += (statistics.ticksAlive());
+        }
+        return result /
+                (gridState.getVehicles().size() + removedVehiclesStatistics.size());
     }
 
 }
