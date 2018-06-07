@@ -38,8 +38,9 @@ class MapEditor {
         else
             this.dist = userDist;
 
-        int width = Math.min(dist/4, 10);
+        int width = Math.min(dist/4, 11);
         width = Math.max(width, 1);
+        if (width%2 == 0) width -= 1;
 
         mapPlanner = new MapPlanner(size, dist, width);
 

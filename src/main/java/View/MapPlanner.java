@@ -407,9 +407,9 @@ class MapPlanner extends JPanel {
         graphics2D.setColor(getBackground());
 
         if (lx == rx)
-            graphics2D.fillRect(lx-width, uy+width+1, width*2+1, dy-uy-width*2+1);
+            graphics2D.fillRect(lx-width, uy+width+1, width*2+1, dy-uy-width*2-1);
         else
-            graphics2D.fillRect(lx+width+1, uy-width, rx-lx-width*2+1, width*2+1);
+            graphics2D.fillRect(lx+width+1, uy-width, rx-lx-width*2-1, width*2+1);
 
         repaint();
     }
@@ -430,7 +430,7 @@ class MapPlanner extends JPanel {
         y = getPixelPosition(y);
 
         Graphics2D graphics2D = (Graphics2D) gridLayers.get(2).getGraphics();
-        graphics2D.setColor(Color.gray);
+        graphics2D.setColor(roadColor);
         graphics2D.fillRect(x-width, y-width, width*2+1, width*2+1);
 
         repaint();
