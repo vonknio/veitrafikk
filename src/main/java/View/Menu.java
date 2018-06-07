@@ -3,12 +3,14 @@ package View;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Field;
 
 class Menu extends JFrame {
 
     private JPanel menu;
     private JTextField sizeField;
     private JTextField distField;
+    private boolean distanceFixed;
     private JButton create;
     private JButton start;
     private JButton back;
@@ -42,20 +44,32 @@ class Menu extends JFrame {
         JLabel sizeDescription = new JLabel("Grid size:");
 
         JPanel distPanel = new JPanel(new BorderLayout());
+        JButton distTick = new JButton("Fix distance");
         JLabel distDescription = new JLabel("Distance:");
 
         sizeField = new JTextField("10", 2);
-        distField = new JTextField("50", 2);
+        distField = new JTextField("60", 2);
+
+        distDescription.setVisible(false);
+        distField.setVisible(false);
+
+        distTick.addActionListener(e -> {
+            distanceFixed = true;
+            distTick.setVisible(false);
+            distDescription.setVisible(true);
+            distField.setVisible(true);
+        });
 
         sizePanel.add(sizeField, BorderLayout.EAST);
         sizePanel.add(sizeDescription, BorderLayout.WEST);
 
         distPanel.add(distField, BorderLayout.EAST);
+        distPanel.add(distTick, BorderLayout.CENTER);
         distPanel.add(distDescription, BorderLayout.WEST);
 
         textFields.add(sizePanel, BorderLayout.NORTH);
         textFields.add(distPanel, BorderLayout.SOUTH);
-        textFields.setBounds(50, 75, 100, 50);
+        textFields.setBounds(50, 75, 100, 55);
         textFields.setVisible(false);
 
         start = new JButton("Start");
@@ -104,16 +118,16 @@ class Menu extends JFrame {
         return Integer.parseInt(sizeField.getText());
     }
 
-    int getDistanceInPx() {
-        return Integer.parseInt(distField.getText());
-    }
+    int getDistanceInPx() { return Integer.parseInt(distField.getText()); }
+
+    boolean getIsDistanceFixed() { return distanceFixed; }
 
     void addOpenEditorListener(ActionListener listener) {
         start.addActionListener(listener);
     }
 
-    void addQuitListener(ActionListener listener) {
-        quit.addActionListener(listener);
-    }
+    public void addLoadListener(ActionListener listener) { load.addActionListener(listener); }
+
+    public void addQuitListener(ActionListener listener) { quit.addActionListener(listener); }
 
 }

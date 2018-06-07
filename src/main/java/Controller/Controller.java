@@ -3,10 +3,12 @@ import Model.Model;
 import View.View;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Logger;
@@ -22,6 +24,7 @@ public class Controller {
         this.view = view;
         this.model = model;
         view.addOpenEditorListener(this::switchToEditMode);
+        view.addLoadListener(this::load);
         view.addQuitListener(e -> System.exit(0));
     }
 
@@ -114,18 +117,19 @@ public class Controller {
 
         logger.config("Adding sink (" + x1 + ", " + y1 + ")");
         model.removeVertexClassifiers(x1, y1);
-        model.addSink(x1, y1);
+        Color color = model.addSink(x1, y1);
         view.removeSpecialVertex(x1, y1);
-        view.drawSink(x1, y1);
+        view.drawSink(x1, y1, color);
     }
 
     public void switchToEditMode(ActionEvent e) {
         int size = view.getGridSize();
         if (size < 1) size = 10;
-        int dist = max(view.getDistanceInPx(), 15);
+        int dist = max(view.getDistanceInPx(), 5);
+        boolean fixedDistance = view.getIsDistanceFixed();
 
         model.createGrid(size);
-        view.openEditor(size, dist);
+        view.openEditor(size, dist, fixedDistance);
         view.addModeChangeListener(this::changeMode);
         view.addNewRoadListener(this::newRoad);
         view.addRemoveListener(this::remove);
@@ -172,6 +176,16 @@ public class Controller {
         String mode = view.getMode();
         System.out.println(mode);
         model.changeMode(mode);
+    }
+
+    private void load(ActionEvent e) {
+        logger.config("LOAD");
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Choose save file");
+        if (fileChooser.showOpenDialog(view.getMenu()) != JFileChooser.APPROVE_OPTION)
+            return;
+        File file = fileChooser.getSelectedFile();
+
     }
 
     private void save(ActionEvent e) {

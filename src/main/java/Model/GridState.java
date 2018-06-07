@@ -1,6 +1,8 @@
 package Model;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Logger;
 
 class GridState {
@@ -66,10 +68,12 @@ class GridState {
         vehicles.add(vehicle);
     }
 
-    void addSink(int x, int y) {
+    Color addSink(int x, int y) {
         Sink sink = grid.addSink(x, y);
+        sink.setColor();
         sinks.removeIf((z) -> TestUtils.compressedEquals(z, sink));
         sinks.add(sink);
+        return sink.getColor();
     }
 
     void addSource(int x, int y, long limit, float probability) {

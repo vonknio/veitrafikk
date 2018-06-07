@@ -1,5 +1,6 @@
 package Model;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -9,6 +10,7 @@ import java.util.List;
  * Class representing a vehicle.
  */
 class Vehicle {
+    private Color color;
     private Vertex prev;
     private Vertex cur;
     private Vertex next;
@@ -24,18 +26,28 @@ class Vehicle {
     }
 
     Vehicle(Vertex cur, Vertex dest) {
+        this(cur, dest, new Color(0,255,255));
+    }
+
+    Vehicle(Vertex cur, Vertex dest, Color color) {
         this.prev = cur;
         this.cur = cur;
         this.dest = dest;
         this.stats = new VehicleStatistics();
+        this.color = color;
         this.id = idCounter++;
     }
 
     Vehicle(Vertex cur, Vertex dest, VehicleStatistics stats) {
+        this(cur, dest, stats, new Color(0,255,255));
+    }
+
+    Vehicle(Vertex cur, Vertex dest, VehicleStatistics stats, Color color) {
         this.prev = cur;
         this.cur = cur;
         this.dest = dest;
         this.stats = stats;
+        this.color = color;
         this.id = idCounter++;
     }
 
@@ -98,6 +110,10 @@ class Vehicle {
         if (vertex.getVertexType() != Vertex.VertexType.IN)
             nextNext = grid.getOther(vertex);
         else nextNext = vertex;
+    }
+
+    Color getColor() {
+        return color;
     }
 
     int getId() {

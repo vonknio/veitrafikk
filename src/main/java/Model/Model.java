@@ -1,5 +1,6 @@
 package Model;
 
+import java.awt.*;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -68,8 +69,8 @@ public class Model {
      * @param x1 X coordinate.
      * @param y1 Y coordinate.
      */
-    public void addSink(int x1, int y1) {
-        gridState.addSink(x1, y1);
+    public Color addSink(int x1, int y1) {
+        return gridState.addSink(x1, y1);
     }
 
     public void addSource(int x1, int y1) {
@@ -211,7 +212,7 @@ public class Model {
         LinkedList<int[]> result = new LinkedList<>();
         Collection<Vehicle> vehicles = getVehicles();
         for (Vehicle v : vehicles) {
-            int[] coords = new int[7];
+            int[] coords = new int[10];
             coords[0] = v.getPrev().getXCoordinate();
             coords[1] = v.getPrev().getYCoordinate();
             coords[2] = v.getCur().getXCoordinate();
@@ -219,6 +220,9 @@ public class Model {
             coords[4] = v.getNext().getXCoordinate();
             coords[5] = v.getNext().getYCoordinate();
             coords[6] = v.getId();
+            coords[7] = v.getColor().getRed();
+            coords[8] = v.getColor().getGreen();
+            coords[9] = v.getColor().getBlue();
             result.add(coords);
         }
         return result;

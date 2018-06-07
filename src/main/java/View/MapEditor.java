@@ -28,11 +28,20 @@ class MapEditor {
     private JComboBox modesMenu;
     private String[] modes = {"SHORTEST_PATH", "RANDOM"};
 
-    MapEditor(int size, int dist) {
+    MapEditor(int size, int userDist, boolean fixed) {
         this.size = size;
-        this.dist = dist;
 
-        mapPlanner = new MapPlanner(size, dist);
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        int border = (int) Math.min(dimension.getHeight(), dimension.getWidth());
+        if (!fixed)
+            this.dist = (border - 150)/(size+2);
+        else
+            this.dist = userDist;
+
+        int width = Math.min(dist/4, 10);
+        width = Math.max(width, 1);
+
+        mapPlanner = new MapPlanner(size, dist, width);
 
         setupFrame();
         setupContainer();
@@ -45,7 +54,7 @@ class MapEditor {
 
     private void setupFrame (){
         frame = new JFrame();
-        frame.setSize(size * dist + dist + 11, size * dist + 125);
+        frame.setSize(Math.max(size * dist + dist, 400), Math.max(size * dist + Math.max(125, dist*2), 525));
         frame.setTitle("Veitrafikk - Map Editor");
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -148,12 +157,10 @@ class MapEditor {
     }
 
     void drawSource(int x1, int y1) {
-        mapPlanner.drawSpecialVertex(x1, y1, new Color(0, 255, 0));
+        mapPlanner.drawSpecialVertex(x1, y1, new Color(255, 255, 255));
     }
 
-    void drawSink(int x1, int y1) {
-        mapPlanner.drawSpecialVertex(x1, y1, new Color(255, 150, 0));
-    }
+    void drawSink(int x1, int y1, Color color) { mapPlanner.drawSpecialVertex(x1, y1, color); }
 
     void removeRoad(int x1, int y1, int x2, int y2) {
         mapPlanner.removeRoad(x1, y1, x2, y2);

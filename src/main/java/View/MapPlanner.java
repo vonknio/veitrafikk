@@ -34,6 +34,9 @@ class MapPlanner extends JPanel {
     private int animationTime = 2000;
     private int animationSmoothness = 20;
 
+    private Color roadColor;
+    private int width;
+
     private ArrayList<BufferedImage> gridLayers;
     private TreeMap<Integer, VehicleImage> vehicleLayers;
 
@@ -50,7 +53,12 @@ class MapPlanner extends JPanel {
     boolean blockDrawing = false;
     boolean startedDrawing = false;
 
-    MapPlanner (int size, int dist){
+    MapPlanner (int size, int dist, int width){
+
+        setBackground(new Color(75,75,75));
+        roadColor = new Color(115,115,115);
+
+        this.width = width;
         this.size = size;
         this.dist = dist;
 
@@ -123,9 +131,9 @@ class MapPlanner extends JPanel {
                     if (nextDirection[0] > 0)
                         target += 1;
                     else if (nextDirection[0] < 0)
-                        target -= 5;
+                        target -= width;
                     else if (nextDirection[1] > 0)
-                        target -= 5;
+                        target -= width;
                     else if (nextDirection[1] < 0)
                         target += 1;
 
@@ -137,7 +145,7 @@ class MapPlanner extends JPanel {
                     else {
                         vehicle.currentPosition[0] =
                                 Math.max(vehicle.currentPosition[0], target);
-                        vehicle.currentPosition[1] = getPixelPosition(vehicle.path[3]) - 5;
+                        vehicle.currentPosition[1] = getPixelPosition(vehicle.path[3]) - width;
                     }
                 }
                 else if (direction[0] == 0 && direction[1] != 0){
@@ -146,16 +154,16 @@ class MapPlanner extends JPanel {
                     if (nextDirection[1] > 0)
                         target += 1;
                     else if (nextDirection[1] < 0)
-                        target -= 5;
+                        target -= width;
                     else if (nextDirection[0] > 0)
                         target += 1;
                     else if (nextDirection[0] < 0)
-                        target -= 5;
+                        target -= width;
 
                     if (direction[1] > 0){
                         vehicle.currentPosition[1] =
                                 Math.min(vehicle.currentPosition[1], target);
-                        vehicle.currentPosition[0] = getPixelPosition(vehicle.path[2]) - 5;
+                        vehicle.currentPosition[0] = getPixelPosition(vehicle.path[2]) - width;
                     }
                     else {
                         vehicle.currentPosition[1] =
@@ -189,11 +197,11 @@ class MapPlanner extends JPanel {
         BufferedImage layer = addLayer();
 
         Graphics2D graphics2D = (Graphics2D) layer.getGraphics();
-        graphics2D.setPaint(Color.gray);
+        graphics2D.setPaint(roadColor);
 
         for (int i = dist; i < size * dist + dist; i += dist)
             for (int j = dist; j < size * dist + dist; j += dist)
-                graphics2D.fillRect(i-5, j-5, 11, 11);
+                graphics2D.fillRect(i-width, j-width, width*2+1, width*2+1);
 
         repaint();
     }
@@ -205,8 +213,8 @@ class MapPlanner extends JPanel {
         return bufferedImage;
     }
 
-    private VehicleImage addVehicleLayer (int id){
-        VehicleImage vehicleImage = new VehicleImage(id);
+    private VehicleImage addVehicleLayer (int id, int r, int g, int b){
+        VehicleImage vehicleImage = new VehicleImage(id, r, g, b);
         vehicleLayers.put(id, vehicleImage);
         return vehicleImage;
     }
@@ -276,8 +284,6 @@ class MapPlanner extends JPanel {
     public void updateVehicles(Collection<int[]> data){
         ArrayList<Integer> toRemove = new ArrayList<>();
 
-        //System.out.println("Next:");
-
         for (Map.Entry<Integer, VehicleImage> entry : vehicleLayers.entrySet()) {
             if (!entry.getValue().updated)
                 toRemove.add(entry.getKey());
@@ -289,12 +295,8 @@ class MapPlanner extends JPanel {
 
         for (int[] v : data){
 
-            /*System.out.println("V[" + v[6] + "]: (" + v[0] + ", " + v[1]
-                    + ")->(" + v[2] + ", " + v[3]
-                    + ")->(" + v[4] + ", " + v[5] + ")");*/
-
             if (!vehicleLayers.containsKey(v[6]))
-                addVehicleLayer(v[6]);
+                addVehicleLayer(v[6], v[7], v[8], v[9]);
             VehicleImage vehicle = vehicleLayers.get(v[6]);
 
             if (vehicle.path[2] == v[2] && vehicle.path[3] == v[3]){
@@ -323,14 +325,14 @@ class MapPlanner extends JPanel {
                 vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1]) + 1;
             }
             else if (direction[0] < 0){
-                vehicle.currentPosition[0] = getPixelPosition(vehicle.path[0]) - 5;
-                vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1]) - 5;
+                vehicle.currentPosition[0] = getPixelPosition(vehicle.path[0]) - width;
+                vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1]) - width;
             } else if (direction[1] >= 0) {
-                vehicle.currentPosition[0] = getPixelPosition(vehicle.path[0]) - 5;
+                vehicle.currentPosition[0] = getPixelPosition(vehicle.path[0]) - width;
                 vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1]) + 1;
             } else {
                 vehicle.currentPosition[0] = getPixelPosition(vehicle.path[0]) + 1;
-                vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1]) - 5;
+                vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1]) - width;
             }
             vehicle.updated = true;
         }
@@ -361,12 +363,12 @@ class MapPlanner extends JPanel {
         int dy = Math.max(y1, y2);
 
         Graphics2D graphics2D = (Graphics2D) gridLayers.get(1).getGraphics();
-        graphics2D.setColor(Color.gray);
+        graphics2D.setColor(roadColor);
 
         if (lx == rx)
-            graphics2D.fillRect(lx-5, uy+6, 11, dy-uy-11);
+            graphics2D.fillRect(lx-width, uy+width+1, width*2+1, dy-uy-width*2+1);
         else
-            graphics2D.fillRect(lx+6, uy-5, rx-lx-11, 11);
+            graphics2D.fillRect(lx+width+1, uy-width, rx-lx-width*2+1, width*2+1);
 
         repaint();
     }
@@ -405,9 +407,9 @@ class MapPlanner extends JPanel {
         graphics2D.setColor(getBackground());
 
         if (lx == rx)
-            graphics2D.fillRect(lx-5, uy+6, 11, dy-uy-11);
+            graphics2D.fillRect(lx-width, uy+width+1, width*2+1, dy-uy-width*2+1);
         else
-            graphics2D.fillRect(lx+6, uy-5, rx-lx-11, 11);
+            graphics2D.fillRect(lx+width+1, uy-width, rx-lx-width*2+1, width*2+1);
 
         repaint();
     }
@@ -418,7 +420,7 @@ class MapPlanner extends JPanel {
 
         Graphics2D graphics2D = (Graphics2D) gridLayers.get(2).getGraphics();
         graphics2D.setColor(color);
-        graphics2D.fillRect(x-5, y-5, 11, 11);
+        graphics2D.fillRect(x-width, y-width, width*2+1, width*2+1);
 
         repaint();
     }
@@ -429,7 +431,7 @@ class MapPlanner extends JPanel {
 
         Graphics2D graphics2D = (Graphics2D) gridLayers.get(2).getGraphics();
         graphics2D.setColor(Color.gray);
-        graphics2D.fillRect(x-5, y-5, 11, 11);
+        graphics2D.fillRect(x-width, y-width, width*2+1, width*2+1);
 
         repaint();
     }
@@ -491,11 +493,11 @@ class MapPlanner extends JPanel {
         int id;
         boolean updated;
 
-        VehicleImage (int id){
-            bufferedImage = new BufferedImage(5, 5, BufferedImage.TYPE_INT_ARGB);
+        VehicleImage (int id, int r, int g, int b){
+            bufferedImage = new BufferedImage(width, width, BufferedImage.TYPE_INT_ARGB);
             Graphics2D graphics2D = (Graphics2D) bufferedImage.getGraphics();
-            graphics2D.setColor(new Color(111,219,255));
-            graphics2D.fillRect(0,0,5,5);
+            graphics2D.setColor(new Color(r,g,b));
+            graphics2D.fillRect(0,0,width,width);
             this.id = id;
             path = new int[7];
             currentPosition = new int[2];

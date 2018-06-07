@@ -1,6 +1,7 @@
 package View;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 
@@ -34,10 +35,10 @@ public class View {
         }
     }
 
-    public void openEditor(int size, int dist) {
+    public void openEditor(int size, int dist, boolean fixed) {
         if (menu != null)
             menu.setVisible(false);
-        mapEditor = new MapEditor(size, dist);
+        mapEditor = new MapEditor(size, dist, fixed);
         active = mapEditor;
         if (isVisible)
             mapEditor.setVisible(true);
@@ -67,6 +68,8 @@ public class View {
 
     public int getDistanceInPx() { return menu.getDistanceInPx(); }
 
+    public boolean getIsDistanceFixed() { return menu.getIsDistanceFixed(); }
+
     public int[] getCoordinates() { return mapEditor.getCoordinates(); }
 
     public String getMode() { return mapEditor.getMode(); }
@@ -93,17 +96,15 @@ public class View {
 
     public void drawSource(int x1, int y1) { mapEditor.drawSource(x1, y1); }
 
-    public void drawSink(int x1, int y1) { mapEditor.drawSink(x1, y1); }
+    public void drawSink(int x1, int y1, Color color) { mapEditor.drawSink(x1, y1, color); }
 
     public void removeRoad(int x1, int y1, int x2, int y2) { mapEditor.removeRoad(x1, y1, x2, y2); }
 
     public void removeSpecialVertex(int x1, int y1) { mapEditor.removeSpecialVertex(x1, y1); }
 
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *  Add listeners
+     *  Add MapEditor listeners
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    public void addOpenEditorListener(ActionListener listener) { menu.addOpenEditorListener(listener); }
 
     public void addStatsListener(ActionListener listener) {
         mapEditor.addStatsListener(listener);
@@ -123,10 +124,6 @@ public class View {
         mapEditor.addSaveListener(listener);
     }
 
-    public void addQuitListener(ActionListener listener) {
-        menu.addQuitListener(listener);
-    }
-
     public void addNewRoadListener(ActionListener listener) { mapEditor.addNewRoadListener(listener); }
 
     public void addNewSourceListener(ActionListener listener) { mapEditor.addNewSourceListener(listener); }
@@ -136,12 +133,26 @@ public class View {
     public void addRemoveListener(ActionListener listener) { mapEditor.addRemoveListener(listener); }
 
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *  Add Menu listeners
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    public void addQuitListener(ActionListener listener) {
+        menu.addQuitListener(listener);
+    }
+
+    public void addOpenEditorListener(ActionListener listener) { menu.addOpenEditorListener(listener); }
+
+    public void addLoadListener(ActionListener listener) { menu.addLoadListener(listener); }
+
+    /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Helper methods for communicating with the user
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     public void removeFirstTickListener() { mapEditor.removeFirstTickListener(); }
 
     public JComponent getMapPlanner() { return mapEditor.mapPlanner; }
+
+    public JFrame getMenu() { return menu; }
 
     public void showDisconnectedGraphError() {
         JOptionPane.showMessageDialog(null,

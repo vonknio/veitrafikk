@@ -29,7 +29,7 @@ class Source extends Vertex {
     }
 
     Vehicle spawnVehicle(Sink sink){
-        Vehicle vehicle = new Vehicle(this, sink);
+        Vehicle vehicle = new Vehicle(this, sink, sink.getColor());
         setVehicle(vehicle);
         fill++;
         return vehicle;
