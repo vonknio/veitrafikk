@@ -105,8 +105,7 @@ class MapEditor {
             remove.setText("Delete");
         });
 
-        quit = new JButton("Quit");
-        quit.addActionListener(e -> System.exit(0));
+        quit = new JButton("Back");
 
         save = new JButton("Save");
 
@@ -215,6 +214,8 @@ class MapEditor {
             start.setText("Next tick");
             listener.actionPerformed(e);
         });}
+
+    void addBackToMenuListener(ActionListener listener) { quit.addActionListener(listener); }
 
     void addStatsListener(ActionListener listener) {
         stats.addActionListener(listener);

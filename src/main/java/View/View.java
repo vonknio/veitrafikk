@@ -44,6 +44,23 @@ public class View {
             mapEditor.setVisible(true);
     }
 
+    public void goBackToMenu() {
+        if (mapEditor != null)
+            mapEditor.setVisible(false);
+        active = menu;
+        menu.showContinue();
+        if (isVisible)
+            menu.setVisible(true);
+    }
+
+    public void continueToEditor() {
+        if (menu != null)
+            menu.setVisible(false);
+        active = mapEditor;
+        if (isVisible)
+            mapEditor.setVisible(true);
+    }
+
     public void showStatistics(double path, double ticks, double time, double vehicles, double velocity, int vertices) {
         statisticsWindow = new StatisticsWindow();
         statisticsWindow.setPath(path);
@@ -120,6 +137,8 @@ public class View {
 
     public void addNextTickListener(ActionListener listener) { mapEditor.addNextTickListener(listener); }
 
+    public void addBackToMenuListener(ActionListener listener) { mapEditor.addBackToMenuListener(listener); }
+
     public void addSaveListener(ActionListener listener) {
         mapEditor.addSaveListener(listener);
     }
@@ -143,6 +162,8 @@ public class View {
     public void addOpenEditorListener(ActionListener listener) { menu.addOpenEditorListener(listener); }
 
     public void addLoadListener(ActionListener listener) { menu.addLoadListener(listener); }
+
+    public void addContinueListener(ActionListener listener) { menu.addContinueListener(listener); }
 
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Helper methods for communicating with the user

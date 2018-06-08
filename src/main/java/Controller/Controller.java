@@ -24,6 +24,7 @@ public class Controller {
         view.addOpenEditorListener(this::switchToEditMode);
         view.addLoadListener(this::load);
         view.addQuitListener(e -> System.exit(0));
+        view.addContinueListener(this::continueToEditMode);
     }
 
     private void newRoad(ActionEvent e) {
@@ -120,6 +121,12 @@ public class Controller {
         view.drawSink(x1, y1, color);
     }
 
+    private void goBackToMenu(ActionEvent e) { view.goBackToMenu(); }
+
+    public void continueToEditMode(ActionEvent e) {
+        view.continueToEditor();
+    }
+
     public void switchToEditMode(ActionEvent e) {
         int size = view.getGridSize();
         if (size < 1) size = 10;
@@ -134,6 +141,7 @@ public class Controller {
         view.addNewSourceListener(this::newSource);
         view.addNewSinkListener(this::newSink);
         view.addFirstTickListener(this::firstTick);
+        view.addBackToMenuListener(this::goBackToMenu);
         view.addSaveListener(this::save);
         view.addStatsListener(this::showStatistics);
 
@@ -149,6 +157,7 @@ public class Controller {
         view.addNewSourceListener(this::newSource);
         view.addNewSinkListener(this::newSink);
         view.addFirstTickListener(this::firstTick);
+        view.addBackToMenuListener(this::goBackToMenu);
         view.addSaveListener(this::save);
         view.addStatsListener(this::showStatistics);
 

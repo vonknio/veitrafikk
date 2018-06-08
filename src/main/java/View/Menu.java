@@ -11,7 +11,9 @@ class Menu extends JFrame {
     private JTextField sizeField;
     private JTextField distField;
     private boolean distanceFixed;
+    private boolean canContinue;
     private JButton create;
+    private JButton cont;
     private JButton start;
     private JButton back;
     private JButton load;
@@ -82,9 +84,14 @@ class Menu extends JFrame {
             back.setVisible(true);
             textFields.setVisible(true);
             create.setVisible(false);
+            cont.setVisible(false);
             load.setVisible(false);
             quit.setVisible(false);
         });
+
+        cont = new JButton("Continue");
+        cont.setBounds(50, 50, 100, 25);
+        cont.setVisible(false);
 
         load = new JButton("Load");
         load.setBounds(50, 75, 100, 25);
@@ -94,24 +101,38 @@ class Menu extends JFrame {
         back = new JButton("Back");
         back.setBounds(50, 150, 100, 25);
         back.addActionListener(e -> {
+            distanceFixed = false;
+            distTick.setVisible(true);
+            distDescription.setVisible(false);
+            distField.setVisible(false);
+
             start.setVisible(false);
             back.setVisible(false);
             textFields.setVisible(false);
             create.setVisible(true);
             load.setVisible(true);
             quit.setVisible(true);
+            if (canContinue) cont.setVisible(true);
         });
         back.setVisible(false);
 
         menu.add(nameLabel);
         menu.add(create);
         menu.add(load);
+        menu.add(cont);
         menu.add(start);
         menu.add(back);
         menu.add(quit);
         menu.add(textFields);
 
         this.add(menu);
+    }
+
+    void showContinue() {
+        canContinue = true;
+        create.setBounds(50, 75, 100, 25);
+        load.setBounds(50, 100, 100, 25);
+        back.doClick();
     }
 
     int getGridSize() {
@@ -129,5 +150,7 @@ class Menu extends JFrame {
     public void addLoadListener(ActionListener listener) { load.addActionListener(listener); }
 
     public void addQuitListener(ActionListener listener) { quit.addActionListener(listener); }
+
+    public void addContinueListener(ActionListener listener) { cont.addActionListener(listener); }
 
 }
