@@ -87,6 +87,17 @@ class GridState {
         vehicles.remove(vehicle);
     }
 
+    void removeSpecialVertex(int x1, int y1){
+        for (int i = 0; i < sinks.size(); ++i){
+            if (sinks.get(i).x == x1 && sinks.get(i).y == y1)
+                sinks.remove(i);
+        }
+        for (int i = 0; i < sources.size(); ++i){
+            if (sources.get(i).x == x1 && sources.get(i).y == y1)
+                sources.remove(i);
+        }
+    }
+
     private Sink getRandomSink() {
         if (sinks.isEmpty()) return null;
         return sinks.get(new Random().nextInt(sinks.size()));

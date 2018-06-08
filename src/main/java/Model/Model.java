@@ -85,6 +85,7 @@ public class Model {
      */
     public void removeVertexClassifiers(int x1, int y1) {
         grid.removeVertexClassifiers(x1, y1);
+        gridState.removeSpecialVertex(x1, y1);
     }
 
     public void nextTick() {

@@ -36,8 +36,7 @@ public class View {
     }
 
     public void openEditor(int size, int dist, boolean fixed) {
-        if (menu != null)
-            menu.setVisible(false);
+        menu.setVisible(false);
         mapEditor = new MapEditor(size, dist, fixed);
         active = mapEditor;
         if (isVisible)
