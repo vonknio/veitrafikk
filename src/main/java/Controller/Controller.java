@@ -5,9 +5,7 @@ import View.View;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -141,6 +139,46 @@ public class Controller {
 
     }
 
+    public void loadEditMode(int size, int dist, boolean fixedDistance) {
+
+        model.createGrid(size);
+        view.openEditor(size, dist, fixedDistance);
+        view.addModeChangeListener(this::changeMode);
+        view.addNewRoadListener(this::newRoad);
+        view.addRemoveListener(this::remove);
+        view.addNewSourceListener(this::newSource);
+        view.addNewSinkListener(this::newSink);
+        view.addFirstTickListener(this::firstTick);
+        view.addSaveListener(this::save);
+        view.addStatsListener(this::showStatistics);
+
+    }
+
+    private void loadRoad(int x1, int y1, int x2, int y2) {
+        if (x1 != x2 && y1 != y2) { return; }
+
+        logger.config("Loading road (" + x1 + ", " + y1 + ") <-> (" + x2 + ", " + y2 + ")");
+        model.addRoad(x1, y1, x2, y2);
+        model.addRoad(x2, y2, x1, y1);
+        view.drawRoad(x1, y1, x2, y2);
+    }
+
+    private void loadSource(int x1, int y1) {
+        logger.config("Loading source (" + x1 + ", " + y1 + ")");
+        model.removeVertexClassifiers(x1, y1);
+        model.addSource(x1, y1);
+        view.removeSpecialVertex(x1, y1);
+        view.drawSource(x1, y1);
+    }
+
+    private void loadSink(int x1, int y1) {
+        logger.config("Loading sink (" + x1 + ", " + y1 + ")");
+        model.removeVertexClassifiers(x1, y1);
+        Color color = model.addSink(x1, y1);
+        view.removeSpecialVertex(x1, y1);
+        view.drawSink(x1, y1, color);
+    }
+
     private void showStatistics(ActionEvent event) {
         view.showStatistics(model.averagePathLength(), model.averageTicksAlive(), model.averageTimeEmpty(),
                 model.averageVehicleCount(), model.averageVelocity(), model.verticesVisited());
@@ -186,6 +224,58 @@ public class Controller {
             return;
         File file = fileChooser.getSelectedFile();
 
+        BufferedReader reader;
+        int lineSize, size, distance = 0;
+        boolean fixed = false;
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            String line = reader.readLine();
+            lineSize = line.length();
+            size = (lineSize - 3)/2;
+            if (line.charAt(3) != '@'){
+                distance = Integer.parseInt(line.substring(2,6));
+                if (distance > 0)
+                    fixed = true;
+            }
+
+            loadEditMode(size, distance, fixed);
+
+            line = reader.readLine(); //wall
+
+            for (int i = 0; i < size*2-1; ++i){
+                line = reader.readLine();
+                if (i%2 == 0){
+                    for (int j = 2; j <= size*2; ++j){
+                        if (j%2 == 0){
+                            if (line.charAt(j) == 't'){
+                                loadSink((j-2)/2, i/2);
+                            } else if (line.charAt(j) == 's'){
+                                loadSource((j-2)/2, i/2);
+                            }
+                        }
+                        else {
+                            if (line.charAt(j) == '-'){
+                                loadRoad((j-2)/2, i/2, (j-2)/2+1, i/2);
+                            }
+                        }
+                    }
+                }
+                else {
+                    for (int j = 2; j <= size*2; ++j) {
+                        if (j%2 == 0){
+                            if (line.charAt(j) == '|'){
+                                loadRoad((j-2)/2, i/2, (j-2)/2, i/2+1);
+                            }
+                        }
+                    }
+                }
+            }
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return;
+        }
+
     }
 
     private void save(ActionEvent e) {
@@ -206,7 +296,8 @@ public class Controller {
         for (int i = 0; i < minLine - (size*2) - 3; ++i)
             wall.append("@");
 
-        grid.append(top).append(System.lineSeparator())
+        grid.append(top.substring(0,2)).append("0000").append(top.substring(6))
+                .append(System.lineSeparator())
                 .append(top).append(System.lineSeparator());
         for (int j = 0; j < size; ++j){
             StringBuilder current = new StringBuilder("@@");

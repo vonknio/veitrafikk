@@ -25,7 +25,7 @@ public class StatisticsWindow extends JFrame {
     }
 
     private void setup() {
-        DecimalFormat dec = new DecimalFormat("#0.0000");
+        DecimalFormat dec = new DecimalFormat("#0.00");
         panel = new JPanel();
         panel.setLayout(null);
         JLabel velocityPanel = new JLabel("Average vehicle velocity: " + dec.format(velocity));
