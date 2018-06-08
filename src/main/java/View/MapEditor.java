@@ -55,7 +55,7 @@ class MapEditor {
 
     private void setupFrame (){
         frame = new JFrame();
-        frame.setSize(Math.max(size * dist + dist, 400), Math.max(size * dist + Math.max(125, dist*2), 525));
+        frame.setSize(Math.max(size * dist + dist, 550), Math.max(size * dist + Math.max(125, dist*2), 675));
         frame.setTitle("Veitrafikk - Map Editor");
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -110,6 +110,7 @@ class MapEditor {
         save = new JButton("Save");
 
         stats = new JButton("Stats");
+        stats.setVisible(false);
 
         modesMenu = new JComboBox<>(modes);
 
@@ -194,6 +195,7 @@ class MapEditor {
         playButtons.add(start, BorderLayout.EAST);
         play.setVisible(true);
         pause.setVisible(true);
+        stats.setVisible(true);
         start.setText("First tick");
         start.removeActionListener(firstTickListener);
     }
