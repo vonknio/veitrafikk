@@ -68,7 +68,7 @@ public class Controller {
     }
 
     private void showSettings(ActionEvent event) {
-        view.showSettings();
+        view.showSettings(gridPlanner.getSourceProbability(), gridPlanner.getSourceLimit());
         view.addSettingsApplyListener(this::applySettings);
         view.addSettingsQuitListener(e -> System.exit(0));
         view.addSettingsLoadListener(mapLoader::load);
@@ -129,7 +129,9 @@ public class Controller {
     private Thread spawnPlayingThread() {
         return new Thread(() -> {
             while (!interrupted()) {
-                if (!nextTick(null)) {
+                if (!nextTick(null) && (model.hasVehiclesOnGrid()  // fail
+                        || (!model.hasVehiclesOnGrid() && !model.hasUnspawnedVehicles())  // success
+                        )) {
                     gameEnd();
                     break;
                 }

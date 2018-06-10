@@ -80,8 +80,8 @@ public class View {
         statisticsWindow.setVisible(true);
     }
 
-    public void showSettings() {
-        settings = new SettingsWindow();
+    public void showSettings(float probability, int limit) {
+        settings = new SettingsWindow(probability, limit);
         settings.update();
         settings.setVisible(true);
     }

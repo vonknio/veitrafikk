@@ -344,6 +344,10 @@ public class Model {
         return !hasVehiclesOnGrid() && !TestUtils.hasUnspawnedVehicles(gridState);
     }
 
+    public boolean hasUnspawnedVehicles() {
+        return TestUtils.hasUnspawnedVehicles(gridState);
+    }
+
     public boolean hasVehiclesOnGrid() {
         return !gridState.getVehicles().isEmpty();
     }

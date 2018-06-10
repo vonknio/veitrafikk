@@ -12,8 +12,12 @@ class SettingsWindow extends JFrame {
     private JButton save;
     private JButton load;
     private JButton quit;
+    private float probability;
+    private int limit;
 
-    SettingsWindow() {
+    SettingsWindow(float probability, int limit) {
+        this.probability = probability;
+        this.limit = limit;
         create();
     }
 
@@ -37,7 +41,7 @@ class SettingsWindow extends JFrame {
 
         JLabel probabilityDescription = new JLabel("Probability of spawning a new vehicle in each tick:");
         probabilityDescription.setVisible(true);
-        probabilityField = new JTextField("1", 2);
+        probabilityField = new JTextField(Float.toString(probability), 2);
         probabilityField.setVisible(true);
 
         JPanel probabilityPanel = new JPanel(new BorderLayout());
@@ -45,7 +49,7 @@ class SettingsWindow extends JFrame {
         probabilityPanel.add(probabilityField, BorderLayout.SOUTH);
 
         JLabel limitDescription = new JLabel("Total number of vehicles to spawn (0 for unlimited):");
-        limitField = new JTextField("10", 2);
+        limitField = new JTextField(Integer.toString(limit), 2);
         limitField.setVisible(true);
 
         JPanel limitPanel = new JPanel(new BorderLayout());
