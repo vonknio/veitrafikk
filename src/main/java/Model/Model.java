@@ -88,8 +88,8 @@ public class Model {
         gridState.removeSpecialVertex(x1, y1);
     }
 
-    public void nextTick() {
-        God.processTimetick(this);
+    public boolean nextTick() {
+        return God.processTimetick(this);
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

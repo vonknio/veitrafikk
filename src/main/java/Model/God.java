@@ -249,8 +249,8 @@ abstract class God {
     static Mode getMode() { return mode; }
 
     enum Mode {
-        /// Each vehicle's path is a random walk generated on the go. If a vehicle gets stuck,
-        /// the path won't be updated.
+        // Each vehicle's path is a random walk generated on the go. If a vehicle gets stuck,
+        // the path won't be updated.
         RANDOM_STATIC {
             PathPlanner getPlanner() { return new RandomPlannerStatic(); }
         },
