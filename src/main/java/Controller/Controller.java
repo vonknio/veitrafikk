@@ -221,7 +221,7 @@ public class Controller {
 
     private void changeMode(ActionEvent e) {
         String mode = view.getMode();
-        System.out.println(mode);
+        logger.config("SWITCHING TO " + mode);
         model.changeMode(mode);
     }
 

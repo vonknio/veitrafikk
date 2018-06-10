@@ -11,10 +11,7 @@ import static org.junit.Assert.*;
 
 public class GodTest {
     private Model model = new Model();
-
-    {
-        model.createGrid(10);
-    }
+    { model.createGrid(10); }
 
     private Grid grid = model.getGrid();
     private GridState gridState = model.getGridState();
@@ -237,7 +234,7 @@ v       |
     */
     @Test
     public void testTwoVehiclesCrossSimultaneously() {
-        God.setMode(God.Mode.SHORTEST_PATH);
+        God.setMode(God.Mode.SHORTEST_PATH_STATIC);
 
         model.addRoad(4, 5, 6, 5);
         model.addRoad(5, 4, 5, 6);
@@ -282,11 +279,11 @@ v       |
         } catch (Exception ignored) {
         }
 
-        God.setMode(God.Mode.SHORTEST_PATH);
-        assertEquals(God.Mode.SHORTEST_PATH, God.getMode());
+        God.setMode(God.Mode.SHORTEST_PATH_STATIC);
+        assertEquals(God.Mode.SHORTEST_PATH_STATIC, God.getMode());
 
-        God.setMode(God.Mode.RANDOM);
-        assertEquals(God.Mode.RANDOM, God.getMode());
+        God.setMode(God.Mode.RANDOM_STATIC);
+        assertEquals(God.Mode.RANDOM_STATIC, God.getMode());
     }
 
     /*
@@ -304,7 +301,7 @@ v       |
         grid.addRoad(9, 0, 9, 9);
         turnEveryVertexIntoSink();
 
-        God.setMode(God.Mode.SHORTEST_PATH);
+        God.setMode(God.Mode.SHORTEST_PATH_STATIC);
 
         Vehicle vehicle = TestUtils.createVehicleOnGrid(0, 0, model);
         vehicle.setDest(grid.getVertexOut(0, 9));
@@ -324,7 +321,7 @@ v       |
 //        grid.addRoad(9, 0, 9, 9);
 //        turnEveryVertexIntoSink();
 //
-//        God.setMode(God.Mode.SHORTEST_PATH);
+//        God.setMode(God.Mode.SHORTEST_PATH_STATIC);
 //
 //        Vehicle vehicle = TestUtils.createVehicleOnGrid(0, 0, model);
 //        vehicle.setDest(grid.getVertex(0, 9));

@@ -9,7 +9,7 @@ public class StatisticsTest {
     @Test
     public void testSimple() {
         Model model = new Model();
-        model.changeMode("SHORTEST_PATH");
+        model.changeMode("SHORTEST_PATH_STATIC");
         model.createGrid(4);
         model.addRoad(0, 0, 0, 3);
         model.addSource(0, 0, 2, 1);
@@ -35,7 +35,7 @@ public class StatisticsTest {
     @Test
     public void testSimple2() {
         Model model = new Model();
-        model.changeMode("SHORTEST_PATH");
+        model.changeMode("SHORTEST_PATH_STATIC");
         model.createGrid(3);
         model.addRoad(0, 0, 0, 2);
         model.addRoad(0, 1, 1, 1);

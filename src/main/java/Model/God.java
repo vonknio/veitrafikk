@@ -9,7 +9,7 @@ import java.util.logging.Logger;
  */
 abstract class God {
     private static Grid grid;
-    private static Mode mode = Mode.SHORTEST_PATH;
+    private static Mode mode = Mode.SHORTEST_PATH_DYNAMIC;
     private static PathPlanner pathPlanner = mode.getPlanner();
     private final static Logger logger = Logger.getLogger(God.class.getName());
 
@@ -36,7 +36,7 @@ abstract class God {
                         " in vertex " + vehicle.getCur() + vehicle.getCur().getVertexType() +
                         " couldn't move to " + vehicle.getNext() + vehicle.getNext().getVertexType());
 
-                if (mode == Mode.RANDOM)
+                if (mode.getPlanner().isDynamic())
                     vehicle.setNextNext(getDestinationForNextTick(vehicle));
             }
             Statistics.process(vehicle);
@@ -53,6 +53,12 @@ abstract class God {
                 model.getGridState().removeVehicle(vertex.getVehicle());
             }
         }
+        for (Vertex v : grid.getVertices())
+            assert !v.hasVehicle() || (v.getVehicle().getCur() == v);
+
+        for (Vehicle vh : model.getGridState().getVehicles())
+            assert(vh.getCur().getVehicle() == vh);
+
         return update;
     }
 
@@ -65,6 +71,8 @@ abstract class God {
      * @return Whether the vehicle moved.
      */
     private static boolean moveVehicle(Vehicle vehicle, Set<Vehicle> processed) {
+        TestUtils.assertSameOrUnitDistance(vehicle.getCur(), vehicle.getNext());
+
         if (vehicle == null || processed.contains(vehicle))
             return false;
 
@@ -160,6 +168,9 @@ abstract class God {
      * @param availableDestinations List of destinations to choose from.
      */
     static void setRandomDestination(Vehicle vehicle, List<Vertex> availableDestinations) {
+        if (availableDestinations.isEmpty())
+            throw new IllegalStateException();
+
         do {
             vehicle.setDest(availableDestinations.get(
                     (new Random()).nextInt(availableDestinations.size())
@@ -238,13 +249,24 @@ abstract class God {
     static Mode getMode() { return mode; }
 
     enum Mode {
-        // Each vehicle's path is a random walk generated on the go.
-        RANDOM {
-            PathPlanner getPlanner() { return new RandomPlanner(); }
+        /// Each vehicle's path is a random walk generated on the go. If a vehicle gets stuck,
+        /// the path won't be updated.
+        RANDOM_STATIC {
+            PathPlanner getPlanner() { return new RandomPlannerStatic(); }
+        },
+        // Each vehicle's path is a random walk generated on the go. If a vehicle gets stuck,
+        // the path can be updated.
+        RANDOM_DYNAMIC {
+            PathPlanner getPlanner() { return new RandomPlannerDynamic(); }
         },
         // Each vehicle's path is optimal but fixed.
-        SHORTEST_PATH {
-            PathPlanner getPlanner() { return new BFSPlanner(); }
+        SHORTEST_PATH_STATIC {
+            PathPlanner getPlanner() { return new BFSPlannerStatic(); }
+        },
+        // Each vehicle's path is optimal. If a vehicle gets stuck, the planner will suggest another
+        // path that doesn't go through vehicle's current nextNext Vertex.
+        SHORTEST_PATH_DYNAMIC {
+            PathPlanner getPlanner() { return new BFSPlannerDynamic(); }
         };
 
         abstract PathPlanner getPlanner();

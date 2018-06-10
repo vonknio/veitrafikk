@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import static java.lang.Integer.max;
 import static java.lang.Integer.min;
+import static java.lang.Math.abs;
 
 /**
  * Class that provides testing functions. Can be safely used by all classes within the package.
@@ -181,5 +182,11 @@ abstract class TestUtils {
         God.setDestinationForNextTick(vehicle, model);
 
         return vehicle;
+    }
+
+    static void assertSameOrUnitDistance(Vertex v1, Vertex v2) {
+        assert(compressedEquals(v1, v2)
+                || v1.x == v2.x && abs(v1.y - v2.y) == 1
+                || v1.y == v2.y && abs(v1.x - v2.x) == 1);
     }
 }

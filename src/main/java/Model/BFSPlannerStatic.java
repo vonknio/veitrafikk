@@ -7,13 +7,13 @@ import java.util.logging.Logger;
 /**
  * Planner that uses BFS to plan paths for vertices.
  */
-class BFSPlanner implements PathPlanner {
+class BFSPlannerStatic implements PathPlanner {
     // Maps vehicles to their remaining paths in the grid.
     // At any given moment such a path should connect vehicle's current position
     // and its destination.
     private Map<Vehicle, Stack<Vertex>> paths = new HashMap<>();
     private Map<Vehicle, Vertex> dests = new HashMap<>();
-    private final static Logger logger = Logger.getLogger(BFSPlanner.class.getName());
+    private final static Logger logger = Logger.getLogger(BFSPlannerStatic.class.getName());
 
     @Override @NotNull
     public Vertex getDestinationForNextTick(Vehicle vehicle, Grid grid) {
@@ -32,12 +32,22 @@ class BFSPlanner implements PathPlanner {
         return paths.get(vehicle).pop();
     }
 
+    @Override
+    public boolean isDynamic() { return false; }
+
     /**
      * Find the shortest path from vehicle's current position to its destination.
      * @param vehicle Vehicle that needs a path.
      * @param grid Grid to operate on.
      */
-    private void planPath(Vehicle vehicle, Grid grid) {
+    protected void planPath(Vehicle vehicle, Grid grid) {
+        Stack<Vertex> path = planPath(vehicle, grid, null);
+        if (path == null)
+            throw new IllegalStateException("Disconnected graph");
+        applyPath(vehicle, path);
+    }
+
+    protected Stack<Vertex> planPath(Vehicle vehicle, Grid grid, Vertex vertexToAvoid) {
         Vertex cur = vehicle.getCur();
         Vertex dest = vehicle.getDest();
 
@@ -56,25 +66,34 @@ class BFSPlanner implements PathPlanner {
             if (cur == dest) break;
 
             visited.add(cur);
-            for (Vertex neighbour : grid.getNeighbours(cur))
+            for (Vertex neighbour : grid.getNeighbours(cur)) {
+                if (TestUtils.compressedEquals(neighbour, vertexToAvoid)) {
+                    continue;
+                }
+
                 if (!visited.contains(neighbour)) {
                     queue.add(neighbour);
                     parents.put(neighbour, cur);
                 }
+            }
         }
 
         Stack<Vertex> path = new Stack<>();
         cur = dest;
         while (cur != vehicle.getCur()) {
             if (cur == null)
-                throw new IllegalStateException("Disconnected graph");
+                return null;
+            //throw new IllegalStateException("Disconnected graph");
             if (cur.getVertexType() == Vertex.VertexType.IN)
                 path.push(cur);
             cur = parents.get(cur);
         }
+        return path;
+    }
 
+    protected void applyPath(Vehicle vehicle, Stack<Vertex> path) {
         logger.config("Path for vehicle " + vehicle.getId() + " is " + path);
         paths.put(vehicle, path);
-        dests.put(vehicle, dest);
+        dests.put(vehicle, vehicle.getDest());
     }
 }

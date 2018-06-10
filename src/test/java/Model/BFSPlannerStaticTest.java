@@ -4,8 +4,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class BFSPlannerTest {
-    private BFSPlanner planner  = new BFSPlanner();
+public class BFSPlannerStaticTest {
+    private BFSPlannerStatic planner  = new BFSPlannerStatic();
     private Grid grid = new Grid(10);
 
     @Test

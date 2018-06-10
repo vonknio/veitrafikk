@@ -16,4 +16,10 @@ interface PathPlanner {
      */
     @NotNull
     Vertex getDestinationForNextTick(Vehicle vehicle, Grid grid);
+
+    /**
+     * @return Whether planner is dynamic – whether getDestinationForNextTick should
+     * be called if vehicle got stuck to find a potentially better path.
+     */
+    boolean isDynamic();
 }
