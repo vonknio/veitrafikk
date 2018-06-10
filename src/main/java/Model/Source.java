@@ -37,6 +37,10 @@ class Source extends Vertex {
 
     private float throwDice() { return new Random().nextFloat(); }
 
-    boolean canSpawnVehicle(){ return fill < limit && !hasVehicle() && throwDice() <= probability; }
+    boolean canSpawnVehicle(){ return willSpawnAgain() && !hasVehicle() && throwDice() <= probability; }
+
+    boolean willSpawnAgain() {
+        return fill < limit;
+    }
 
 }

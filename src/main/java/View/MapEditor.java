@@ -18,7 +18,7 @@ class MapEditor {
 
     private JButton quit;
     private JButton play;
-    private JButton save;
+    private JButton settings;
     private JButton pause;
     private JButton start;
     private JButton stats;
@@ -26,7 +26,7 @@ class MapEditor {
     private JPanel gameButtons;
     private JPanel drawingButtons;
     private JComboBox modesMenu;
-    private String[] modes = {"SHORTEST_PATH_STATIC", "SHORTEST_PATH_DYNAMIC", "RANDOM_STATIC", "RANDOM_DYNAMIC"};
+    private String[] modes = {"SHORTEST_PATH_DYNAMIC", "SHORTEST_PATH_STATIC", "RANDOM_STATIC", "RANDOM_DYNAMIC"};
 
     MapEditor(int size, int userDist, boolean fixed) {
         this.size = size;
@@ -107,7 +107,7 @@ class MapEditor {
 
         quit = new JButton("Back");
 
-        save = new JButton("Save");
+        settings = new JButton("Settings");
 
         stats = new JButton("Stats");
         stats.setVisible(false);
@@ -136,7 +136,7 @@ class MapEditor {
         gameButtons.add(start, BorderLayout.CENTER);
         gameButtons.add(playButtons, BorderLayout.NORTH);
 
-        otherButtons.add(save, BorderLayout.CENTER);
+        otherButtons.add(settings, BorderLayout.CENTER);
         otherButtons.add(quit, BorderLayout.WEST);
         otherButtons.add(stats, BorderLayout.EAST);
 
@@ -196,7 +196,7 @@ class MapEditor {
         play.setVisible(true);
         pause.setVisible(true);
         stats.setVisible(true);
-        start.setText("First tick");
+        start.setText("Next tick");
         start.removeActionListener(firstTickListener);
     }
 
@@ -224,7 +224,7 @@ class MapEditor {
     }
 
     void addSaveListener(ActionListener listener) {
-        save.addActionListener(listener);
+        settings.addActionListener(listener);
     }
 
     void addNewRoadListener(ActionListener listener) {

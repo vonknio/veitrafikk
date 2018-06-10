@@ -9,6 +9,7 @@ public class View {
     Menu menu;
     MapEditor mapEditor;
     StatisticsWindow statisticsWindow;
+    SettingsWindow settings;
     private Object active;
     private boolean isVisible = false;
 
@@ -32,6 +33,13 @@ public class View {
                 menu.setVisible(false);
             if (mapEditor != null)
                 mapEditor.setVisible(false);
+        }
+
+        if (!b) {
+            if (statisticsWindow != null)
+                statisticsWindow.setVisible(false);
+            if (settings != null)
+                settings.setVisible(false);
         }
     }
 
@@ -72,9 +80,17 @@ public class View {
         statisticsWindow.setVisible(true);
     }
 
+    public void showSettings() {
+        settings = new SettingsWindow();
+        settings.update();
+        settings.setVisible(true);
+    }
+
     public void nextTick(){
         //TODO
     }
+
+    public void updateVehicles(Collection<int[]> coordinates){ mapEditor.updateVehicles(coordinates); }
 
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Getters and setters
@@ -102,7 +118,10 @@ public class View {
         throw new IllegalStateException();
     }
 
-    public void updateVehicles(Collection<int[]> coordinates){ mapEditor.updateVehicles(coordinates); }
+    public float getSourceProbability() { return settings.getSourceProbability(); }
+
+    public int getSourceLimit() { return settings.getSourceLimit(); }
+
 
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Draw
@@ -150,7 +169,8 @@ public class View {
 
     public void addRemoveListener(ActionListener listener) { mapEditor.addRemoveListener(listener); }
 
-    /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Add Menu listeners
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -163,6 +183,20 @@ public class View {
     public void addLoadListener(ActionListener listener) { menu.addLoadListener(listener); }
 
     public void addContinueListener(ActionListener listener) { menu.addContinueListener(listener); }
+
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *  Add Settings listeners
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    public void addSettingsApplyListener(ActionListener listener) { settings.addApplyListener(listener); }
+
+    public void addSettingsQuitListener(ActionListener listener) { settings.addQuitListener(listener); }
+
+    public void addSettingsSaveListener(ActionListener listener) { settings.addSaveListener(listener); }
+
+    public void addSettingsLoadListener(ActionListener listener) { settings.addLoadListener(listener); }
+
 
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Helper methods for communicating with the user

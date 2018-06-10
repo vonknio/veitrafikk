@@ -2,12 +2,7 @@ package Controller;
 import Model.Model;
 import View.View;
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.*;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -17,125 +12,32 @@ import static java.lang.Thread.interrupted;
 
 public class Controller {
     private final static Logger logger = Logger.getLogger(Controller.class.getName());
-    private View view;
-    private Model model;
+    private final View view;
+    private final Model model;
+    private final MapLoader mapLoader;
+    private final GridPlanner gridPlanner;
     private Thread playingThread;
-    private MapLoader mapLoader;
 
     public Controller(View view, Model model) {
         this.view = view;
         this.model = model;
         this.mapLoader = new MapLoader(model, view, this);
+        this.gridPlanner = new GridPlanner(model, view, this);
 
         view.addOpenEditorListener(this::switchToEditMode);
+        view.addContinueListener(this::continueToEditMode);
         view.addLoadListener(mapLoader::load);
         view.addQuitListener(e -> System.exit(0));
-        view.addContinueListener(this::continueToEditMode);
-    }
-
-    private void newRoad(ActionEvent e) {
-        int[] coordinates = view.getCoordinates();
-        if (coordinates.length != 4) {
-            throw new IllegalArgumentException();
-        }
-
-        int x1 = coordinates[0], y1 = coordinates[1],
-                x2 = coordinates[2], y2 = coordinates[3];
-
-        if (x1 != x2 && y1 != y2) {
-            return;
-        }
-
-        logger.config("Adding road (" + x1 + ", " + y1 + ") <-> (" + x2 + ", " + y2 + ")");
-        model.addRoad(x1, y1, x2, y2);
-        model.addRoad(x2, y2, x1, y1);
-        view.drawRoad(x1, y1, x2, y2);
-    }
-
-    private void remove(ActionEvent e) {
-        int[] coordinates = view.getCoordinates();
-        if (coordinates.length != 4) {
-            throw new IllegalStateException();
-        }
-        int x1 = coordinates[0], y1 = coordinates[1],
-                x2 = coordinates[2], y2 = coordinates[3];
-
-        if (model.isSink(x1, y1) || model.isSource(x1, y1)){
-            logger.config("Removing vertex classifier (" + x1 + ", " + y1 + ")");
-            model.removeVertexClassifiers(x1, y1);
-            view.removeSpecialVertex(x1, y1);
-            return;
-        }
-
-        if (!model.hasRoad(x1, y1, x2, y2))
-            return;
-
-        coordinates = model.getEnclosingRoad(x1, y1, x2, y2);
-
-        x1 = coordinates[0];
-        y1 = coordinates[1];
-        x2 = coordinates[2];
-        y2 = coordinates[3];
-
-        logger.config("Removing road (" + x1 + ", " + y1 + ") <-> (" + x2 + ", " + y2 + ")");
-
-        if (x1 == x2)
-            for (int i = 0; i < y2-y1; ++i)
-                removeUnitRoad(x1, y1+i, x1, y1+i+1);
-        else
-            for (int i = 0; i < x2-x1; ++i)
-                removeUnitRoad(x1+i, y1, x1+i+1, y1);
-
-    }
-
-    private void removeUnitRoad(int x1, int y1, int x2, int y2){
-
-        if (model.isLastRoad(x1, y1))
-            view.removeSpecialVertex(x1, y1);
-        if (model.isLastRoad(x2, y2))
-            view.removeSpecialVertex(x2, y2);
-
-        model.removeRoad(x1, y1, x2, y2);
-        view.removeRoad(x1, y1, x2, y2);
-    }
-
-    private void newSource(ActionEvent e) {
-        int[] coordinates = view.getCoordinates();
-        if (coordinates.length != 2) {
-            throw new IllegalStateException();
-        }
-        int x1 = coordinates[0], y1 = coordinates[1];
-
-        logger.config("Adding source (" + x1 + ", " + y1 + ")");
-        model.removeVertexClassifiers(x1, y1);
-        model.addSource(x1, y1);
-        view.removeSpecialVertex(x1, y1);
-        view.drawSource(x1, y1);
-    }
-
-    private void newSink(ActionEvent e) {
-        int[] coordinates = view.getCoordinates();
-        if (coordinates.length != 2) {
-            throw new IllegalStateException();
-        }
-        int x1 = coordinates[0], y1 = coordinates[1];
-
-        logger.config("Adding sink (" + x1 + ", " + y1 + ")");
-        model.removeVertexClassifiers(x1, y1);
-        Color color = model.addSink(x1, y1);
-        view.removeSpecialVertex(x1, y1);
-        view.drawSink(x1, y1, color);
     }
 
     private void goBackToMenu(ActionEvent e) { view.goBackToMenu(); }
 
-    public void continueToEditMode(ActionEvent e) {
-        view.continueToEditor();
-    }
+    private void continueToEditMode(ActionEvent e) { view.continueToEditor(); }
 
-    public void switchToEditMode(ActionEvent e) {
+    void switchToEditMode(ActionEvent e) {
         int size = view.getGridSize();
-        if (size < 1) size = 10;
+        if (size < 2) size = 2;
+        else if (size > 100) size = 100;
         int dist = max(view.getDistanceInPx(), 5);
         boolean fixedDistance = view.getIsDistanceFixed();
 
@@ -147,19 +49,35 @@ public class Controller {
 
         view.openEditor(size, dist, fixedDistance);
         view.addModeChangeListener(this::changeMode);
-        view.addNewRoadListener(this::newRoad);
-        view.addRemoveListener(this::remove);
-        view.addNewSourceListener(this::newSource);
-        view.addNewSinkListener(this::newSink);
         view.addFirstTickListener(this::firstTick);
         view.addBackToMenuListener(this::goBackToMenu);
-        view.addSaveListener(mapLoader::save);
         view.addStatsListener(this::showStatistics);
+
+        view.addNewRoadListener(gridPlanner::newRoad);
+        view.addRemoveListener(gridPlanner::remove);
+        view.addNewSourceListener(gridPlanner::newSource);
+        view.addNewSinkListener(gridPlanner::newSink);
+
+      //  view.addSaveListener(mapLoader::save);
+        view.addSaveListener(this::showSettings);
     }
 
     private void showStatistics(ActionEvent event) {
         view.showStatistics(model.averagePathLength(), model.averageTicksAlive(), model.averageTimeEmpty(),
                 model.averageVehicleCount(), model.averageVelocity(), model.verticesVisited());
+    }
+
+    private void showSettings(ActionEvent event) {
+        view.showSettings();
+        view.addSettingsApplyListener(this::applySettings);
+        view.addSettingsQuitListener(e -> System.exit(0));
+        view.addSettingsLoadListener(mapLoader::load);
+        view.addSettingsSaveListener(mapLoader::save);
+    }
+
+    private void applySettings(ActionEvent e) {
+        gridPlanner.setSourceProbability(view.getSourceProbability());
+        gridPlanner.setSourceLimit(view.getSourceLimit());
     }
 
     private void firstTick(ActionEvent e) {
@@ -204,9 +122,17 @@ public class Controller {
         model.changeMode(mode);
     }
 
+    private void gameEnd() {
+        showStatistics(null);
+    }
+
     private Thread spawnPlayingThread() {
         return new Thread(() -> {
-            while (!interrupted() && nextTick(null)) {
+            while (!interrupted()) {
+                if (!nextTick(null)) {
+                    gameEnd();
+                    break;
+                }
                 try {
                     TimeUnit.SECONDS.sleep(4);
                 } catch (Exception ex) {

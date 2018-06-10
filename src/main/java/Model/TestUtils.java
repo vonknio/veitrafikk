@@ -189,4 +189,14 @@ abstract class TestUtils {
                 || v1.x == v2.x && abs(v1.y - v2.y) == 1
                 || v1.y == v2.y && abs(v1.x - v2.x) == 1);
     }
+
+    /**
+     * @return Whether given grid has unspawned vehicles.
+     */
+    static boolean hasUnspawnedVehicles(GridState gridState) {
+        for (Source source : gridState.getSources())
+            if (source.willSpawnAgain())
+                return true;
+        return false;
+    }
 }

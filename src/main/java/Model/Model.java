@@ -63,6 +63,10 @@ public class Model {
         gridState.addSource(x1, y1, limit, probability);
     }
 
+    public void addSource(int x1, int y1) {
+        addSource(x1, y1, 10, 1);
+    }
+
     /**
      * Add a sink vertex to the grid.
      *
@@ -71,10 +75,6 @@ public class Model {
      */
     public Color addSink(int x1, int y1) {
         return gridState.addSink(x1, y1);
-    }
-
-    public void addSource(int x1, int y1) {
-        addSource(x1, y1, 10, 1);
     }
 
     /**
@@ -338,5 +338,13 @@ public class Model {
 
     Statistics getStatistics() {
         return statistics;
+    }
+
+    public boolean endedSuccessfully() {
+        return !hasVehiclesOnGrid() && !TestUtils.hasUnspawnedVehicles(gridState);
+    }
+
+    public boolean hasVehiclesOnGrid() {
+        return !gridState.getVehicles().isEmpty();
     }
 }

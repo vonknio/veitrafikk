@@ -8,11 +8,9 @@ import java.awt.event.ActionEvent;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.logging.Logger;
-
-import static java.lang.Integer.compareUnsigned;
 import static java.lang.Integer.max;
 
-public class MapLoader {
+class MapLoader {
     private final static Logger logger = Logger.getLogger(MapLoader.class.getName());
     private final Model model;
     private final View view;
@@ -182,7 +180,9 @@ public class MapLoader {
                     fixed = true;
             }
 
+            view.setVisible(false);
             controller.configureEditMode(size, distance, fixed);
+            view.setVisible(true);
 
             line = reader.readLine(); //wall
 
