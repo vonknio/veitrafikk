@@ -26,7 +26,7 @@ class Vehicle {
     }
 
     Vehicle(Vertex cur, Vertex dest) {
-        this(cur, dest, new Color(0,255,255));
+        this(cur, dest, new Color(0, 255, 255));
     }
 
     Vehicle(Vertex cur, Vertex dest, Color color) {
@@ -39,7 +39,7 @@ class Vehicle {
     }
 
     Vehicle(Vertex cur, Vertex dest, VehicleStatistics stats) {
-        this(cur, dest, stats, new Color(0,255,255));
+        this(cur, dest, stats, new Color(0, 255, 255));
     }
 
     Vehicle(Vertex cur, Vertex dest, VehicleStatistics stats, Color color) {
@@ -120,7 +120,7 @@ class Vehicle {
         return id;
     }
 
-    //TODO idleTicks
+
     class VehicleStatistics implements ObjectStatistics {
         private long idleTicks = 0;
         private long ticksAlive = 0;
@@ -154,6 +154,10 @@ class Vehicle {
 
         long ticksAlive() {
             return ticksAlive - 1;
+        }
+
+        long getIdleTicks() {
+            return idleTicks;
         }
 
         double pathLength() {

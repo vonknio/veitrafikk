@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -8,12 +10,11 @@ class Statistics {
     private GridState gridState;
     private Grid grid;
 
-    public Statistics(Grid grid, GridState gridState) {
+    Statistics(Grid grid, GridState gridState) {
         setGrid(grid);
         setGridState(gridState);
         removedVehiclesStatistics = new LinkedList<>();
     }
-
     /**
      * Update all statistics related to given vertex for current timetick.
      */
@@ -50,6 +51,7 @@ class Statistics {
         for (Vehicle vehicle : gridState.getVehicles()) {
             statistics.add(vehicle.stats);
         }
+        statistics.addAll(removedVehiclesStatistics);
         return statistics;
     }
 
@@ -124,4 +126,51 @@ class Statistics {
                 (gridState.getVehicles().size() + removedVehiclesStatistics.size());
     }
 
+    double averageWaitingTime() {
+        double result = 0;
+        for (Vehicle vehicle : gridState.getVehicles()) {
+            result += (vehicle.stats.getIdleTicks());
+        }
+        for (Vehicle.VehicleStatistics statistics : removedVehiclesStatistics) {
+            result += (statistics.getIdleTicks());
+        }
+        return result /
+                (gridState.getVehicles().size() + removedVehiclesStatistics.size());
+    }
+
+    int finishedVehicles() {
+        return removedVehiclesStatistics.size();
+    }
+
+    int totalVehicles() {
+        return finishedVehicles() + gridState.getVehicles().size();
+    }
+
+    double maxVelocity() {
+        return Collections.max(vehiclesStatistics(), Comparator.comparingDouble(o -> o.velocity())).velocity();
+    }
+
+    double maxTicksAlive() {
+        return Collections.max(vehiclesStatistics(), Comparator.comparingDouble(o -> o.ticksAlive())).ticksAlive();
+    }
+
+    double maxPathLength() {
+        return Collections.max(vehiclesStatistics(), Comparator.comparingDouble(o -> o.pathLength())).pathLength();
+    }
+
+    double maxVehicleCount() {
+        return Collections.max(verticesStatistics(), Comparator.comparingDouble(o -> o.vehicleCount())).vehicleCount();
+    }
+
+    double maxTimeEmpty() {
+        return Collections.max(verticesStatistics(), Comparator.comparingDouble(o -> o.timeEmpty())).timeEmpty();
+    }
+
+    double maxWaitingTime() {
+        return Collections.max(vehiclesStatistics(), Comparator.comparingDouble(o -> o.getIdleTicks())).getIdleTicks();
+    }
+
+    int notVisitedVertices() {
+        return grid.getVertices().size() - verticesVisited();
+    }
 }

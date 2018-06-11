@@ -63,8 +63,14 @@ public class Controller {
     }
 
     private void showStatistics(ActionEvent event) {
-        view.showStatistics(model.averagePathLength(), model.averageTicksAlive(), model.averageTimeEmpty(),
-                model.averageVehicleCount(), model.averageVelocity(), model.verticesVisited());
+        view.showStatistics(
+                model.averageVelocity(), model.verticesVisited(), model.averagePathLength(),
+                model.averageTimeEmpty(), model.averageVehicleCount(), model.averageTicksAlive(),
+                model.maxVelocity(), model.notVisitedVertices(), model.maxPathLength(),
+                model.maxTimeEmpty(), model.maxVehicleCount(), model.maxTicksAlive(),
+                model.endedSuccessfully(), model.getTime(), model.averageWaitingTime(),
+                model.maxWaitingTime(), model.totalVehicles(), model.finishedVehicles()
+        );
     }
 
     private void showSettings(ActionEvent event) {

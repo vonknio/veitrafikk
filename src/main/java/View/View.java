@@ -27,8 +27,7 @@ public class View {
                 mapEditor.setVisible(true);
             else if (active == statisticsWindow)
                 statisticsWindow.setVisible(true);
-        }
-        else {
+        } else {
             if (menu != null)
                 menu.setVisible(false);
             if (mapEditor != null)
@@ -68,14 +67,11 @@ public class View {
             mapEditor.setVisible(true);
     }
 
-    public void showStatistics(double path, double ticks, double time, double vehicles, double velocity, int vertices) {
+    public void showStatistics(double velocity, int vertices, double path, double time, double vehicles, double ticks, double velocityMax, int verticesMax, double pathMax, double timeMax,
+                               double vehiclesMax, double ticksMax, boolean success, long ticksTotal, double wait, double waitMax, int total, int finished) {
         statisticsWindow = new StatisticsWindow();
-        statisticsWindow.setPath(path);
-        statisticsWindow.setTicks(ticks);
-        statisticsWindow.setTime(time);
-        statisticsWindow.setVehicles(vehicles);
-        statisticsWindow.setVelocity(velocity);
-        statisticsWindow.setVertices(vertices);
+        statisticsWindow.setValues(velocity, vertices, path, time, vehicles, ticks, velocityMax, verticesMax, pathMax, timeMax,
+                vehiclesMax, ticksMax, success, ticksTotal, wait, waitMax, total, finished);
         statisticsWindow.update();
         statisticsWindow.setVisible(true);
     }
@@ -86,25 +82,39 @@ public class View {
         settings.setVisible(true);
     }
 
-    public void nextTick(){
+    public void nextTick() {
         //TODO
     }
 
-    public void updateVehicles(Collection<int[]> coordinates){ mapEditor.updateVehicles(coordinates); }
+    public void updateVehicles(Collection<int[]> coordinates) {
+        mapEditor.updateVehicles(coordinates);
+    }
 
-    /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *  Getters and setters
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    /**
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Getters and setters
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     */
 
-    public int getGridSize() { return menu.getGridSize(); }
+    public int getGridSize() {
+        return menu.getGridSize();
+    }
 
-    public int getDistanceInPx() { return menu.getDistanceInPx(); }
+    public int getDistanceInPx() {
+        return menu.getDistanceInPx();
+    }
 
-    public boolean getIsDistanceFixed() { return menu.getIsDistanceFixed(); }
+    public boolean getIsDistanceFixed() {
+        return menu.getIsDistanceFixed();
+    }
 
-    public int[] getCoordinates() { return mapEditor.getCoordinates(); }
+    public int[] getCoordinates() {
+        return mapEditor.getCoordinates();
+    }
 
-    public String getMode() { return mapEditor.getMode(); }
+    public String getMode() {
+        return mapEditor.getMode();
+    }
 
     public int getXOriginCoordinate() {
         if (mapEditor != null)
@@ -118,56 +128,94 @@ public class View {
         throw new IllegalStateException();
     }
 
-    public float getSourceProbability() { return settings.getSourceProbability(); }
+    public float getSourceProbability() {
+        return settings.getSourceProbability();
+    }
 
-    public int getSourceLimit() { return settings.getSourceLimit(); }
+    public int getSourceLimit() {
+        return settings.getSourceLimit();
+    }
 
 
-    /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *  Draw
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    /**
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Draw
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     */
 
-    public void drawRoad(int x1, int y1, int x2, int y2) { mapEditor.drawRoad(x1, y1, x2, y2); }
+    public void drawRoad(int x1, int y1, int x2, int y2) {
+        mapEditor.drawRoad(x1, y1, x2, y2);
+    }
 
-    public void drawSource(int x1, int y1) { mapEditor.drawSource(x1, y1); }
+    public void drawSource(int x1, int y1) {
+        mapEditor.drawSource(x1, y1);
+    }
 
-    public void drawSink(int x1, int y1, Color color) { mapEditor.drawSink(x1, y1, color); }
+    public void drawSink(int x1, int y1, Color color) {
+        mapEditor.drawSink(x1, y1, color);
+    }
 
-    public void removeRoad(int x1, int y1, int x2, int y2) { mapEditor.removeRoad(x1, y1, x2, y2); }
+    public void removeRoad(int x1, int y1, int x2, int y2) {
+        mapEditor.removeRoad(x1, y1, x2, y2);
+    }
 
-    public void removeSpecialVertex(int x1, int y1) { mapEditor.removeSpecialVertex(x1, y1); }
+    public void removeSpecialVertex(int x1, int y1) {
+        mapEditor.removeSpecialVertex(x1, y1);
+    }
 
-    /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *  Add MapEditor listeners
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    /**
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Add MapEditor listeners
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     */
 
     public void addStatsListener(ActionListener listener) {
         mapEditor.addStatsListener(listener);
     }
 
-    public void addModeChangeListener(ActionListener listener) { mapEditor.addModeChangeListener(listener); }
+    public void addModeChangeListener(ActionListener listener) {
+        mapEditor.addModeChangeListener(listener);
+    }
 
-    public void addFirstTickListener(ActionListener listener) { mapEditor.addFirstTickListener(listener); }
+    public void addFirstTickListener(ActionListener listener) {
+        mapEditor.addFirstTickListener(listener);
+    }
 
-    public void addPlayListener(ActionListener listener) { mapEditor.addPlayListener(listener); }
+    public void addPlayListener(ActionListener listener) {
+        mapEditor.addPlayListener(listener);
+    }
 
-    public void addPauseListener(ActionListener listener) { mapEditor.addPauseListener(listener); }
+    public void addPauseListener(ActionListener listener) {
+        mapEditor.addPauseListener(listener);
+    }
 
-    public void addNextTickListener(ActionListener listener) { mapEditor.addNextTickListener(listener); }
+    public void addNextTickListener(ActionListener listener) {
+        mapEditor.addNextTickListener(listener);
+    }
 
-    public void addBackToMenuListener(ActionListener listener) { mapEditor.addBackToMenuListener(listener); }
+    public void addBackToMenuListener(ActionListener listener) {
+        mapEditor.addBackToMenuListener(listener);
+    }
 
     public void addSaveListener(ActionListener listener) {
         mapEditor.addSaveListener(listener);
     }
 
-    public void addNewRoadListener(ActionListener listener) { mapEditor.addNewRoadListener(listener); }
+    public void addNewRoadListener(ActionListener listener) {
+        mapEditor.addNewRoadListener(listener);
+    }
 
-    public void addNewSourceListener(ActionListener listener) { mapEditor.addNewSourceListener(listener); }
+    public void addNewSourceListener(ActionListener listener) {
+        mapEditor.addNewSourceListener(listener);
+    }
 
-    public void addNewSinkListener(ActionListener listener) { mapEditor.addNewSinkListener(listener); }
+    public void addNewSinkListener(ActionListener listener) {
+        mapEditor.addNewSinkListener(listener);
+    }
 
-    public void addRemoveListener(ActionListener listener) { mapEditor.addRemoveListener(listener); }
+    public void addRemoveListener(ActionListener listener) {
+        mapEditor.addRemoveListener(listener);
+    }
 
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -178,35 +226,57 @@ public class View {
         menu.addQuitListener(listener);
     }
 
-    public void addOpenEditorListener(ActionListener listener) { menu.addOpenEditorListener(listener); }
+    public void addOpenEditorListener(ActionListener listener) {
+        menu.addOpenEditorListener(listener);
+    }
 
-    public void addLoadListener(ActionListener listener) { menu.addLoadListener(listener); }
+    public void addLoadListener(ActionListener listener) {
+        menu.addLoadListener(listener);
+    }
 
-    public void addContinueListener(ActionListener listener) { menu.addContinueListener(listener); }
+    public void addContinueListener(ActionListener listener) {
+        menu.addContinueListener(listener);
+    }
 
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Add Settings listeners
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    public void addSettingsApplyListener(ActionListener listener) { settings.addApplyListener(listener); }
+    public void addSettingsApplyListener(ActionListener listener) {
+        settings.addApplyListener(listener);
+    }
 
-    public void addSettingsQuitListener(ActionListener listener) { settings.addQuitListener(listener); }
+    public void addSettingsQuitListener(ActionListener listener) {
+        settings.addQuitListener(listener);
+    }
 
-    public void addSettingsSaveListener(ActionListener listener) { settings.addSaveListener(listener); }
+    public void addSettingsSaveListener(ActionListener listener) {
+        settings.addSaveListener(listener);
+    }
 
-    public void addSettingsLoadListener(ActionListener listener) { settings.addLoadListener(listener); }
+    public void addSettingsLoadListener(ActionListener listener) {
+        settings.addLoadListener(listener);
+    }
 
 
-    /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *  Helper methods for communicating with the user
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    /**
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Helper methods for communicating with the user
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     */
 
-    public void removeFirstTickListener() { mapEditor.removeFirstTickListener(); }
+    public void removeFirstTickListener() {
+        mapEditor.removeFirstTickListener();
+    }
 
-    public JComponent getMapPlanner() { return mapEditor.mapPlanner; }
+    public JComponent getMapPlanner() {
+        return mapEditor.mapPlanner;
+    }
 
-    public JFrame getMenu() { return menu; }
+    public JFrame getMenu() {
+        return menu;
+    }
 
     public void showDisconnectedGraphError() {
         JOptionPane.showMessageDialog(null,

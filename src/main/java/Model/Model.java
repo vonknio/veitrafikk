@@ -213,7 +213,7 @@ public class Model {
         LinkedList<int[]> result = new LinkedList<>();
         Collection<Vehicle> vehicles = getVehicles();
         for (Vehicle v : vehicles) {
-            int[] coords = new int[10];
+            int[] coords = new int[11];
             coords[0] = v.getPrev().getXCoordinate();
             coords[1] = v.getPrev().getYCoordinate();
             coords[2] = v.getCur().getXCoordinate();
@@ -224,6 +224,7 @@ public class Model {
             coords[7] = v.getColor().getRed();
             coords[8] = v.getColor().getGreen();
             coords[9] = v.getColor().getBlue();
+            coords[10] = v.getCur().getVertexType() == Vertex.VertexType.IN ? 1 : 0;
             result.add(coords);
         }
         return result;
@@ -350,5 +351,49 @@ public class Model {
 
     public boolean hasVehiclesOnGrid() {
         return !gridState.getVehicles().isEmpty();
+    }
+
+    public double averageWaitingTime() {
+        return statistics.averageWaitingTime();
+    }
+
+    public int finishedVehicles() {
+        return statistics.finishedVehicles();
+    }
+
+    public int totalVehicles() {
+        return statistics.totalVehicles();
+    }
+
+    public double maxVelocity() {
+        return statistics.maxVelocity();
+    }
+
+    public double maxTicksAlive() {
+        return statistics.maxTicksAlive();
+    }
+
+    public double maxPathLength() {
+        return statistics.maxPathLength();
+    }
+
+    public double maxVehicleCount() {
+        return statistics.maxVehicleCount();
+    }
+
+    public int notVisitedVertices() {
+        return statistics.notVisitedVertices();
+    }
+
+    public double maxTimeEmpty() {
+        return statistics.maxTimeEmpty();
+    }
+
+    public double maxWaitingTime() {
+        return statistics.maxWaitingTime();
+    }
+
+    public long getTime() {
+        return gridState.getTime();
     }
 }
