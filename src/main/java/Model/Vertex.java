@@ -38,9 +38,7 @@ class Vertex {
 
     VertexType getVertexType() { return type; }
 
-    void setVertexType(VertexType vertexType) {
-        this.type = vertexType;
-    }
+    void setVertexType(VertexType vertexType) { this.type = vertexType; }
 
     boolean hasVehicle() { return getVehicle() != null; }
 
@@ -51,9 +49,7 @@ class Vertex {
     void removeVehicle() { this.vehicle = null; }
 
     @Override
-    public String toString() {
-        return "(" + x + ", " + y + ")";
-    }
+    public String toString() { return "(" + x + ", " + y + ")"; }
 
     enum VertexType {
         IN,
@@ -85,13 +81,9 @@ class Vertex {
                 vehicleCount++;
         }
 
-        private void updateAuxiliaryVariables() {
-            vehicleInPrevTick = vehicle;
-        }
+        private void updateAuxiliaryVariables() { vehicleInPrevTick = vehicle; }
 
-        long vehicleCount() {
-            return vehicleCount;
-        }
+        long vehicleCount() { return vehicleCount; }
 
         double timeEmpty() {
             if (ticks == 0)

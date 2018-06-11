@@ -304,6 +304,11 @@ v       |
         God.setMode(God.Mode.SHORTEST_PATH_STATIC);
 
         Vehicle vehicle = TestUtils.createVehicleOnGrid(0, 0, model);
+
+        // make sure path will be replanned
+        vehicle.setDest(grid.getVertexOut(9, 0));
+        God.setDestinationForNextTick(gridState.getVehicles(), model);
+
         vehicle.setDest(grid.getVertexOut(0, 9));
 
         God.setDestinationForNextTick(gridState.getVehicles(), model);
@@ -311,36 +316,4 @@ v       |
 
         assertTrue(TestUtils.compressedEquals(grid.getVertex(0, 1), vehicle.getCur()));
     }
-
-// think about it later
-//    @Test
-//    public void testShortestPathSeveralVehicles() {
-//        grid.addRoad(0, 0, 0, 9);
-//        grid.addRoad(0, 0, 9, 0);
-//        grid.addRoad(0, 9, 9, 9);
-//        grid.addRoad(9, 0, 9, 9);
-//        turnEveryVertexIntoSink();
-//
-//        God.setMode(God.Mode.SHORTEST_PATH_STATIC);
-//
-//        Vehicle vehicle = TestUtils.createVehicleOnGrid(0, 0, model);
-//        vehicle.setDest(grid.getVertex(0, 9));
-//
-//        Vehicle vehicle2 = TestUtils.createVehicleOnGrid(0, 0, model);
-//        vehicle2.setDest(grid.getVertex(9, 0));
-//
-//        Vehicle vehicle3 = TestUtils.createVehicleOnGrid(0, 1, model);
-//        vehicle3.setDest(grid.getVertex(9, 0));
-//
-//        List<Vehicle> vehicles = new ArrayList<>();
-//        vehicles.add(vehicle);
-//        vehicles.add(vehicle2);
-//        vehicles.add(vehicle3);
-//        God.setDestinationForNextTick(vehicles, model);
-//        God.processTimetick(model);
-//
-//        assertTrue(TestUtils.compressedEquals(grid.getVertex(0, 1), vehicle.getCur()));
-//        assertTrue(TestUtils.compressedEquals(grid.getVertex(1, 0), vehicle2.getCur()));
-//        assertTrue(TestUtils.compressedEquals(grid.getVertex(0, 0), vehicle3.getCur()));
-//    }
 }

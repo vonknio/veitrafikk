@@ -13,35 +13,14 @@ class Grid {
     private int size;
     private Vertex[][] vertices;
     private boolean[][] roads;
-    private int roadLength;
-
-    private static final int defaultRoadLength = 1;  // intervals
-
-    /**
-     * Constructor with default road length.
-     *
-     * @param size Size of grid's side.
-     */
-    Grid(int size) {
-        this(size, defaultRoadLength);
-    }
 
     /**
      * @param size       Size of grid's side.
-     * @param roadLength Length of unit road.
      */
-    Grid(int size, int roadLength) {
-        if ((size - 1) % roadLength != 0)
-            throw new IllegalArgumentException();
-
+    Grid(int size) {
         this.size = size;
         vertices = new Vertex[size * size][2];
         roads = new boolean[size * size][4];
-
-        if (roadLength < 1)
-            throw new IllegalArgumentException();
-
-        this.roadLength = roadLength;
     }
 
     /**
@@ -69,9 +48,7 @@ class Grid {
     /**
      * @return Size of the grid's side.
      */
-    int getSize() {
-        return size;
-    }
+    int getSize() { return size; }
 
     /**
      * Add long road. Vertices must lie on the same straight line.
@@ -86,16 +63,10 @@ class Grid {
                 || x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0)
             throw new IllegalArgumentException();
 
-        if (!(x1 % roadLength == 0 && y1 % roadLength == 0)
-                || !(x2 % roadLength == 0 && y2 % roadLength == 0))
-            throw new IllegalArgumentException();
-
         if (x1 == x2) {
-
             for (int i = min(y1, y2); i < max(y1, y2); ++i)
                 addUnitRoad(x1, i, x1, i + 1);
         } else if (y1 == y2) {
-
             for (int i = min(x1, x2); i < max(x1, x2); ++i)
                 addUnitRoad(i, y1, i + 1, y1);
         } else {
@@ -115,22 +86,28 @@ class Grid {
         if (x1 >= size || y1 >= size || x2 >= size || y2 >= size
                 || x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0)
             throw new IllegalArgumentException();
+
         if (!(x1 == x2 && (abs(y1 - y2) == 1)) && !(y1 == y2 && (abs(x1 - x2) == 1)))
             throw new IllegalArgumentException();
+
         if (vertices[x1 * size + y1][0] == null) addVertex(x1, y1);
         if (vertices[x2 * size + y2][0] == null) addVertex(x2, y2);
+
         if (x1 == x2 && y1 - y2 == 1) {
             roads[x1 * size + y1][0] = true;
             roads[x2 * size + y2][2] = true;
         }
+
         if (x1 - x2 == -1 && y1 == y2) {
             roads[x1 * size + y1][1] = true;
             roads[x2 * size + y2][3] = true;
         }
+
         if (x1 == x2 && y1 - y2 == -1) {
             roads[x1 * size + y1][2] = true;
             roads[x2 * size + y2][0] = true;
         }
+
         if (x1 - x2 == 1 && y1 == y2) {
             roads[x1 * size + y1][3] = true;
             roads[x2 * size + y2][1] = true;
@@ -150,15 +127,10 @@ class Grid {
                 || x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0)
             throw new IllegalArgumentException();
 
-        if (!(x1 % roadLength == 0 && y1 % roadLength == 0)
-                || !(x2 % roadLength == 0 && y2 % roadLength == 0))
-            throw new IllegalArgumentException();
         if (x1 == x2) {
-
             for (int i = min(y1, y2); i < max(y1, y2); ++i)
                 removeUnitRoad(x1, i, x1, i + 1);
         } else if (y1 == y2) {
-
             for (int i = min(x1, x2); i < max(x1, x2); ++i)
                 removeUnitRoad(i, y1, i + 1, y1);
         } else {
@@ -178,32 +150,39 @@ class Grid {
         if (x1 >= size || y1 >= size || x2 >= size || y2 >= size
                 || x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0)
             throw new IllegalArgumentException();
+
         if (!(x1 == x2 && (abs(y1 - y2) == 1)) && !(y1 == y2 && (abs(x1 - x2) == 1)))
             throw new IllegalArgumentException();
+
         if (x1 == x2 && y1 - y2 == 1) {
             roads[x1 * size + y1][0] = false;
             roads[x2 * size + y2][2] = false;
         }
+
         if (x1 - x2 == -1 && y1 == y2) {
             roads[x1 * size + y1][1] = false;
             roads[x2 * size + y2][3] = false;
         }
+
         if (x1 == x2 && y1 - y2 == -1) {
             roads[x1 * size + y1][2] = false;
             roads[x2 * size + y2][0] = false;
         }
+
         if (x1 - x2 == 1 && y1 == y2) {
             roads[x1 * size + y1][3] = false;
             roads[x2 * size + y2][1] = false;
         }
+
         if (getNeighbourSize(x1, y1) == 0)
             removeVertex(x1, y1);
+
         if (getNeighbourSize(x2, y2) == 0)
             removeVertex(x2, y2);
     }
 
     /**
-     * Add new vertex of sink type
+     * Add new vertex of sink type.
      *
      * @param x X coordinate.
      * @param y Y coordinate.
@@ -216,7 +195,7 @@ class Grid {
     }
 
     /**
-     * Add new vertex of source type
+     * Add new vertex of source type.
      *
      * @param x X coordinate.
      * @param y Y coordinate.
@@ -277,9 +256,7 @@ class Grid {
         return getVertexOut(in.x, in.y);
     }
 
-    Vertex getVertex(int x, int y) {
-        return getVertexOut(x, y);
-    }
+    Vertex getVertex(int x, int y) { return getVertexOut(x, y); }
 
     /**
      * @return Corresponding IN/OUT vertex of given vertex.
@@ -320,8 +297,8 @@ class Grid {
     /**
      * Get neighbour of vertex with given coordinates.
      *
-     * @param x         X coordinate.
-     * @param y         Y coordinate.
+     * @param x X coordinate.
+     * @param y Y coordinate.
      * @param direction 0-up, 1-right, 2-down, 3-left neighbour.
      * @return Neighbour vertex.
      */
@@ -377,13 +354,13 @@ class Grid {
     }
 
     /**
-     * @return Whether there is a path between any pair of vertices.
+     * @return Whether there is a path between every pair of vertices.
      */
     boolean isConnected() {
         Collection<Vertex> vertices = getVertices();
         if (vertices.isEmpty())
             return true;
-        HashMap<Vertex, Boolean> visited = new HashMap<Vertex, Boolean>();
+        HashMap<Vertex, Boolean> visited = new HashMap<>();
         for (Vertex vertex : vertices) {
             visited.put(vertex, false);
         }
@@ -393,9 +370,5 @@ class Grid {
                 return false;
         }
         return true;
-    }
-
-    int getRoadLength() {
-        return roadLength;
     }
 }

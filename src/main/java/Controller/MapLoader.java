@@ -217,9 +217,7 @@ class MapLoader {
 
         } catch (Exception exception) {
             exception.printStackTrace();
-            return;
         }
-
     }
 
     private void loadSource(int x1, int y1) {

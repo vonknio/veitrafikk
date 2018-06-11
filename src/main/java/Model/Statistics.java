@@ -94,7 +94,7 @@ class Statistics {
         for (Vehicle.VehicleStatistics statistics : removedVehiclesStatistics) {
             result += (statistics.pathLength() - 1);
         }
-        return result * grid.getRoadLength() /
+        return result /
                 (gridState.getVehicles().size() + removedVehiclesStatistics.size());
     }
 

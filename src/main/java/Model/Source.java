@@ -12,9 +12,7 @@ class Source extends Vertex {
         setProbability(probability);
     }
 
-    void setLimit(long limit) {
-        this.limit = limit;
-    }
+    void setLimit(long limit) { this.limit = limit; }
 
     long getLimit() { return limit; }
 
@@ -24,9 +22,7 @@ class Source extends Vertex {
         this.probability = probability;
     }
 
-    float getProbability() {
-        return probability;
-    }
+    float getProbability() { return probability; }
 
     Vehicle spawnVehicle(Sink sink){
         Vehicle vehicle = new Vehicle(this, sink, sink.getColor());
@@ -39,8 +35,5 @@ class Source extends Vertex {
 
     boolean canSpawnVehicle(){ return willSpawnAgain() && !hasVehicle() && throwDice() <= probability; }
 
-    boolean willSpawnAgain() {
-        return fill < limit;
-    }
-
+    boolean willSpawnAgain() { return fill < limit; }
 }

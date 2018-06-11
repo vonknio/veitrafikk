@@ -27,8 +27,6 @@ class BFSPlannerStatic implements PathPlanner {
             planPath(vehicle, grid);
 
         Stack<Vertex> path = paths.get(vehicle);
-        //if (TestUtils.compressedEquals(path.peek(), vehicle.getCur()))
-        //    path.pop();
         return paths.get(vehicle).pop();
     }
 
