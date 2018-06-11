@@ -71,8 +71,6 @@ abstract class God {
      * @return Whether the vehicle moved.
      */
     private static boolean moveVehicle(Vehicle vehicle, Set<Vehicle> processed) {
-        TestUtils.assertSameOrUnitDistance(vehicle.getCur(), vehicle.getNext());
-
         if (vehicle == null || processed.contains(vehicle))
             return false;
 
@@ -90,6 +88,8 @@ abstract class God {
             vehicle.setNextNext(getDestinationForNextTick(vehicle));
             nextNext = vehicle.getNextNext();
         }
+
+        TestUtils.assertSameOrUnitDistance(vehicle.getCur(), vehicle.getNext());
 
         if (vertex.getVertexType() == Vertex.VertexType.IN) {
             swapInAndOut(vertex);

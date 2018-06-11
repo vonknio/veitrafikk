@@ -34,7 +34,7 @@ V-------+
 
         // no move here
         assertTrue(TestUtils.compressedEquals(planner.getDestinationForNextTick(vehicle, grid),
-                grid.getVertex(1, 0)));
+                grid.getVertex(0, 0)));
 
     }
 
