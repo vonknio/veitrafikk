@@ -99,6 +99,9 @@ public class Controller {
 
     private void play(ActionEvent e) {
         logger.config("PLAY");
+        if (playingThread != null)
+            if (playingThread.isAlive())
+                return;
         playingThread = spawnPlayingThread();
         playingThread.start();
     }
@@ -114,11 +117,19 @@ public class Controller {
         }
     }
 
-    private boolean nextTick(ActionEvent e) {
+    private void nextTick(ActionEvent e) {
+        if (playingThread != null)
+            if (playingThread.isAlive())
+                return;
+        playingThread = playOnce();
+        playingThread.start();
+    }
+
+    private boolean nextTick() throws InterruptedException {
         boolean update = model.nextTick();
         Collection<int[]> vehicleCoordinates = model.getAllVehicleCoordinates();
         view.updateVehicles(vehicleCoordinates);
-        view.nextTick();
+        view.animate();
         return update;
     }
 
@@ -134,19 +145,37 @@ public class Controller {
 
     private Thread spawnPlayingThread() {
         return new Thread(() -> {
+            boolean updated = true;
             while (!interrupted()) {
-                if (!nextTick(null) && (model.hasVehiclesOnGrid()  // fail
+                if (!updated && model.hasVehiclesOnGrid()  // fail
                         || (!model.hasVehiclesOnGrid() && !model.hasUnspawnedVehicles())  // success
-                        )) {
+                        ) {
                     gameEnd();
                     break;
                 }
                 try {
-                    TimeUnit.SECONDS.sleep(4);
+                    updated = nextTick();
                 } catch (Exception ex) {
                     return;
                 }
             }
         });
     }
+
+    private Thread playOnce() {
+        return new Thread(() -> {
+            boolean updated;
+            try {
+                updated = nextTick();
+                if (!updated && model.hasVehiclesOnGrid()  // fail
+                        || (!model.hasVehiclesOnGrid() && !model.hasUnspawnedVehicles())  // success
+                        ) {
+                    gameEnd();
+                }
+            } catch (Exception ex) {
+                return;
+            }
+        });
+    }
+
 }

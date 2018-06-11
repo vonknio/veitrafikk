@@ -82,9 +82,7 @@ public class View {
         settings.setVisible(true);
     }
 
-    public void nextTick() {
-        //TODO
-    }
+    public void animate() throws InterruptedException { mapEditor.animate(); }
 
     public void updateVehicles(Collection<int[]> coordinates) {
         mapEditor.updateVehicles(coordinates);

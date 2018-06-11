@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 /**
@@ -45,8 +46,6 @@ class MapPlanner extends JPanel {
     private ActionListener newSinkListener;
     private ActionListener newSourceListener;
 
-    Timer timer;
-
     boolean drawSink = false;
     boolean drawSource = false;
     boolean deleteMode = false;
@@ -62,7 +61,7 @@ class MapPlanner extends JPanel {
         this.size = size;
         this.dist = dist;
 
-        pixelsPerTimer = dist/animationSmoothness;
+        pixelsPerTimer = dist/animationSmoothness+1;
 
         setupLayers();
 
@@ -110,75 +109,6 @@ class MapPlanner extends JPanel {
             }
         });
 
-        timer = new Timer(animationTime / animationSmoothness, e -> {
-            for (Map.Entry<Integer, VehicleImage> entry : vehicleLayers.entrySet()){
-                VehicleImage vehicle = entry.getValue();
-                int[] direction = new int[2];
-                int[] nextDirection = new int[2];
-
-                direction[0] = vehicle.path[2] - vehicle.path[0];
-                direction[1] = vehicle.path[3] - vehicle.path[1];
-
-                nextDirection[0] = vehicle.path[4] - vehicle.path[2];
-                nextDirection[1] = vehicle.path[5] - vehicle.path[3];
-
-                vehicle.currentPosition[0] += direction[0] * pixelsPerTimer;
-                vehicle.currentPosition[1] += direction[1] * pixelsPerTimer;
-
-                if (direction[1] == 0 && direction[0] != 0) {
-                    int target = getPixelPosition(vehicle.path[2]);
-
-                    if (nextDirection[0] > 0)
-                        target += 1;
-                    else if (nextDirection[0] < 0)
-                        target -= width;
-                    else if (nextDirection[1] > 0)
-                        target -= width;
-                    else if (nextDirection[1] < 0)
-                        target += 1;
-
-                    if (direction[0] > 0){
-                        vehicle.currentPosition[0] =
-                                Math.min(vehicle.currentPosition[0], target);
-                        vehicle.currentPosition[1] = getPixelPosition(vehicle.path[3]) + 1;
-                    }
-                    else {
-                        vehicle.currentPosition[0] =
-                                Math.max(vehicle.currentPosition[0], target);
-                        vehicle.currentPosition[1] = getPixelPosition(vehicle.path[3]) - width;
-                    }
-                }
-                else if (direction[0] == 0 && direction[1] != 0){
-                    int target = getPixelPosition(vehicle.path[3]);
-
-                    if (nextDirection[1] > 0)
-                        target += 1;
-                    else if (nextDirection[1] < 0)
-                        target -= width;
-                    else if (nextDirection[0] > 0)
-                        target += 1;
-                    else if (nextDirection[0] < 0)
-                        target -= width;
-
-                    if (direction[1] > 0){
-                        vehicle.currentPosition[1] =
-                                Math.min(vehicle.currentPosition[1], target);
-                        vehicle.currentPosition[0] = getPixelPosition(vehicle.path[2]) - width;
-                    }
-                    else {
-                        vehicle.currentPosition[1] =
-                                Math.max(vehicle.currentPosition[1], target);
-                        vehicle.currentPosition[0] = getPixelPosition(vehicle.path[2]) + 1;
-                    }
-                }
-            }
-
-            repaint();
-
-        });
-
-        timer.start();
-
     }
 
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -224,6 +154,112 @@ class MapPlanner extends JPanel {
         if (ret == 0) ret = dist;
         else if (ret > size*dist) ret = size*dist;
         return ret;
+    }
+
+    /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *  Animation
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    public void animate() throws InterruptedException {
+        int subTicks = animationSmoothness;
+        while (subTicks >= 0){
+            final boolean last = subTicks == 0;
+            SwingUtilities.invokeLater(() -> animateVehicles(last));
+            try {
+                TimeUnit.MILLISECONDS.sleep(animationTime/animationSmoothness+1);
+            } catch (InterruptedException e) {
+                animateVehicles(true);
+                throw e;
+            }
+            subTicks--;
+        }
+    }
+
+    private boolean animateVehicles(boolean last){
+        boolean destinationReached = true;
+
+        for (Map.Entry<Integer, VehicleImage> entry : vehicleLayers.entrySet()){
+            VehicleImage vehicle = entry.getValue();
+            int[] direction = new int[2];
+            int[] nextDirection = new int[2];
+
+            direction[0] = vehicle.path[2] - vehicle.path[0];
+            direction[1] = vehicle.path[3] - vehicle.path[1];
+
+            nextDirection[0] = vehicle.path[4] - vehicle.path[2];
+            nextDirection[1] = vehicle.path[5] - vehicle.path[3];
+
+            vehicle.currentPosition[0] += direction[0] * pixelsPerTimer;
+            vehicle.currentPosition[1] += direction[1] * pixelsPerTimer;
+
+            if (direction[1] == 0 && direction[0] != 0) {
+                int target = getPixelPosition(vehicle.path[2]);
+
+                if (nextDirection[0] > 0)
+                    target += 1;
+                else if (nextDirection[0] < 0)
+                    target -= width;
+                else if (nextDirection[1] > 0)
+                    target -= width;
+                else if (nextDirection[1] < 0)
+                    target += 1;
+
+                if (direction[0] > 0){
+                    vehicle.currentPosition[0] =
+                            Math.min(vehicle.currentPosition[0], target);
+                    vehicle.currentPosition[1] = getPixelPosition(vehicle.path[3]) + 1;
+                    if (vehicle.currentPosition[0] != target)
+                        destinationReached = false;
+                    if (last)
+                        vehicle.currentPosition[0] = target;
+                }
+                else {
+                    vehicle.currentPosition[0] =
+                            Math.max(vehicle.currentPosition[0], target);
+                    vehicle.currentPosition[1] = getPixelPosition(vehicle.path[3]) - width;
+                    if (vehicle.currentPosition[0] != target)
+                        destinationReached = false;
+                    if (last)
+                        vehicle.currentPosition[0] = target;
+                }
+            }
+            else if (direction[0] == 0 && direction[1] != 0){
+                int target = getPixelPosition(vehicle.path[3]);
+
+                if (nextDirection[1] > 0)
+                    target += 1;
+                else if (nextDirection[1] < 0)
+                    target -= width;
+                else if (nextDirection[0] > 0)
+                    target += 1;
+                else if (nextDirection[0] < 0)
+                    target -= width;
+
+                if (direction[1] > 0){
+                    vehicle.currentPosition[1] =
+                            Math.min(vehicle.currentPosition[1], target);
+                    vehicle.currentPosition[0] = getPixelPosition(vehicle.path[2]) - width;
+                    if (vehicle.currentPosition[1] != target)
+                        destinationReached = false;
+                    if (last)
+                        vehicle.currentPosition[1] = target;
+                }
+                else {
+                    vehicle.currentPosition[1] =
+                            Math.max(vehicle.currentPosition[1], target);
+                    vehicle.currentPosition[0] = getPixelPosition(vehicle.path[2]) + 1;
+                    if (vehicle.currentPosition[1] != target)
+                        destinationReached = false;
+                    if (last)
+                        vehicle.currentPosition[1] = target;
+                }
+            }
+        }
+
+        repaint();
+
+        return destinationReached;
+
     }
 
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

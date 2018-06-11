@@ -152,6 +152,7 @@ class MapEditor {
         return mapPlanner.getCoordinates();
     }
 
+    void animate() throws InterruptedException { mapPlanner.animate(); }
 
     void drawRoad(int x1, int y1, int x2, int y2) {
         mapPlanner.drawRoad(x1, y1, x2, y2);
