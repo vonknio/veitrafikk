@@ -31,13 +31,6 @@ abstract class TestUtils {
     }
 
     /**
-     * @return Grid size.
-     */
-    static int getGridSize(Grid grid) {
-        return grid.getSize();
-    }
-
-    /**
      * @param x1 X coordinate.
      * @param y1 Y coordinate.
      * @param grid Grid.
@@ -184,10 +177,14 @@ abstract class TestUtils {
         return vehicle;
     }
 
+    /**
+     * Assert that two given vehicles either have the same coordinates or
+     * are separated by a unit road.
+     */
     static void assertSameOrUnitDistance(Vertex v1, Vertex v2) {
         assert(compressedEquals(v1, v2)
-                || v1.x == v2.x && abs(v1.y - v2.y) == 1
-                || v1.y == v2.y && abs(v1.x - v2.x) == 1);
+                || (v1.x == v2.x && abs(v1.y - v2.y) == 1)
+                || (v1.y == v2.y && abs(v1.x - v2.x) == 1));
     }
 
     /**

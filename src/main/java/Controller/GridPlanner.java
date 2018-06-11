@@ -41,6 +41,37 @@ class GridPlanner {
         view.drawRoad(x1, y1, x2, y2);
     }
 
+    void newSource(ActionEvent e) {
+        int[] coordinates = view.getCoordinates();
+        if (coordinates.length != 2) {
+            throw new IllegalStateException();
+        }
+        int x1 = coordinates[0], y1 = coordinates[1];
+
+        logger.config("Adding source (" + x1 + ", " + y1 + ") with probability " + sourceProbability + " and limit " + sourceLimit);
+        model.removeVertexClassifiers(x1, y1);
+        model.addSource(x1, y1, sourceLimit, sourceProbability);
+        view.removeSpecialVertex(x1, y1);
+        view.drawSource(x1, y1);
+    }
+
+    void newSink(ActionEvent e) {
+        int[] coordinates = view.getCoordinates();
+        if (coordinates.length != 2) {
+            throw new IllegalStateException();
+        }
+        int x1 = coordinates[0], y1 = coordinates[1];
+
+        logger.config("Adding sink (" + x1 + ", " + y1 + ")");
+        model.removeVertexClassifiers(x1, y1);
+        Color color = model.addSink(x1, y1);
+        view.removeSpecialVertex(x1, y1);
+        view.drawSink(x1, y1, color);
+    }
+
+    /**
+     *  Remove sink, source, or a road. What is to be removed depends where the user has clicked.
+     */
     void remove(ActionEvent e) {
         int[] coordinates = view.getCoordinates();
         if (coordinates.length != 4) {
@@ -87,51 +118,19 @@ class GridPlanner {
         view.removeRoad(x1, y1, x2, y2);
     }
 
-    void newSource(ActionEvent e) {
-        int[] coordinates = view.getCoordinates();
-        if (coordinates.length != 2) {
-            throw new IllegalStateException();
-        }
-        int x1 = coordinates[0], y1 = coordinates[1];
-
-        logger.config("Adding source (" + x1 + ", " + y1 + ") with probability " + sourceProbability + " and limit " + sourceLimit);
-        model.removeVertexClassifiers(x1, y1);
-        model.addSource(x1, y1, sourceLimit, sourceProbability);
-        view.removeSpecialVertex(x1, y1);
-        view.drawSource(x1, y1);
-    }
-
-    void newSink(ActionEvent e) {
-        int[] coordinates = view.getCoordinates();
-        if (coordinates.length != 2) {
-            throw new IllegalStateException();
-        }
-        int x1 = coordinates[0], y1 = coordinates[1];
-
-        logger.config("Adding sink (" + x1 + ", " + y1 + ")");
-        model.removeVertexClassifiers(x1, y1);
-        Color color = model.addSink(x1, y1);
-        view.removeSpecialVertex(x1, y1);
-        view.drawSink(x1, y1, color);
-    }
+    float getSourceProbability() { return sourceProbability; }
 
     void setSourceProbability(float probability) {
         if (probability <= 0 || probability > 1)
             probability = 1;
-       sourceProbability = probability;
+        sourceProbability = probability;
     }
+
+    int getSourceLimit() { return sourceLimit; }
 
     void setSourceLimit(int limit) {
         if (limit == 0)
             sourceLimit = -1;
         sourceLimit = limit;
-    }
-
-    float getSourceProbability() {
-        return sourceProbability;
-    }
-
-    int getSourceLimit() {
-        return sourceLimit;
     }
 }

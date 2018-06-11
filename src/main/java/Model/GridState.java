@@ -8,20 +8,18 @@ import java.util.logging.Logger;
 class GridState {
     private long timeTick = 0;
     private List<Vehicle> vehicles = new LinkedList<>();
-    private List<Sink> sinks = new LinkedList<>();
-    private List<Source> sources = new LinkedList<>();
-    private TrafficLight light = new TrafficLight();
+    private final List<Sink> sinks = new LinkedList<>();
+    private final List<Source> sources = new LinkedList<>();
     private final Grid grid;
     private final static Logger logger = Logger.getLogger(GridState.class.getName());
 
-    GridState(Grid grid) {
-        this.grid = grid;
-    }
+    GridState(Grid grid) { this.grid = grid; }
 
-    long getTime() {
-        return timeTick;
-    }
+    long getTime() { return timeTick; }
 
+    /**
+     * Generate all changes for next timetick, e.g. spawn vehicles.
+     */
     void updateForNextTimetick() {
         for (Source source : sources) {
             if (source.canSpawnVehicle()) {
@@ -37,10 +35,14 @@ class GridState {
         timeTick++;
     }
 
-    List<Vehicle> getVehicles() {
-        return vehicles;
-    }
+    /**
+     * @return List of vehicles currently present on the grid.
+     */
+    List<Vehicle> getVehicles() { return vehicles; }
 
+    /**
+     * @return List of vehicles sorted according to the IN/OUT type of their grid positions.
+     */
     List<Vehicle> getVehiclesSorted() {
         LinkedList<Vehicle> vehicles = new LinkedList<>();
         for (Vertex v : grid.getVerticesSorted()) {
@@ -50,35 +52,32 @@ class GridState {
         return vehicles;
     }
 
+    /**
+     * @return Randomly shuffled list of vehicles.
+     */
     List<Vehicle> getVehiclesShuffled() {
         LinkedList<Vehicle> shuffled = new LinkedList<>(vehicles);
         Collections.shuffle(shuffled);
         return shuffled;
     }
 
-    Collection<Sink> getSinks() {
-        return sinks;
-    }
+    Collection<Sink> getSinks() { return sinks; }
 
-    Collection<Source> getSources() {
-        return sources;
-    }
+    Collection<Source> getSources() { return sources; }
 
-    void addVehicle(Vehicle vehicle) {
-        vehicles.add(vehicle);
-    }
+    void addVehicle(Vehicle vehicle) { vehicles.add(vehicle); }
 
     Color addSink(int x, int y) {
         Sink sink = grid.addSink(x, y);
         sink.setColor();
-        sinks.removeIf((z) -> TestUtils.compressedEquals(z, sink));
+        sinks.removeIf(z -> TestUtils.compressedEquals(z, sink));
         sinks.add(sink);
         return sink.getColor();
     }
 
     void addSource(int x, int y, long limit, float probability) {
         Source source = grid.addSource(x, y, limit, probability);
-        sources.removeIf((z) -> TestUtils.compressedEquals(z, source));
+        sources.removeIf(z -> TestUtils.compressedEquals(z, source));
         sources.add(source);
     }
 
@@ -87,6 +86,11 @@ class GridState {
         vehicles.remove(vehicle);
     }
 
+    /**
+     * Remove source or sink under given coordinates.
+     * @param x1 X coordinate.
+     * @param y1 Y coordinate.
+     */
     void removeSpecialVertex(int x1, int y1){
         for (int i = 0; i < sinks.size(); ++i){
             if (sinks.get(i).x == x1 && sinks.get(i).y == y1)

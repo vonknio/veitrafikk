@@ -1,12 +1,12 @@
 package Model;
 
 import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 import java.util.Random;
 
 public class RandomPlannerStatic implements PathPlanner {
-    @Override @NotNull
+    @Override
+    @NotNull
     public Vertex getDestinationForNextTick(Vehicle vehicle, Grid grid) {
         Vertex vertex;
         if (vehicle.getNext() == null)
@@ -22,7 +22,5 @@ public class RandomPlannerStatic implements PathPlanner {
     }
 
     @Override
-    public boolean isDynamic() {
-        return false;
-    }
+    public boolean isDynamic() { return false; }
 }

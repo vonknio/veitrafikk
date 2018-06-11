@@ -14,5 +14,4 @@ public abstract class Program {
         Controller controller = new Controller(view, model);
         view.setVisible(true);
     }
-
 }

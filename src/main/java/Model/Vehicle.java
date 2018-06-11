@@ -10,13 +10,13 @@ import java.util.List;
  * Class representing a vehicle.
  */
 class Vehicle {
-    private Color color;
+    private final Color color;
     private Vertex prev;
     private Vertex cur;
     private Vertex next;
     private Vertex nextNext;
     private Vertex dest;
-    private int id;
+    private final int id;
     private static int idCounter = 0;
 
     final VehicleStatistics stats;
@@ -56,69 +56,63 @@ class Vehicle {
      *  Getters and setters
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    Vertex getCur() {
-        return cur;
-    }
+    Vertex getCur() { return cur; }
 
-    void setCur(Vertex vertex) {
-        cur = vertex;
-    }
+    void setCur(Vertex vertex) { cur = vertex; }
 
-    Vertex getNext() {
-        return next;
-    }
+    Vertex getNext() { return next; }
 
-    Vertex getNextNext() {
-        return nextNext;
-    }
+    Vertex getNextNext() { return nextNext; }
 
-    Vertex getPrev() {
-        return prev;
-    }
+    Vertex getPrev() { return prev; }
 
-    void setPrev(Vertex vertex) {
-        prev = vertex;
-    }
+    void setPrev(Vertex vertex) { prev = vertex; }
 
-    Vertex getDest() {
-        return dest;
-    }
+    Vertex getDest() { return dest; }
 
-    void setDest(Vertex vertex) {
-        dest = vertex;
-    }
+    void setDest(Vertex vertex) { dest = vertex; }
 
+    /**
+     * @param vertex Vertex of IN type.
+     */
     void setNext(Vertex vertex) {
         if (vertex.getVertexType() != Vertex.VertexType.IN)
             throw new IllegalArgumentException("Next field should always have IN type.");
         next = vertex;
     }
 
+    /**
+     *  If given vertex has IN type, 'next' field will be set to it. Otherwise
+     *  it will be set to the twin IN vertex of the given one.
+     */
     void setNextSafe(Vertex vertex, Grid grid) {
         if (vertex.getVertexType() != Vertex.VertexType.IN)
             next = grid.getOther(vertex);
         else next = vertex;
     }
 
+    /**
+     * @param vertex Vertex of IN type.
+     */
     void setNextNext(Vertex vertex) {
         if (vertex.getVertexType() != Vertex.VertexType.IN)
             throw new IllegalArgumentException("Next field should always have IN type.");
         this.nextNext = vertex;
     }
 
+    /**
+     *  If given vertex has IN type, 'nextNext' field will be set to it. Otherwise
+     *  it will be set to the twin IN vertex of the given one.
+     */
     void setNextNextSafe(Vertex vertex, Grid grid) {
         if (vertex.getVertexType() != Vertex.VertexType.IN)
             nextNext = grid.getOther(vertex);
         else nextNext = vertex;
     }
 
-    Color getColor() {
-        return color;
-    }
+    Color getColor() { return color; }
 
-    int getId() {
-        return id;
-    }
+    int getId() { return id; }
 
     //TODO idleTicks
     class VehicleStatistics implements ObjectStatistics {
@@ -152,9 +146,7 @@ class Vehicle {
         private void updateAuxiliaryVariables() {
         }
 
-        long ticksAlive() {
-            return ticksAlive - 1;
-        }
+        long ticksAlive() { return ticksAlive - 1; }
 
         double pathLength() {
             Vertex prev = null;

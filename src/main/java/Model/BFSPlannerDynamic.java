@@ -1,5 +1,7 @@
 package Model;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -7,6 +9,7 @@ import java.util.Stack;
 public class BFSPlannerDynamic extends BFSPlannerStatic {
     private Map<Vehicle, Vertex> latestCur = new HashMap<>();
 
+    @NotNull
     @Override
     public Vertex getDestinationForNextTick(Vehicle vehicle, Grid grid) {
         if (TestUtils.compressedEquals(vehicle.getCur(), latestCur.get(vehicle)) &&
