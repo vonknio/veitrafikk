@@ -155,7 +155,7 @@ class Statistics {
     }
 
     double maxPathLength() {
-        return Collections.max(vehiclesStatistics(), Comparator.comparingDouble(o -> o.pathLength())).pathLength();
+        return Collections.max(vehiclesStatistics(), Comparator.comparingDouble(o -> o.pathLength())).pathLength() - 1;
     }
 
     double maxVehicleCount() {
