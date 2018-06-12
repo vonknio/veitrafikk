@@ -29,8 +29,7 @@ abstract class God {
         List<Vehicle> vehicles = model.getGridState().getVehiclesShuffled();
 
         for (Vehicle vehicle : vehicles) {
-            if (processed.contains(vehicle))
-                continue;
+            if (processed.contains(vehicle));
             else if (moveVehicle(vehicle, processed))
                 update = true;
             else {
