@@ -64,7 +64,7 @@ class SettingsWindow extends JFrame {
         save.setBounds(190, 195, 100, 30);
 
         apply = new JButton("Apply");
-        apply.setBounds(310, 195, 100, 30);
+        apply.setBounds(320, 195, 100, 30);
         quit = new JButton("Quit");
         quit.setBounds(310, 195, 100, 25);
 

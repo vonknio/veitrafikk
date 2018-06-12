@@ -1,6 +1,8 @@
 package View;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
+import java.awt.*;
 import java.text.DecimalFormat;
 
 public class StatisticsWindow extends JFrame {
@@ -39,43 +41,97 @@ public class StatisticsWindow extends JFrame {
 
     private void setup() {
         DecimalFormat dec = new DecimalFormat("#0.00");
+        final int rows = 10;
+        final int cols = 2;
+
         panel = new JPanel();
-        panel.setLayout(null);
-        JLabel successLabel = new JLabel("Result: " + (success ? "Success" : "Failure"));
-        successLabel.setBounds(5, 5, 400, 40);
-        JLabel ticksLabel = new JLabel("Time: " + ticksTotal);
-        ticksLabel.setBounds(5, 45, 400, 40);
-        JLabel vehiclesLabel = new JLabel("Vehicles:   total: " + total + " finished: " + finished);
-        vehiclesLabel.setBounds(5, 85, 400, 40);
-        JLabel velocityPanel = new JLabel("Velocity:   max: " + dec.format(velocityMax) + " average: " + dec.format(velocity));
-        velocityPanel.setBounds(5, 125, 400, 40);
-        JLabel pathPanel = new JLabel("Path length:   max: " + dec.format(pathMax) + " average: " + dec.format(path));
-        pathPanel.setBounds(5, 165, 400, 40);
-        JLabel ticksPanel = new JLabel("Ticks alive:   max: " + dec.format(ticksMax) + " average: " + dec.format(ticks));
-        ticksPanel.setBounds(5, 205, 400, 40);
-        JLabel waitPanel = new JLabel("Waiting time:   max: " + dec.format(waitMax) + " average: " + dec.format(wait));
-        waitPanel.setBounds(5, 245, 400, 40);
-        JLabel verticesLabel = new JLabel("Vertices: ");
-        verticesLabel.setBounds(5, 285, 400, 40);
-        JLabel verticesPanel = new JLabel("Visited: " + dec.format(vertices) + "   Not visited: " + dec.format(verticesNot));
-        verticesPanel.setBounds(5, 325, 400, 40);
-        JLabel timePanel = new JLabel("Time empty:   max: " + dec.format(timeMax) + " average: " + dec.format(time));
-        timePanel.setBounds(5, 365, 400, 40);
-        JLabel vehiclesPanel = new JLabel("Number of visiting vehicles:   max: " + dec.format(vehiclesMax) + " average: " + dec.format(vehicles));
-        vehiclesPanel.setBounds(5, 405, 400, 40);
+        panel.setLayout(new GridLayout(0, cols, 1, 3));
+        panel.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
+        panel.setBackground( Color.BLACK );
+        panel.setBorder( new MatteBorder(2, 2, 2, 2, Color.BLACK) );
+
+        OpaqueLabel successLabel = new OpaqueLabel("RESULT", true);
+        OpaqueLabel successValue =
+                success ? new OpaqueLabel("Success", true) : new OpaqueLabel("Not completed", true);
 
         panel.add(successLabel);
+        panel.add(successValue);
+
+        OpaqueLabel ticksLabel = new OpaqueLabel("TOTAL TIME", true);
+        OpaqueLabel ticksValue = new OpaqueLabel(Long.toString(ticksTotal), true);
+
         panel.add(ticksLabel);
+        panel.add(ticksValue);
+
+        OpaqueLabel vehiclesLabel = new OpaqueLabel("VEHICLES", true);
         panel.add(vehiclesLabel);
-        panel.add(waitPanel);
-        panel.add(velocityPanel);
-        panel.add(vehiclesPanel);
-        panel.add(verticesPanel);
-        panel.add(verticesLabel);
-        panel.add(timePanel);
-        panel.add(pathPanel);
-        panel.add(ticksPanel);
+        panel.add(new VarPanel("total:", Long.toString(total), "finished:", Long.toString(finished)));
+
+        OpaqueLabel velocityLabel = new OpaqueLabel("VELOCITY", true);
+
+        panel.add(velocityLabel);
+        panel.add(new VarPanel("max:", dec.format(velocityMax), "average:", dec.format(velocity)));
+
+        OpaqueLabel pathLabel = new OpaqueLabel("PATH", true);
+        panel.add(pathLabel);
+        panel.add(new VarPanel("max length:", dec.format(pathMax), "average length:", dec.format(path)));
+
+        OpaqueLabel ticksAliveLabel = new OpaqueLabel("TICKS ALIVE", true);
+        panel.add(ticksAliveLabel);
+        panel.add(new VarPanel("max:", dec.format(ticksMax), "average:", dec.format(ticks)));
+
+        OpaqueLabel waitLabel = new OpaqueLabel("TICKS WAITING", true);
+        panel.add(waitLabel);
+        panel.add(new VarPanel("max:", dec.format(waitMax), "average:", dec.format(wait)));
+
+        OpaqueLabel vertices1Label = new OpaqueLabel("VERTICES", true);
+        panel.add(vertices1Label);
+        panel.add(new VarPanel("no. visited:", Long.toString(vertices),
+                "no. not visited:", Long.toString(verticesNot)));
+
+        OpaqueLabel vertices2Label = new OpaqueLabel("VERTICES TIME EMPTY", true);
+        panel.add(vertices2Label);
+        panel.add(new VarPanel("max", dec.format(timeMax), "average:", dec.format(time)));
+
+        OpaqueLabel vertices3Label = new OpaqueLabel("VERTICES VISITS", true);
+        panel.add(vertices3Label);
+        panel.add(new VarPanel("most visited:", dec.format(vehiclesMax), "average:", dec.format(vehicles)));
+
         this.add(panel);
+    }
+
+    class VarPanel extends JPanel {
+        VarPanel(String desc, String val){
+            super(new GridLayout(0, 1));
+            JPanel center = new JPanel(new GridLayout(0,2));
+            center.add(new OpaqueLabel(desc, true));
+            center.add(new JLabel(val));
+            this.add(center);
+            setVisible(true);
+        }
+        VarPanel(String desc1, String val1, String desc2, String val2){
+            super(new GridLayout(0,1));
+            JPanel north = new JPanel(new GridLayout(0,2));
+            JPanel south = new JPanel(new GridLayout(0,2));
+            north.add(new OpaqueLabel(desc1, true));
+            north.add(new JLabel(val1));
+            south.add(new OpaqueLabel(desc2, true));
+            south.add(new JLabel(val2));
+            this.add(north);
+            this.add(south);
+            setVisible(true);
+        }
+    }
+
+    class OpaqueLabel extends JLabel {
+        OpaqueLabel(String s){
+            super(s);
+            setOpaque(true);
+        }
+        OpaqueLabel(String s, boolean c){
+            super(s, SwingConstants.CENTER);
+            setOpaque(true);
+        }
     }
 
     void setValues(double velocity, int vertices, double path, double time, double vehicles, double ticks, double velocityMax, int verticesNot, double pathMax, double timeMax,

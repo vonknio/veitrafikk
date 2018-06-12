@@ -30,7 +30,10 @@ public class Controller {
         view.addQuitListener(e -> System.exit(0));
     }
 
-    private void goBackToMenu(ActionEvent e) { view.goBackToMenu(); }
+    private void goBackToMenu(ActionEvent e) {
+        pause(null);
+        view.goBackToMenu();
+    }
 
     private void continueToEditMode(ActionEvent e) {
         pause(null);
