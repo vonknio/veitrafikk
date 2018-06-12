@@ -33,7 +33,7 @@ class MapPlanner extends JPanel {
 
     private int pixelsPerTimer;
     private int animationTime = 2000;
-    private int animationSmoothness = 20;
+    private int animationSmoothness = 40;
 
     private Color roadColor;
     private int width;
@@ -166,7 +166,7 @@ class MapPlanner extends JPanel {
             final boolean last = subTicks == 0;
             SwingUtilities.invokeLater(() -> animateVehicles(last));
             try {
-                TimeUnit.MILLISECONDS.sleep(animationTime/animationSmoothness+1);
+                TimeUnit.MILLISECONDS.sleep(animationTime/animationSmoothness);
             } catch (InterruptedException e) {
                 animateVehicles(true);
                 throw e;
@@ -331,9 +331,17 @@ class MapPlanner extends JPanel {
 
         for (int[] v : data){
 
-            if (!vehicleLayers.containsKey(v[6]))
+            boolean newVehicle = false;
+
+            if (!vehicleLayers.containsKey(v[6])) {
                 addVehicleLayer(v[6], v[7], v[8], v[9]);
+                newVehicle = true;
+            }
             VehicleImage vehicle = vehicleLayers.get(v[6]);
+
+            int[] prevDirection = new int[2];
+            prevDirection[0] = vehicle.path[2] - vehicle.path[0];
+            prevDirection[1] = vehicle.path[3] - vehicle.path[1];
 
             if (vehicle.path[2] == v[2] && vehicle.path[3] == v[3]){
                 vehicle.path[0] = v[2];
@@ -357,18 +365,27 @@ class MapPlanner extends JPanel {
             nextDirection[1] = v[5] - v[3];
 
             if (direction[0] > 0){
-                vehicle.currentPosition[0] = getPixelPosition(vehicle.path[0]) + 1;
+                vehicle.currentPosition[0] =
+                        getPixelPosition(vehicle.path[0]) + (prevDirection[1] > 0 ? -width : 1);
                 vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1]) + 1;
             }
             else if (direction[0] < 0){
-                vehicle.currentPosition[0] = getPixelPosition(vehicle.path[0]) - width;
+                vehicle.currentPosition[0] =
+                        getPixelPosition(vehicle.path[0]) + (prevDirection[1] < 0 ? 1 : -width);
                 vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1]) - width;
-            } else if (direction[1] >= 0) {
+            } else if (direction[1] > 0) {
                 vehicle.currentPosition[0] = getPixelPosition(vehicle.path[0]) - width;
-                vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1]) + 1;
-            } else {
+                vehicle.currentPosition[1] =
+                        getPixelPosition(vehicle.path[1]) + (prevDirection[0] < 0 ? -width : 1);
+            } else if (direction[1] < 0){
                 vehicle.currentPosition[0] = getPixelPosition(vehicle.path[0]) + 1;
-                vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1]) - width;
+                vehicle.currentPosition[1] =
+                        getPixelPosition(vehicle.path[1]) + (prevDirection[0] > 0 ? 1 : -width);
+            } else if (newVehicle){
+                vehicle.currentPosition[0] = getPixelPosition(vehicle.path[0])
+                        + (nextDirection[1] > 0 ? -width : (nextDirection[1] < 0 ? 1 : 1));
+                vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1])
+                        + (nextDirection[0] > 0 ? 1 : (nextDirection[0] < 0 ? -width : 1));
             }
             vehicle.updated = true;
         }
@@ -533,7 +550,7 @@ class MapPlanner extends JPanel {
             bufferedImage = new BufferedImage(width, width, BufferedImage.TYPE_INT_ARGB);
             Graphics2D graphics2D = (Graphics2D) bufferedImage.getGraphics();
             graphics2D.setColor(new Color(r,g,b));
-            graphics2D.fillRect(0,0,width,width);
+            graphics2D.fillRect(0,0,width, width);
             this.id = id;
             path = new int[7];
             currentPosition = new int[2];
