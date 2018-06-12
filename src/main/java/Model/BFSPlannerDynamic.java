@@ -12,16 +12,14 @@ public class BFSPlannerDynamic extends BFSPlannerStatic {
     @NotNull
     @Override
     public Vertex getDestinationForNextTick(Vehicle vehicle, Grid grid) {
-        if (TestUtils.compressedEquals(vehicle.getCur(), latestCur.get(vehicle)) &&
-            vehicle.getNextNext() != null) {
+        if (TestUtils.compressedEquals(vehicle.getCur(), latestCur.get(vehicle))
+                && vehicle.getNextNext() != null) {
             // Vehicle hasn't moved since last function call – find a new route
             Vertex curBackup = vehicle.getCur();
             vehicle.setCur(vehicle.getNext());
-            Stack<Vertex> path = planPath(vehicle, grid,
-                    (vehicle.getNextNext() == null) ?
-                            vehicle.getNext() :
-                            vehicle.getNextNext());
+            Stack<Vertex> path = planPath(vehicle, grid, vehicle.getNextNext());
             vehicle.setCur(curBackup);
+
             if (path != null)
                 applyPath(vehicle, path);
         }
