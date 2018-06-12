@@ -244,4 +244,7 @@ class MapEditor {
         mapPlanner.addNewSinkListener(listener);
     }
 
+    int getAnimationTime() { return mapPlanner.getAnimationTime(); }
+
+    void setAnimationTime(int animationTime) { mapPlanner.setAnimationTime(animationTime); }
 }

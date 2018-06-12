@@ -92,6 +92,8 @@ public class Controller {
     private void applySettings(ActionEvent e) {
         gridPlanner.setSourceProbability(view.getSourceProbability());
         gridPlanner.setSourceLimit(view.getSourceLimit());
+        int animationTime = view.getAnimationTime();
+        view.setAnimationTime(animationTime < 10 ? 10 : animationTime);
         model.applySettingsToSources(view.getSourceLimit(), view.getSourceProbability());
     }
 

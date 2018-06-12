@@ -156,6 +156,11 @@ class MapPlanner extends JPanel {
         return ret;
     }
 
+    int getAnimationTime() { return animationTime; }
+
+    void setAnimationTime(int animationTime) { this.animationTime = animationTime; }
+
+
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Animation
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -558,5 +563,7 @@ class MapPlanner extends JPanel {
             currentPosition = new int[2];
         }
     }
+
+
 
 }

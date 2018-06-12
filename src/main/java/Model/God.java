@@ -3,6 +3,9 @@ package Model;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 /**
  * Deus ex machina, one and only. Manages the runtime state of the simulation.
  * Is responsible for all runtime events (e.g. moving vehicles) and algorithms.
@@ -54,11 +57,13 @@ abstract class God {
                 model.getGridState().removeVehicle(vertex.getVehicle());
             }
         }
-        for (Vertex v : grid.getVertices())
-            assert !v.hasVehicle() || (v.getVehicle().getCur() == v);
+        for (Vertex v : grid.getVertices()) {
+            assertTrue(!v.hasVehicle() || (v.getVehicle().getCur() == v));
+        }
 
-        for (Vehicle vh : model.getGridState().getVehicles())
-            assert(vh.getCur().getVehicle() == vh);
+        for (Vehicle vh : model.getGridState().getVehicles()) {
+            assertSame(vh.getCur().getVehicle(), vh);
+        }
 
         return update;
     }
@@ -72,7 +77,8 @@ abstract class God {
      * @return Whether the vehicle moved.
      */
     private static boolean moveVehicle(Vehicle vehicle, Set<Vehicle> processed) {
-        if (vehicle == null || processed.contains(vehicle))
+        if (vehicle == null) return true;
+        if (/*vehicle == null || */processed.contains(vehicle))
             return false;
 
         processed.add(vehicle);
@@ -100,25 +106,30 @@ abstract class God {
         if (!grid.getVertexOut(next).hasVehicle())
             swapInAndOut(next);
 
-        if (grid.getVertexOut(next).hasVehicle()
-                && TestUtils.compressedEquals(
-                        grid.getVertexOut(next).getVehicle().getNext(),
-                        nextNext)
-                && !moveVehicle(grid.getVertexOut(next).getVehicle(), processed)
-                )
+        if (!moveVehicle(grid.getVertexOut(next).getVehicle(), processed)
+                && !moveVehicle(next.getVehicle(), processed))
+            return false;
+
+        if (next.hasVehicle())
+            swapInAndOut(next);
+
+        if (next.hasVehicle() || (grid.getVertexOut(next).hasVehicle() && TestUtils.compressedEquals(
+                grid.getVertexOut(next).getVehicle().getNext(),
+                nextNext)))
             return false;
 
         if (next.hasVehicle() && !moveVehicle(next.getVehicle(), processed)) {
             vehicle.setPrev(vehicle.getCur());
             return false;
         }
+        vehicle.getCur().removeVehicle();
 
         vehicle.setPrev(vehicle.getCur());
         vehicle.setCur(vehicle.getNext());
         vehicle.setNext(vehicle.getNextNext());
         vehicle.setNextNext(getDestinationForNextTick(vehicle));
 
-        vertex.removeVehicle();
+        //vertex.removeVehicle();
         vehicle.getCur().setVehicle(vehicle);
 
         logger.config("Vehicle " + vehicle.getId() + " moved from "
@@ -126,7 +137,6 @@ abstract class God {
                 + " to " + vehicle.getCur()+vehicle.getCur().getVertexType());
         return true;
     }
-
 
 
     /**

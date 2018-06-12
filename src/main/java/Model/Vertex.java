@@ -90,6 +90,5 @@ class Vertex {
                 return 0;
             return noVehicleTicks / ticks;
         }
-
     }
 }

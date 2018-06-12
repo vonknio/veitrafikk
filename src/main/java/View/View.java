@@ -77,7 +77,7 @@ public class View {
     }
 
     public void showSettings(float probability, int limit) {
-        settings = new SettingsWindow(probability, limit);
+        settings = new SettingsWindow(probability, limit, mapEditor.getAnimationTime());
         settings.update();
         settings.setVisible(true);
     }
@@ -134,6 +134,10 @@ public class View {
         return settings.getSourceLimit();
     }
 
+
+    public int getAnimationTime() { return settings.getAnimationTime(); }
+
+    public void setAnimationTime(int animationTime) { mapEditor.setAnimationTime(animationTime); }
 
     /**
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
