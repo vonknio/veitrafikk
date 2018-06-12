@@ -9,7 +9,7 @@ import java.util.logging.Logger;
  */
 abstract class God {
     private static Grid grid;
-    private static Mode mode = Mode.SHORTEST_PATH_DYNAMIC;
+    private static Mode mode = Mode.SHORTEST_PATH_STATIC;
     private static PathPlanner pathPlanner = mode.getPlanner();
     private final static Logger logger = Logger.getLogger(God.class.getName());
 

@@ -27,7 +27,7 @@ class MapLoader {
         fileChooser.setDialogTitle("Choose/create file to save the grid");
         if (fileChooser.showSaveDialog(view.getMapPlanner()) != JFileChooser.APPROVE_OPTION)
             return;
-        File file = fileChooser.getSelectedFile();
+        File file = new File(fileChooser.getSelectedFile() + ".txt");
 
         int minLine = 23;
         int size = model.getGridSize();

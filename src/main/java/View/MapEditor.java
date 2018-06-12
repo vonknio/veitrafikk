@@ -26,7 +26,7 @@ class MapEditor {
     private JPanel gameButtons;
     private JPanel drawingButtons;
     private JComboBox modesMenu;
-    private String[] modes = {"SHORTEST_PATH_DYNAMIC", "SHORTEST_PATH_STATIC", "RANDOM_STATIC", "RANDOM_DYNAMIC"};
+    private String[] modes = {"SHORTEST_PATH_STATIC", "SHORTEST_PATH_DYNAMIC", "RANDOM_STATIC", "RANDOM_DYNAMIC"};
 
     MapEditor(int size, int userDist, boolean fixed) {
         this.size = size;
