@@ -230,6 +230,13 @@ public class Model {
         return result;
     }
 
+    /**
+     * @param limit limit of vehicles from each vertex.
+     * @param probability probability of spawning a vehicle in a vertex at each tick.
+     */
+    public void applySettingsToSources(int limit, float probability) {
+        gridState.applySettingsToSources(limit, probability);
+    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Test

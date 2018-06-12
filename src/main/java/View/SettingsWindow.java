@@ -25,7 +25,7 @@ class SettingsWindow extends JFrame {
         setup();
 
         setTitle("Settings");
-        setSize(500, 325);
+        setSize(500, 275);
         setLocationRelativeTo(null);
     }
 
@@ -35,11 +35,12 @@ class SettingsWindow extends JFrame {
 
         JLabel nameLabel = new JLabel("VEITRAFIKK", SwingConstants.CENTER);
         nameLabel.setFont(new Font("Monaco", Font.PLAIN, 25));
-        nameLabel.setBounds(250-190/2,30, 190, 40);
+        nameLabel.setBounds(250-190/2,20, 190, 40);
 
         JPanel textFields = new JPanel(new BorderLayout());
 
-        JLabel probabilityDescription = new JLabel("Probability of spawning a new vehicle in each tick:");
+        JLabel probabilityDescription = new JLabel("Probability of spawning a new vehicle in each tick:",
+                SwingConstants.CENTER);
         probabilityDescription.setVisible(true);
         probabilityField = new JTextField(Float.toString(probability), 2);
         probabilityField.setVisible(true);
@@ -48,7 +49,8 @@ class SettingsWindow extends JFrame {
         probabilityPanel.add(probabilityDescription, BorderLayout.NORTH);
         probabilityPanel.add(probabilityField, BorderLayout.SOUTH);
 
-        JLabel limitDescription = new JLabel("Total number of vehicles to spawn (0 for unlimited):");
+        JLabel limitDescription = new JLabel("Total number of vehicles to spawn (0 for unlimited):",
+                SwingConstants.CENTER);
         limitField = new JTextField(Integer.toString(limit), 2);
         limitField.setVisible(true);
 
@@ -57,14 +59,14 @@ class SettingsWindow extends JFrame {
         limitPanel.add(limitField, BorderLayout.SOUTH);
 
         load = new JButton("Load");
-        load.setBounds(100, 200, 100, 25);
+        load.setBounds(90, 195, 100, 30);
         save = new JButton("Save");
-        save.setBounds(300, 200, 100, 25);
+        save.setBounds(190, 195, 100, 30);
 
         apply = new JButton("Apply");
-        apply.setBounds(100, 250, 100, 25);
+        apply.setBounds(310, 195, 100, 30);
         quit = new JButton("Quit");
-        quit.setBounds(300, 250, 100, 25);
+        quit.setBounds(310, 195, 100, 25);
 
         textFields.add(probabilityPanel, BorderLayout.NORTH);
         textFields.add(limitPanel, BorderLayout.SOUTH);
@@ -76,18 +78,33 @@ class SettingsWindow extends JFrame {
         settingsPanel.add(apply);
         settingsPanel.add(load);
         settingsPanel.add(save);
-        settingsPanel.add(quit);
+        //settingsPanel.add(quit);
         settingsPanel.add(textFields);
 
         this.add(settingsPanel);
     }
 
 
-    public void addLoadListener(ActionListener listener) { load.addActionListener(listener); }
+    public void addLoadListener(ActionListener listener) {
+        load.addActionListener(e -> {
+            listener.actionPerformed(e);
+            this.setVisible(false);
+        });
+    }
 
-    public void addQuitListener(ActionListener listener) { quit.addActionListener(listener); }
+    public void addQuitListener(ActionListener listener) {
+        quit.addActionListener(e -> {
+            listener.actionPerformed(e);
+            this.setVisible(false);
+        });
+    }
 
-    public void addSaveListener(ActionListener listener) { save.addActionListener(listener); }
+    public void addSaveListener(ActionListener listener) {
+        save.addActionListener(e -> {
+            listener.actionPerformed(e);
+            this.setVisible(false);
+        });
+    }
 
     public void addApplyListener(ActionListener listener) {
         apply.addActionListener(e -> {

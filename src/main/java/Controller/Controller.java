@@ -32,7 +32,10 @@ public class Controller {
 
     private void goBackToMenu(ActionEvent e) { view.goBackToMenu(); }
 
-    private void continueToEditMode(ActionEvent e) { view.continueToEditor(); }
+    private void continueToEditMode(ActionEvent e) {
+        pause(null);
+        view.continueToEditor();
+    }
 
     void switchToEditMode(ActionEvent e) {
         int size = view.getGridSize();
@@ -47,6 +50,7 @@ public class Controller {
     void configureEditMode(int size, int dist, boolean fixedDistance) {
         model.createGrid(size);
 
+        pause(null);
         view.openEditor(size, dist, fixedDistance);
         view.addModeChangeListener(this::changeMode);
         view.addFirstTickListener(this::firstTick);
@@ -74,6 +78,7 @@ public class Controller {
     }
 
     private void showSettings(ActionEvent event) {
+        pause(null);
         view.showSettings(gridPlanner.getSourceProbability(), gridPlanner.getSourceLimit());
         view.addSettingsApplyListener(this::applySettings);
         view.addSettingsQuitListener(e -> System.exit(0));
@@ -84,6 +89,7 @@ public class Controller {
     private void applySettings(ActionEvent e) {
         gridPlanner.setSourceProbability(view.getSourceProbability());
         gridPlanner.setSourceLimit(view.getSourceLimit());
+        model.applySettingsToSources(view.getSourceLimit(), view.getSourceProbability());
     }
 
     private void firstTick(ActionEvent e) {
@@ -141,6 +147,7 @@ public class Controller {
 
     private void gameEnd() {
         showStatistics(null);
+        pause(null);
     }
 
     private Thread spawnPlayingThread() {

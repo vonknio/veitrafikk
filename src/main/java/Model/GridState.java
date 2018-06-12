@@ -106,4 +106,12 @@ class GridState {
         if (sinks.isEmpty()) return null;
         return sinks.get(new Random().nextInt(sinks.size()));
     }
+
+    public void applySettingsToSources(int limit, float probability) {
+        for (Source s : sources) {
+            s.setLimit(limit);
+            s.setProbability(probability);
+        }
+    }
+
 }
