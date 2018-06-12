@@ -22,6 +22,7 @@ public class BFSPlannerDynamic extends BFSPlannerStatic {
 
             if (path != null)
                 applyPath(vehicle, path);
+            else return vehicle.getNextNext();  // no change in path – return previous nextNext
         }
 
         Vertex next = super.getDestinationForNextTick(vehicle, grid);
