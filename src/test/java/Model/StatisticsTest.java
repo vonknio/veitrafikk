@@ -48,6 +48,7 @@ public class StatisticsTest {
         model.nextTick();
         model.nextTick();
         model.nextTick();
+        model.nextTick();
 
         assertEquals(4, model.verticesVisited());
         assertEquals(2, model.averagePathLength(), 0.1);
@@ -57,8 +58,25 @@ public class StatisticsTest {
     }
 
     @Test
-    public void testComplex() {
-        //TODO
-
+    public void test3() {
+        Model model = new Model();
+        model.changeMode("SHORTEST_PATH_STATIC");
+        model.createGrid(10);
+        model.addRoad(0, 0, 0, 9);
+        model.addSink(0, 9);
+        model.addSource(0, 0, 5, 1);
+        model.nextTick();
+        model.nextTick();
+        assertEquals(2, model.totalVehicles());
+        assertEquals(2, model.maxPathLength(), 0.1);
+        assertEquals(1.5, model.averagePathLength(), 0.1);
+        for (int i = 0; i < 14; i++) {
+            model.nextTick();
+        }
+        assertEquals(5, model.totalVehicles());
+        assertEquals(9, model.maxPathLength(), 0.1);
+        assertEquals(9, model.averagePathLength(), 0.1);
+        assertEquals(1, model.maxVelocity(), 0.1);
+        assertEquals(1, model.averageVelocity(), 0.1);
     }
 }

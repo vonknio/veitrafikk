@@ -109,7 +109,6 @@ class SettingsWindow extends JFrame {
         settingsPanel.add(apply);
         settingsPanel.add(load);
         settingsPanel.add(save);
-        //settingsPanel.add(quit);
         settingsPanel.add(textFields);
         settingsPanel.add(animationFields);
 

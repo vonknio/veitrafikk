@@ -118,6 +118,7 @@ class MapPlanner extends JPanel {
     private void setupLayers (){
         gridLayers = new ArrayList<>();
         vehicleLayers = new TreeMap<>();
+        //highlightLayers = new ArrayList<>();
         addBackground();
         addLayer(); //Roads
         addLayer(); //Sources & Sinks
@@ -560,6 +561,7 @@ class MapPlanner extends JPanel {
             graphics2D.fillRect(0,0,width, width);
             this.id = id;
             path = new int[7];
+            Arrays.fill(path, -1);
             currentPosition = new int[2];
         }
     }

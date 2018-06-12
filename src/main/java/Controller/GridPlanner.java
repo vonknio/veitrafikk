@@ -14,7 +14,7 @@ class GridPlanner {
     private final Controller controller;
 
     private float sourceProbability = 1;
-    private int sourceLimit = 10;
+    private int sourceLimit = 5;
 
     GridPlanner(Model model, View view, Controller controller) {
         this.model = model;
