@@ -346,6 +346,8 @@ class MapPlanner extends JPanel {
             if (vehicle.path[2] == v[2] && vehicle.path[3] == v[3]){
                 vehicle.path[0] = v[2];
                 vehicle.path[1] = v[3];
+                vehicle.updated = true;
+                continue;
             }
             else {
                 vehicle.path[0] = v[0];
