@@ -27,7 +27,6 @@ public class StatisticsWindow extends JFrame {
     private double waitMax;
     private boolean success;
 
-
     public StatisticsWindow() {
         create();
     }
@@ -47,8 +46,8 @@ public class StatisticsWindow extends JFrame {
         panel = new JPanel();
         panel.setLayout(new GridLayout(0, cols, 1, 3));
         panel.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
-        panel.setBackground( Color.BLACK );
-        panel.setBorder( new MatteBorder(2, 2, 2, 2, Color.BLACK) );
+        panel.setBackground(new Color(75,75,75));
+        panel.setBorder(new MatteBorder(2, 2, 2, 2, new Color(75,75,75)));
 
         OpaqueLabel successLabel = new OpaqueLabel("RESULT", true);
         OpaqueLabel successValue =
