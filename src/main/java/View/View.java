@@ -4,12 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.LinkedList;
 
 public class View {
     Menu menu;
     MapEditor mapEditor;
-    StatisticsWindow statisticsWindow;
-    SettingsWindow settings;
+    private StatisticsWindow statisticsWindow;
+    private SettingsWindow settings;
     private Object active;
     private boolean isVisible = false;
 
@@ -21,24 +22,17 @@ public class View {
     public void setVisible(boolean b) {
         isVisible = b;
         if (b && active != null) {
-            if (active == menu)
-                menu.setVisible(true);
-            else if (active == mapEditor)
-                mapEditor.setVisible(true);
-            else if (active == statisticsWindow)
-                statisticsWindow.setVisible(true);
+            if (active == menu) menu.setVisible(true);
+            else if (active == mapEditor) mapEditor.setVisible(true);
+            else if (active == statisticsWindow) statisticsWindow.setVisible(true);
         } else {
-            if (menu != null)
-                menu.setVisible(false);
-            if (mapEditor != null)
-                mapEditor.setVisible(false);
+            if (menu != null) menu.setVisible(false);
+            if (mapEditor != null) mapEditor.setVisible(false);
         }
 
         if (!b) {
-            if (statisticsWindow != null)
-                statisticsWindow.setVisible(false);
-            if (settings != null)
-                settings.setVisible(false);
+            if (statisticsWindow != null) statisticsWindow.setVisible(false);
+            if (settings != null) settings.setVisible(false);
         }
     }
 
@@ -46,34 +40,33 @@ public class View {
         menu.setVisible(false);
         mapEditor = new MapEditor(size, dist, fixed);
         active = mapEditor;
-        if (isVisible)
-            mapEditor.setVisible(true);
+        if (isVisible) mapEditor.setVisible(true);
     }
 
     public void goBackToMenu() {
-        if (mapEditor != null)
-            mapEditor.setVisible(false);
+        if (mapEditor != null) mapEditor.setVisible(false);
         active = menu;
         menu.showContinue();
-        if (isVisible)
-            menu.setVisible(true);
+        if (isVisible) menu.setVisible(true);
     }
 
     public void continueToEditor() {
-        if (menu != null)
-            menu.setVisible(false);
+        if (menu != null) menu.setVisible(false);
         active = mapEditor;
-        if (isVisible)
-            mapEditor.setVisible(true);
+        if (isVisible) mapEditor.setVisible(true);
     }
 
-    public void showStatistics(double velocity, int vertices, double path, double time, double vehicles, double ticks, double velocityMax, int verticesMax, double pathMax, double timeMax,
-                               double vehiclesMax, double ticksMax, boolean success, long ticksTotal, double wait, double waitMax, int total, int finished) {
+    public void showStatistics(double velocity, int vertices, double path, double time, double vehicles, double ticks, double velocityMax, int verticesMax, double pathMax, double timeMax, double vehiclesMax, double ticksMax, boolean success, long ticksTotal, double wait, double waitMax, int total, int finished, LinkedList<String> listId) {
         statisticsWindow = new StatisticsWindow();
-        statisticsWindow.setValues(velocity, vertices, path, time, vehicles, ticks, velocityMax, verticesMax, pathMax, timeMax,
-                vehiclesMax, ticksMax, success, ticksTotal, wait, waitMax, total, finished);
+        statisticsWindow.setValues(velocity, vertices, path, time, vehicles, ticks, velocityMax, verticesMax, pathMax, timeMax, vehiclesMax, ticksMax, success, ticksTotal, wait, waitMax, total, finished, listId);
         statisticsWindow.update();
         statisticsWindow.setVisible(true);
+    }
+
+    public void showVehicleStatistics(int[] previous, boolean hasFinished, int[] currentPosition, int id, double velocity, long ticksAlive, Color color) {
+        VehicleWindow vehicleWindow = new VehicleWindow(previous, hasFinished, currentPosition, id, velocity, ticksAlive, color);
+        vehicleWindow.update();
+        vehicleWindow.setVisible(true);
     }
 
     public void showSettings(float probability, int limit) {
@@ -98,9 +91,7 @@ public class View {
         return menu.getGridSize();
     }
 
-    public int getDistanceInPx() {
-        return menu.getDistanceInPx();
-    }
+    public int getDistanceInPx() { return menu.getDistanceInPx(); }
 
     public boolean getIsDistanceFixed() {
         return menu.getIsDistanceFixed();
@@ -115,14 +106,12 @@ public class View {
     }
 
     public int getXOriginCoordinate() {
-        if (mapEditor != null)
-            return mapEditor.frame.getX();
+        if (mapEditor != null) return mapEditor.frame.getX();
         throw new IllegalStateException();
     }
 
     public int getYOriginCoordinate() {
-        if (mapEditor != null)
-            return mapEditor.frame.getY();
+        if (mapEditor != null) return mapEditor.frame.getY();
         throw new IllegalStateException();
     }
 
@@ -173,6 +162,10 @@ public class View {
 
     public void addStatsListener(ActionListener listener) {
         mapEditor.addStatsListener(listener);
+    }
+
+    public void addVehicleStatsListener(ActionListener listener) {
+        statisticsWindow.addVehicleListener(listener);
     }
 
     public void addModeChangeListener(ActionListener listener) {
@@ -281,10 +274,12 @@ public class View {
     }
 
     public void showDisconnectedGraphError() {
-        JOptionPane.showMessageDialog(null,
-                "All roads have to be connected and contain at least one sink and one source!",
-                "Warning", JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(null, "All roads have to be connected and contain at least one sink and one source!", "Warning", JOptionPane.PLAIN_MESSAGE);
     }
 
+    public int getCurrentId() {
+        return statisticsWindow.getCurrentId();
+
+    }
 }
 

@@ -1,10 +1,11 @@
 package Model;
 
 import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.Random;
 
-public class RandomPlannerStatic implements PathPlanner {
+class RandomPlannerStatic implements PathPlanner {
     @Override
     @NotNull
     public Vertex getDestinationForNextTick(Vehicle vehicle, Grid grid) {

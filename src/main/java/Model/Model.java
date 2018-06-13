@@ -403,4 +403,66 @@ public class Model {
     public long getTime() {
         return gridState.getTime();
     }
+
+    public LinkedList<String> getIdStrings() {
+        LinkedList<String> list = new LinkedList<>();
+        for (Vehicle.VehicleStatistics statistics : vehiclesStatistics()) {
+            list.add(String.valueOf(statistics.getId()));
+        }
+        return list;
+    }
+
+    public int[] getPositionById(int id) {
+        for (Vehicle.VehicleStatistics statistics : vehiclesStatistics()) {
+            if (statistics.getId() == id) {
+                return statistics.getPosition();
+            }
+        }
+        return null;
+    }
+
+    public boolean hasFinished(int id) {
+        for (Vehicle.VehicleStatistics statistics : vehiclesStatistics()) {
+            if (statistics.getId() == id) {
+                return statistics.hasFinished();
+            }
+        }
+        return true;
+    }
+
+    public int[] previous(int id) {
+        for (Vehicle.VehicleStatistics statistics : vehiclesStatistics()) {
+            if (statistics.getId() == id) {
+                return statistics.previous();
+            }
+        }
+        return null;
+    }
+
+    public double getVelocityById(int id) {
+        for (Vehicle.VehicleStatistics statistics : vehiclesStatistics()) {
+            if (statistics.getId() == id) {
+                return statistics.velocity();
+            }
+        }
+        return 0.0;
+    }
+
+    public long ticksAlive(int id) {
+        for (Vehicle.VehicleStatistics statistics : vehiclesStatistics()) {
+            if (statistics.getId() == id) {
+                return statistics.ticksAlive();
+            }
+        }
+        return 0;
+    }
+
+    public Color color(int id) {
+        for (Vehicle.VehicleStatistics statistics : vehiclesStatistics()) {
+            if (statistics.getId() == id) {
+                return statistics.color();
+            }
+        }
+        return null;
+    }
 }

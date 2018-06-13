@@ -82,12 +82,11 @@ class Vehicle {
     }
 
     /**
-     *  If given vertex has IN type, 'next' field will be set to it. Otherwise
-     *  it will be set to the twin IN vertex of the given one.
+     * If given vertex has IN type, 'next' field will be set to it. Otherwise
+     * it will be set to the twin IN vertex of the given one.
      */
     void setNextSafe(Vertex vertex, Grid grid) {
-        if (vertex.getVertexType() != Vertex.VertexType.IN)
-            next = grid.getOther(vertex);
+        if (vertex.getVertexType() != Vertex.VertexType.IN) next = grid.getOther(vertex);
         else next = vertex;
     }
 
@@ -101,12 +100,11 @@ class Vehicle {
     }
 
     /**
-     *  If given vertex has IN type, 'nextNext' field will be set to it. Otherwise
-     *  it will be set to the twin IN vertex of the given one.
+     * If given vertex has IN type, 'nextNext' field will be set to it. Otherwise
+     * it will be set to the twin IN vertex of the given one.
      */
     void setNextNextSafe(Vertex vertex, Grid grid) {
-        if (vertex.getVertexType() != Vertex.VertexType.IN)
-            nextNext = grid.getOther(vertex);
+        if (vertex.getVertexType() != Vertex.VertexType.IN) nextNext = grid.getOther(vertex);
         else nextNext = vertex;
     }
 
@@ -119,6 +117,7 @@ class Vehicle {
         private long idleTicks = 0;
         private long ticksAlive = 0;
         private List<Vertex> path = new ArrayList<>();
+        private boolean finished = false;
 
         @Override
         public void process() {
@@ -130,17 +129,14 @@ class Vehicle {
 
         private void updateTime() {
             ticksAlive++;
-            if (TestUtils.compressedEquals(prev, cur) && !path.isEmpty())
-                idleTicks++;
+            if (TestUtils.compressedEquals(prev, cur) && !path.isEmpty()) idleTicks++;
         }
 
         private void updatePath() {
             if (path.isEmpty()) {
-                if (cur instanceof Source)
-                    path.add(cur);
+                if (cur instanceof Source) path.add(cur);
             }
-            if (!TestUtils.compressedEquals(prev, cur))
-                path.add(cur);
+            if (!TestUtils.compressedEquals(prev, cur)) path.add(cur);
         }
 
         private void updateAuxiliaryVariables() {
@@ -156,8 +152,7 @@ class Vehicle {
             Vertex prev = null;
             int result = 0;
             for (Vertex vertex : path) {
-                if (!TestUtils.compressedEquals(prev, vertex))
-                    result++;
+                if (!TestUtils.compressedEquals(prev, vertex)) result++;
                 prev = vertex;
             }
             return result;
@@ -169,6 +164,36 @@ class Vehicle {
 
         double velocity() {
             return pathLength() / (ticksAlive() + 1);
+        }
+
+        int getId() {
+            return id;
+        }
+
+        int[] getPosition() {
+            int[] po = new int[2];
+            po[0] = cur.x;
+            po[1] = cur.y;
+            return po;
+        }
+
+        void setFinished() {
+            finished = true;
+        }
+
+        boolean hasFinished() {
+            return finished;
+        }
+
+        int[] previous() {
+            int[] po = new int[2];
+            po[0] = prev.x;
+            po[1] = prev.y;
+            return po;
+        }
+
+        public Color color() {
+            return color;
         }
     }
 }

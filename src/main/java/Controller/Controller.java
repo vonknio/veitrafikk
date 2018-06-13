@@ -1,10 +1,10 @@
 package Controller;
+
 import Model.Model;
 import View.View;
 
 import java.awt.event.ActionEvent;
 import java.util.Collection;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import static java.lang.Integer.max;
@@ -59,7 +59,6 @@ public class Controller {
         view.addFirstTickListener(this::firstTick);
         view.addBackToMenuListener(this::goBackToMenu);
         view.addStatsListener(this::showStatistics);
-
         view.addNewRoadListener(gridPlanner::newRoad);
         view.addRemoveListener(gridPlanner::remove);
         view.addNewSourceListener(gridPlanner::newSource);
@@ -69,15 +68,20 @@ public class Controller {
         view.addSaveListener(this::showSettings);
     }
 
+    private void showVehicleStatistics(ActionEvent event) {
+        int id = view.getCurrentId();
+
+        view.showVehicleStatistics(model.previous(id), model.hasFinished(id), model.getPositionById(id), id, model.getVelocityById(id), model.ticksAlive(id), model.color(id));
+    }
+
     private void showStatistics(ActionEvent event) {
         view.showStatistics(
                 model.averageVelocity(), model.verticesVisited(), model.averagePathLength(),
                 model.averageTimeEmpty(), model.averageVehicleCount(), model.averageTicksAlive(),
                 model.maxVelocity(), model.notVisitedVertices(), model.maxPathLength(),
-                model.maxTimeEmpty(), model.maxVehicleCount(), model.maxTicksAlive(),
-                model.endedSuccessfully(), model.getTime(), model.averageWaitingTime(),
-                model.maxWaitingTime(), model.totalVehicles(), model.finishedVehicles()
+                model.maxTimeEmpty(), model.maxVehicleCount(), model.maxTicksAlive(), model.endedSuccessfully(), model.getTime(), model.averageWaitingTime(), model.maxWaitingTime(), model.totalVehicles(), model.finishedVehicles(), model.getIdStrings()
         );
+        view.addVehicleStatsListener(this::showVehicleStatistics);
     }
 
     private void showSettings(ActionEvent event) {

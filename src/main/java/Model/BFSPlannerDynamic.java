@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-public class BFSPlannerDynamic extends BFSPlannerStatic {
+class BFSPlannerDynamic extends BFSPlannerStatic {
     private Map<Vehicle, Vertex> latestCur = new HashMap<>();
 
     @NotNull

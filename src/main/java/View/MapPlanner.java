@@ -1,7 +1,6 @@
 package View;
 
 import javax.swing.*;
-import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -207,7 +206,7 @@ class MapPlanner extends JPanel {
                     target -= width;
                 else if (nextDirection[1] > 0)
                     target -= width;
-                else if (nextDirection[1] < 0)
+                else
                     target += 1;
 
                 if (direction[0] > 0){
@@ -236,9 +235,9 @@ class MapPlanner extends JPanel {
                     target += 1;
                 else if (nextDirection[1] < 0)
                     target -= width;
-                else if (nextDirection[0] > 0)
+                else if (nextDirection[0] >= 0)
                     target += 1;
-                else if (nextDirection[0] < 0)
+                else
                     target -= width;
 
                 if (direction[1] > 0){
@@ -381,7 +380,7 @@ class MapPlanner extends JPanel {
                 vehicle.currentPosition[0] =
                         getPixelPosition(vehicle.path[0]) + (prevDirection[1] < 0 ? 1 : -width);
                 vehicle.currentPosition[1] = getPixelPosition(vehicle.path[1]) - width;
-            } else if (direction[1] > 0) {
+            } else if (direction[1] >= 0) {
                 vehicle.currentPosition[0] = getPixelPosition(vehicle.path[0]) - width;
                 vehicle.currentPosition[1] =
                         getPixelPosition(vehicle.path[1]) + (prevDirection[0] < 0 ? -width : 1);

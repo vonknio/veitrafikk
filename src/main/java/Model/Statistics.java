@@ -33,6 +33,7 @@ class Statistics {
     }
 
     static void processRemoved(Vehicle vehicle) {
+        vehicle.stats.setFinished();
         removedVehiclesStatistics.add(vehicle.stats);
     }
 
