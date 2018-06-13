@@ -200,6 +200,13 @@ public class Model {
     }
 
     /**
+     * @return Collection of all vehicles that died last tick with path of length one.
+     */
+    Collection<Vehicle> getGhostVehicles() {
+        return gridState.getGhostVehicles();
+    }
+
+    /**
      * @return Size of the underlying grid.
      */
     int getSize() {
@@ -212,6 +219,7 @@ public class Model {
     public Collection<int[]> getAllVehicleCoordinates() {
         LinkedList<int[]> result = new LinkedList<>();
         Collection<Vehicle> vehicles = getVehicles();
+        Collection<Vehicle> ghostVehicles = getGhostVehicles();
         for (Vehicle v : vehicles) {
             int[] coords = new int[11];
             coords[0] = v.getPrev().getXCoordinate();
@@ -226,6 +234,22 @@ public class Model {
             coords[9] = v.getColor().getBlue();
             coords[10] = v.getCur().getVertexType() == Vertex.VertexType.IN ? 1 : 0;
             result.add(coords);
+        }
+        for (Vehicle v : ghostVehicles){
+            int[] coords = new int[11];
+            coords[0] = v.getPrev().getXCoordinate();
+            coords[1] = v.getPrev().getYCoordinate();
+            coords[2] = v.getCur().getXCoordinate();
+            coords[3] = v.getCur().getYCoordinate();
+            coords[4] = v.getNext().getXCoordinate();
+            coords[5] = v.getNext().getYCoordinate();
+            coords[6] = v.getId();
+            coords[7] = v.getColor().getRed();
+            coords[8] = v.getColor().getGreen();
+            coords[9] = v.getColor().getBlue();
+            coords[10] = v.getCur().getVertexType() == Vertex.VertexType.IN ? 1 : 0;
+            result.add(coords);
+            gridState.removeGhostVehicle(v);
         }
         return result;
     }

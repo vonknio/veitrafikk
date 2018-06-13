@@ -37,10 +37,12 @@ public class View {
     }
 
     public void openEditor(int size, int dist, boolean fixed) {
-        menu.setVisible(false);
+        if (menu != null)
+            menu.setVisible(false);
         mapEditor = new MapEditor(size, dist, fixed);
         active = mapEditor;
         if (isVisible) mapEditor.setVisible(true);
+        mapEditor.setVisible(true);
     }
 
     public void goBackToMenu() {
@@ -192,8 +194,8 @@ public class View {
         mapEditor.addBackToMenuListener(listener);
     }
 
-    public void addSaveListener(ActionListener listener) {
-        mapEditor.addSaveListener(listener);
+    public void addSettingsListener(ActionListener listener) {
+        mapEditor.addSettingsListener(listener);
     }
 
     public void addNewRoadListener(ActionListener listener) {
@@ -279,7 +281,6 @@ public class View {
 
     public int getCurrentId() {
         return statisticsWindow.getCurrentId();
-
     }
 }
 

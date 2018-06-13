@@ -11,12 +11,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 /**
- * TODO: Add undo functionality
- *
  * Image layers:
  * 0   - background vertices
- * 1   - road lines
- * 2   - special vertices (sources, sinks)
+ * 1   - highlight
+ * 2   - road lines
+ * 3   - special vertices (sources, sinks)
  * Vehicle layers:
  * 0   - first vehicle
  * 1   - second vehicle
@@ -117,8 +116,8 @@ class MapPlanner extends JPanel {
     private void setupLayers (){
         gridLayers = new ArrayList<>();
         vehicleLayers = new TreeMap<>();
-        //highlightLayers = new ArrayList<>();
         addBackground();
+        addLayer(); //Highlight
         addLayer(); //Roads
         addLayer(); //Sources & Sinks
     }
@@ -422,7 +421,7 @@ class MapPlanner extends JPanel {
         int uy = Math.min(y1, y2);
         int dy = Math.max(y1, y2);
 
-        Graphics2D graphics2D = (Graphics2D) gridLayers.get(1).getGraphics();
+        Graphics2D graphics2D = (Graphics2D) gridLayers.get(2).getGraphics();
         graphics2D.setColor(roadColor);
 
         if (lx == rx)
@@ -463,13 +462,13 @@ class MapPlanner extends JPanel {
         int uy = Math.min(y1, y2);
         int dy = Math.max(y1, y2);
 
-        Graphics2D graphics2D = (Graphics2D) gridLayers.get(1).getGraphics();
-        graphics2D.setColor(getBackground());
+        Graphics2D graphics2D = (Graphics2D) gridLayers.get(2).getGraphics();
+        graphics2D.setBackground(new Color(0, 0, 0, 0));
 
         if (lx == rx)
-            graphics2D.fillRect(lx-width, uy+width+1, width*2+1, dy-uy-width*2-1);
+            graphics2D.clearRect(lx-width, uy+width+1, width*2+1, dy-uy-width*2-1);
         else
-            graphics2D.fillRect(lx+width+1, uy-width, rx-lx-width*2-1, width*2+1);
+            graphics2D.clearRect(lx+width+1, uy-width, rx-lx-width*2-1, width*2+1);
 
         repaint();
     }
@@ -478,7 +477,7 @@ class MapPlanner extends JPanel {
         x = getPixelPosition(x);
         y = getPixelPosition(y);
 
-        Graphics2D graphics2D = (Graphics2D) gridLayers.get(2).getGraphics();
+        Graphics2D graphics2D = (Graphics2D) gridLayers.get(3).getGraphics();
         graphics2D.setColor(color);
         graphics2D.fillRect(x-width, y-width, width*2+1, width*2+1);
 
@@ -489,7 +488,7 @@ class MapPlanner extends JPanel {
         x = getPixelPosition(x);
         y = getPixelPosition(y);
 
-        Graphics2D graphics2D = (Graphics2D) gridLayers.get(2).getGraphics();
+        Graphics2D graphics2D = (Graphics2D) gridLayers.get(3).getGraphics();
         graphics2D.setColor(roadColor);
         graphics2D.fillRect(x-width, y-width, width*2+1, width*2+1);
 
@@ -557,14 +556,12 @@ class MapPlanner extends JPanel {
             bufferedImage = new BufferedImage(width, width, BufferedImage.TYPE_INT_ARGB);
             Graphics2D graphics2D = (Graphics2D) bufferedImage.getGraphics();
             graphics2D.setColor(new Color(r,g,b));
-            graphics2D.fillRect(0,0,width, width);
+            graphics2D.fillRect(0,0, width, width);
             this.id = id;
             path = new int[7];
             Arrays.fill(path, -1);
             currentPosition = new int[2];
         }
     }
-
-
 
 }

@@ -28,7 +28,7 @@ class SettingsWindow extends JFrame {
     private void create (){
         setup();
 
-        setTitle("Settings");
+        setTitle("Options");
         setSize(500, 400);
         setLocationRelativeTo(null);
     }
@@ -41,7 +41,7 @@ class SettingsWindow extends JFrame {
         nameLabel.setFont(new Font("Monaco", Font.PLAIN, 25));
         nameLabel.setBounds(250-190/2,20, 190, 40);
 
-        JPanel textFields = new JPanel(new BorderLayout());
+        JPanel textFields = new JPanel(new GridLayout(0,1));
         JLabel sourceSetDescription = new JLabel("Add sources with...");
         sourceSetDescription.setFont(new Font("Monaco", Font.PLAIN, 15));
         sourceSetDescription.setVisible(true);
@@ -66,31 +66,31 @@ class SettingsWindow extends JFrame {
         limitPanel.add(limitField, BorderLayout.SOUTH);
 
         load = new JButton("Load");
-        load.setBounds(90, 300, 100, 30);
+        load.setBounds(90, 310, 100, 30);
         save = new JButton("Save");
-        save.setBounds(190, 300, 100, 30);
+        save.setBounds(190, 310, 100, 30);
 
         apply = new JButton("Apply");
-        apply.setBounds(320, 300, 100, 30);
+        apply.setBounds(320, 310, 100, 30);
         quit = new JButton("Quit");
-        quit.setBounds(310, 300, 100, 25);
+        quit.setBounds(310, 310, 100, 25);
 
-        textFields.add(sourceSetDescription, BorderLayout.NORTH);
-        textFields.add(probabilityPanel, BorderLayout.CENTER);
-        textFields.add(limitPanel, BorderLayout.SOUTH);
-        textFields.setBounds(50, 75, 400, 100);
+        textFields.add(sourceSetDescription);
+        textFields.add(probabilityPanel);
+        textFields.add(limitPanel);
+        textFields.setBounds(50, 75, 400, 120);
 
         textFields.setVisible(true);
 
         // Animation settings
 
-        JPanel animationFields = new JPanel(new BorderLayout());
+        JPanel animationFields = new JPanel(new GridLayout(0,1));
 
-        JLabel animationFieldsDescription = new JLabel("Visuals");
+        JLabel animationFieldsDescription = new JLabel("Visuals:");
         animationFieldsDescription.setFont(new Font("Monaco", Font.PLAIN, 15));
         animationFieldsDescription.setVisible(true);
 
-        JLabel animationTimeDescription = new JLabel("Animation duration:",
+        JLabel animationTimeDescription = new JLabel("Duration of animation of one tick [ms]:",
                 SwingConstants.CENTER);
         animationTimeDescription.setVisible(true);
 
@@ -101,9 +101,9 @@ class SettingsWindow extends JFrame {
         animationTimePanel.add(animationTimeDescription, BorderLayout.NORTH);
         animationTimePanel.add(animationTimeField, BorderLayout.SOUTH);
 
-        animationFields.add(animationFieldsDescription, BorderLayout.NORTH);
-        animationFields.add(animationTimePanel, BorderLayout.CENTER);
-        animationFields.setBounds(50, 185, 400, 60);
+        animationFields.add(animationFieldsDescription);//, BorderLayout.NORTH);
+        animationFields.add(animationTimePanel);//, BorderLayout.CENTER);
+        animationFields.setBounds(50, 200, 400, 80);
 
         settingsPanel.add(nameLabel);
         settingsPanel.add(apply);
@@ -118,29 +118,29 @@ class SettingsWindow extends JFrame {
 
     public void addLoadListener(ActionListener listener) {
         load.addActionListener(e -> {
-            listener.actionPerformed(e);
             this.setVisible(false);
+            listener.actionPerformed(e);
         });
     }
 
     public void addQuitListener(ActionListener listener) {
         quit.addActionListener(e -> {
-            listener.actionPerformed(e);
             this.setVisible(false);
+            listener.actionPerformed(e);
         });
     }
 
     public void addSaveListener(ActionListener listener) {
         save.addActionListener(e -> {
-            listener.actionPerformed(e);
             this.setVisible(false);
+            listener.actionPerformed(e);
         });
     }
 
     public void addApplyListener(ActionListener listener) {
         apply.addActionListener(e -> {
-            listener.actionPerformed(e);
             this.setVisible(false);
+            listener.actionPerformed(e);
         });
     }
 

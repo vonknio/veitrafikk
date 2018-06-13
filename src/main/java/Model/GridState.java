@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 class GridState {
     private long timeTick = 0;
     private List<Vehicle> vehicles = new LinkedList<>();
+    private List<Vehicle> ghostVehicles = new LinkedList<>();
     private final List<Sink> sinks = new LinkedList<>();
     private final List<Source> sources = new LinkedList<>();
     private final Grid grid;
@@ -39,6 +40,11 @@ class GridState {
      * @return List of vehicles currently present on the grid.
      */
     List<Vehicle> getVehicles() { return vehicles; }
+
+    /**
+     * @return List of ghost vehicles.
+     */
+    List<Vehicle> getGhostVehicles() { return ghostVehicles; }
 
     /**
      * @return List of vehicles sorted according to the IN/OUT type of their grid positions.
@@ -84,6 +90,12 @@ class GridState {
     void removeVehicle(Vehicle vehicle) {
         vehicle.getCur().removeVehicle();
         vehicles.remove(vehicle);
+        if (vehicle.getPathLength() <= 2.0)
+            ghostVehicles.add(vehicle);
+    }
+
+    void removeGhostVehicle(Vehicle vehicle) {
+        ghostVehicles.remove(vehicle);
     }
 
     /**

@@ -107,7 +107,7 @@ class MapEditor {
 
         quit = new JButton("Back");
 
-        settings = new JButton("Settings");
+        settings = new JButton("Options");
 
         stats = new JButton("Stats");
         stats.setVisible(false);
@@ -224,7 +224,7 @@ class MapEditor {
         stats.addActionListener(listener);
     }
 
-    void addSaveListener(ActionListener listener) {
+    void addSettingsListener(ActionListener listener) {
         settings.addActionListener(listener);
     }
 

@@ -63,9 +63,7 @@ public class Controller {
         view.addRemoveListener(gridPlanner::remove);
         view.addNewSourceListener(gridPlanner::newSource);
         view.addNewSinkListener(gridPlanner::newSink);
-
-      //  view.addSaveListener(mapLoader::save);
-        view.addSaveListener(this::showSettings);
+        view.addSettingsListener(this::showSettings);
     }
 
     private void showVehicleStatistics(ActionEvent event) {

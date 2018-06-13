@@ -72,6 +72,8 @@ class Vehicle {
 
     void setDest(Vertex vertex) { dest = vertex; }
 
+    double getPathLength() { return stats.pathLength(); }
+
     /**
      * @param vertex Vertex of IN type.
      */
