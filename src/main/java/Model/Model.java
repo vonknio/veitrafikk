@@ -1,8 +1,11 @@
 package Model;
 
 import java.awt.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import static java.lang.Integer.max;
 import static java.lang.Integer.min;
@@ -181,6 +184,43 @@ public class Model {
      */
     GridState getGridState() {
         return gridState;
+    }
+
+    /**
+     * @param x1 X coordinate of the vertex.
+     * @param y1 Y coordinate of the vertex.
+     * @return Id and path of the vehicle in chosen vertex.
+     */
+    public ArrayList<int[]> getVehiclePath(int x1, int y1) {
+        Vertex vertexIn = grid.getVertexIn(x1, y1);
+        Vertex vertexOut = grid.getVertexOut(x1, y1);
+        if (vertexIn == null)
+            return null;
+
+        Vehicle vehicle = vertexIn.hasVehicle() ? vertexIn.getVehicle() : vertexOut.getVehicle();
+
+        if (vehicle == null)
+            return null;
+
+        ArrayList<int[]> list = new ArrayList<>();
+        List<Vertex> path = vehicle.getPath();
+
+        if (path.size() <= 1)
+            return null; //only current vertex in path
+
+        int[] id = new int[1];
+        id[0] = vehicle.getId();
+        list.add(id);
+        for (int i = 0; i < path.size()-1; ++i){
+            int[] p = new int[4];
+            p[0] = path.get(i).x;
+            p[1] = path.get(i).y;
+            p[2] = path.get(i+1).x;
+            p[3] = path.get(i+1).y;
+            list.add(p);
+        }
+
+        return list;
     }
 
     /**

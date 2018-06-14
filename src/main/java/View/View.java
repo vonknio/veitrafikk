@@ -3,6 +3,7 @@ package View;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -76,6 +77,8 @@ public class View {
         settings.update();
         settings.setVisible(true);
     }
+
+    public void showPath(ArrayList<int[]> path) { mapEditor.showPath(path); }
 
     public void animate() throws InterruptedException { mapEditor.animate(); }
 
@@ -213,6 +216,8 @@ public class View {
     public void addRemoveListener(ActionListener listener) {
         mapEditor.addRemoveListener(listener);
     }
+
+    public void addShowPathListener(ActionListener listener) { mapEditor.addShowPathListener(listener); }
 
 
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

@@ -3,6 +3,7 @@ package View;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collection;
 
 class MapEditor {
@@ -148,9 +149,9 @@ class MapEditor {
 
     private void setupMapPlanner (){ container.add(mapPlanner, BorderLayout.CENTER); }
 
-    int[] getCoordinates() {
-        return mapPlanner.getCoordinates();
-    }
+    int[] getCoordinates() { return mapPlanner.getCoordinates(); }
+
+    public void showPath(ArrayList<int[]> path) { mapPlanner.showPath(path); }
 
     void animate() throws InterruptedException { mapPlanner.animate(); }
 
@@ -243,6 +244,8 @@ class MapEditor {
     void addNewSinkListener(ActionListener listener) {
         mapPlanner.addNewSinkListener(listener);
     }
+
+    void addShowPathListener(ActionListener listener) { mapPlanner.addShowPathListener(listener); }
 
     int getAnimationTime() { return mapPlanner.getAnimationTime(); }
 

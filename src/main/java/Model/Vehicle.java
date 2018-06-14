@@ -74,6 +74,10 @@ class Vehicle {
 
     double getPathLength() { return stats.pathLength(); }
 
+    List<Vertex> getPath(){
+        return stats.path;
+    }
+
     /**
      * @param vertex Vertex of IN type.
      */
@@ -141,8 +145,7 @@ class Vehicle {
             if (!TestUtils.compressedEquals(prev, cur)) path.add(cur);
         }
 
-        private void updateAuxiliaryVariables() {
-        }
+        private void updateAuxiliaryVariables() { }
 
         long ticksAlive() { return ticksAlive - 1; }
 

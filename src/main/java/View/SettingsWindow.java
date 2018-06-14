@@ -101,8 +101,8 @@ class SettingsWindow extends JFrame {
         animationTimePanel.add(animationTimeDescription, BorderLayout.NORTH);
         animationTimePanel.add(animationTimeField, BorderLayout.SOUTH);
 
-        animationFields.add(animationFieldsDescription);//, BorderLayout.NORTH);
-        animationFields.add(animationTimePanel);//, BorderLayout.CENTER);
+        animationFields.add(animationFieldsDescription);
+        animationFields.add(animationTimePanel);
         animationFields.setBounds(50, 200, 400, 80);
 
         settingsPanel.add(nameLabel);

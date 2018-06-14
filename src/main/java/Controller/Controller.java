@@ -4,6 +4,8 @@ import Model.Model;
 import View.View;
 
 import java.awt.event.ActionEvent;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Logger;
 
@@ -63,6 +65,7 @@ public class Controller {
         view.addRemoveListener(gridPlanner::remove);
         view.addNewSourceListener(gridPlanner::newSource);
         view.addNewSinkListener(gridPlanner::newSink);
+        view.addShowPathListener(this::showPath);
         view.addSettingsListener(this::showSettings);
     }
 
@@ -111,7 +114,6 @@ public class Controller {
     }
 
     private void play(ActionEvent e) {
-        logger.config("PLAY");
         if (playingThread != null)
             if (playingThread.isAlive())
                 return;
@@ -120,7 +122,6 @@ public class Controller {
     }
 
     private void pause(ActionEvent e) {
-        logger.config("PAUSE");
         if (playingThread != null) {
             playingThread.interrupt();
             try {
@@ -128,6 +129,18 @@ public class Controller {
                     playingThread.join();
             } catch (Exception ex) {}
         }
+    }
+
+    private void showPath(ActionEvent e){
+        int[] coordinates = view.getCoordinates();
+        if (coordinates.length < 2) {
+            throw new IllegalArgumentException();
+        }
+        int x1 = coordinates[0], y1 = coordinates[1];
+        ArrayList<int[]> path = model.getVehiclePath(x1, y1);
+        if (path == null)
+            return;
+        view.showPath(path);
     }
 
     private void nextTick(ActionEvent e) {
