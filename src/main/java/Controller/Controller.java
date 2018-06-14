@@ -4,10 +4,11 @@ import Model.Model;
 import View.View;
 
 import java.awt.event.ActionEvent;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static java.lang.Integer.max;
 import static java.lang.Thread.interrupted;
@@ -77,11 +78,16 @@ public class Controller {
     }
 
     private void showStatistics(ActionEvent event) {
+        List<String> idStrings = model.getSortedIdsOfPastVehicles().stream()
+                .map(String::valueOf).collect(Collectors.toList());
+
         view.showStatistics(
                 model.averageVelocity(), model.verticesVisited(), model.averagePathLength(),
                 model.averageTimeEmpty(), model.averageVehicleCount(), model.averageTicksAlive(),
                 model.maxVelocity(), model.notVisitedVertices(), model.maxPathLength(),
-                model.maxTimeEmpty(), model.maxVehicleCount(), model.maxTicksAlive(), model.endedSuccessfully(), model.getTime(), model.averageWaitingTime(), model.maxWaitingTime(), model.totalVehicles(), model.finishedVehicles(), model.getIdStrings()
+                model.maxTimeEmpty(), model.maxVehicleCount(), model.maxTicksAlive(), model.endedSuccessfully(),
+                model.getTime(), model.averageWaitingTime(), model.maxWaitingTime(), model.totalVehicles(),
+                model.finishedVehicles(), idStrings
         );
         view.addVehicleStatsListener(this::showVehicleStatistics);
     }
@@ -96,11 +102,17 @@ public class Controller {
     }
 
     private void applySettings(ActionEvent e) {
-        gridPlanner.setSourceProbability(view.getSourceProbability());
-        gridPlanner.setSourceLimit(view.getSourceLimit());
+        float sourceProbability = view.getSourceProbability();
+        int sourceLimit = view.getSourceLimit();
+        sourceLimit = max(sourceLimit, 0);
+        sourceProbability = Float.min(Float.max(sourceProbability, Float.MIN_VALUE), 1);
+
+        gridPlanner.setSourceProbability(sourceProbability);
+        gridPlanner.setSourceLimit(sourceLimit);
+        model.applySettingsToSources(sourceLimit, sourceProbability);
+
         int animationTime = view.getAnimationTime();
         view.setAnimationTime(animationTime < 10 ? 10 : animationTime);
-        model.applySettingsToSources(view.getSourceLimit(), view.getSourceProbability());
     }
 
     private void firstTick(ActionEvent e) {

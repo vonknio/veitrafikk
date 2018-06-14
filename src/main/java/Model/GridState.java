@@ -47,15 +47,12 @@ class GridState {
     List<Vehicle> getGhostVehicles() { return ghostVehicles; }
 
     /**
-     * @return List of vehicles sorted according to the IN/OUT type of their grid positions.
+     * @return List of vehicles sorted by id.
      */
     List<Vehicle> getVehiclesSorted() {
-        LinkedList<Vehicle> vehicles = new LinkedList<>();
-        for (Vertex v : grid.getVerticesSorted()) {
-            if (v.hasVehicle())
-                vehicles.add(v.getVehicle());
-        }
-        return vehicles;
+       List<Vehicle> vehiclesSorted = new ArrayList<>(vehicles);
+       vehiclesSorted.sort(Comparator.comparingInt(Vehicle::getId));
+       return vehiclesSorted;
     }
 
     /**

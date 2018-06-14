@@ -35,5 +35,5 @@ class Source extends Vertex {
 
     boolean canSpawnVehicle(){ return willSpawnAgain() && !hasVehicle() && throwDice() <= probability; }
 
-    boolean willSpawnAgain() { return fill < limit; }
+    boolean willSpawnAgain() { return fill < limit || limit <= 0; }
 }

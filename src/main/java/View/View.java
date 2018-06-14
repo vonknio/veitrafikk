@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
+import java.util.List;
 
 public class View {
     Menu menu;
@@ -59,9 +59,15 @@ public class View {
         if (isVisible) mapEditor.setVisible(true);
     }
 
-    public void showStatistics(double velocity, int vertices, double path, double time, double vehicles, double ticks, double velocityMax, int verticesMax, double pathMax, double timeMax, double vehiclesMax, double ticksMax, boolean success, long ticksTotal, double wait, double waitMax, int total, int finished, LinkedList<String> listId) {
+    public void showStatistics(double velocity, int vertices, double path, double time, double vehicles,
+                               double ticks, double velocityMax, int verticesMax, double pathMax,
+                               double timeMax, double vehiclesMax, double ticksMax, boolean success,
+                               long ticksTotal, double wait, double waitMax, int total, int finished,
+                               List<String> listId) {
         statisticsWindow = new StatisticsWindow();
-        statisticsWindow.setValues(velocity, vertices, path, time, vehicles, ticks, velocityMax, verticesMax, pathMax, timeMax, vehiclesMax, ticksMax, success, ticksTotal, wait, waitMax, total, finished, listId);
+        statisticsWindow.setValues(velocity, vertices, path, time, vehicles, ticks, velocityMax,
+                verticesMax, pathMax, timeMax, vehiclesMax, ticksMax, success, ticksTotal, wait,
+                waitMax, total, finished, listId);
         statisticsWindow.update();
         statisticsWindow.setVisible(true);
     }

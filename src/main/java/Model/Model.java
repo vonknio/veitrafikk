@@ -1,11 +1,9 @@
 package Model;
 
 import java.awt.*;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.Integer.max;
 import static java.lang.Integer.min;
@@ -377,7 +375,7 @@ public class Model {
      *  Statistics
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    public LinkedList<Vehicle.VehicleStatistics> vehiclesStatistics() {
+    public List<Vehicle.VehicleStatistics> vehiclesStatistics() {
         return statistics.vehiclesStatistics();
     }
 
@@ -469,12 +467,10 @@ public class Model {
         return gridState.getTime();
     }
 
-    public LinkedList<String> getIdStrings() {
-        LinkedList<String> list = new LinkedList<>();
-        for (Vehicle.VehicleStatistics statistics : vehiclesStatistics()) {
-            list.add(String.valueOf(statistics.getId()));
-        }
-        return list;
+    public List<Integer> getSortedIdsOfPastVehicles() {
+       return new ArrayList<>(vehiclesStatistics()).stream()
+                .map(Vehicle.VehicleStatistics::getId)
+                .sorted().collect(Collectors.toList());
     }
 
     public int[] getPositionById(int id) {

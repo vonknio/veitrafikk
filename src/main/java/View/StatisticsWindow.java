@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.LinkedList;
+import java.util.List;
 
 public class StatisticsWindow extends JFrame {
 
@@ -27,7 +28,7 @@ public class StatisticsWindow extends JFrame {
     private double wait;
     private double waitMax;
     private boolean success;
-    private LinkedList<String> idStrings;
+    private List<String> idStrings;
     private JButton jButton;
     private JComboBox<String> vehiclesBox;
 
@@ -118,7 +119,11 @@ public class StatisticsWindow extends JFrame {
         return Integer.parseInt(vehiclesBox.getSelectedItem().toString().substring(8));
     }
 
-    void setValues(double velocity, int vertices, double path, double time, double vehicles, double ticks, double velocityMax, int verticesNot, double pathMax, double timeMax, double vehiclesMax, double ticksMax, boolean success, long ticksTotal, double wait, double waitMax, int total, int finished, LinkedList<String> idStrings) {
+    void setValues(double velocity, int vertices, double path, double time, double vehicles,
+                   double ticks, double velocityMax, int verticesNot, double pathMax,
+                   double timeMax, double vehiclesMax, double ticksMax, boolean success,
+                   long ticksTotal, double wait, double waitMax, int total, int finished,
+                   List<String> idStrings) {
         this.velocity = velocity;
         this.vertices = vertices;
         this.path = path;
