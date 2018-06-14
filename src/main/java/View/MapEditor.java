@@ -249,6 +249,10 @@ class MapEditor {
 
     void addShowPathInnerListener(ActionListener listener) { mapPlanner.addShowPathInnerListener(listener); }
 
+    void addMapVehicleListener(ActionListener listener) { mapPlanner.addMapVehicleListener(listener); }
+
+    void addMapVehicleInnerListener(ActionListener listener) { mapPlanner.addMapVehicleInnerListener(listener); }
+
     int getAnimationTime() { return mapPlanner.getAnimationTime(); }
 
     void setAnimationTime(int animationTime) { mapPlanner.setAnimationTime(animationTime); }
