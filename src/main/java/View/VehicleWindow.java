@@ -6,12 +6,12 @@ import java.awt.*;
 import java.text.DecimalFormat;
 
 public class VehicleWindow extends JFrame {
-    private int[] previous;
-    private boolean hasFinished;
-    private int[] currentPosition;
     private int id;
-    private double velocity;
+    private boolean hasFinished;
     private long ticksAlive;
+    private double velocity;
+    private int[] previous;
+    private int[] currentPosition;
     private Color color;
 
     public VehicleWindow(int[] previous, boolean hasFinished, int[] currentPosition, int id, double velocity,

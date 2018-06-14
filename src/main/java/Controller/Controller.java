@@ -6,6 +6,7 @@ import View.View;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -74,6 +75,7 @@ public class Controller {
     }
 
     private void showVehicleStatistics(ActionEvent event) {
+        if (model.vehiclesStatistics().size() == 0) return;
         int id = view.getCurrentId();
         view.showVehicleStatistics(model.previous(id), model.hasFinished(id), model.getPositionById(id), id,
                 model.getVelocityById(id), model.ticksAlive(id), model.color(id));
@@ -92,6 +94,11 @@ public class Controller {
     private void showStatistics(ActionEvent event) {
         List<String> idStrings = model.getSortedIdsOfPastVehicles().stream()
                 .map(String::valueOf).collect(Collectors.toList());
+        if (model.getStatistics() == null || model.vehiclesStatistics().size() == 0) {
+            view.showStatistics(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false, 0, 0, 0, 0, 0, new LinkedList<>());
+            view.addVehicleStatsListener(this::showVehicleStatistics);
+            return;
+        }
 
         view.showStatistics(
                 model.averageVelocity(), model.verticesVisited(), model.averagePathLength(),

@@ -1,7 +1,9 @@
 package Model;
 
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -428,7 +430,7 @@ public class Model {
         return statistics.averageTicksAlive();
     }
 
-    Statistics getStatistics() {
+    public Statistics getStatistics() {
         return statistics;
     }
 
@@ -445,42 +447,52 @@ public class Model {
     }
 
     public double averageWaitingTime() {
+        if (statistics == null) return 0;
         return statistics.averageWaitingTime();
     }
 
     public int finishedVehicles() {
+        if (statistics == null) return 0;
         return statistics.finishedVehicles();
     }
 
     public int totalVehicles() {
+        if (statistics == null) return 0;
         return statistics.totalVehicles();
     }
 
     public double maxVelocity() {
+        if (statistics == null) return 0;
         return statistics.maxVelocity();
     }
 
     public double maxTicksAlive() {
+        if (statistics == null) return 0;
         return statistics.maxTicksAlive();
     }
 
     public double maxPathLength() {
+        if (statistics == null) return 0;
         return statistics.maxPathLength();
     }
 
     public double maxVehicleCount() {
+        if (statistics == null) return 0;
         return statistics.maxVehicleCount();
     }
 
     public int notVisitedVertices() {
+        if (statistics == null) return 0;
         return statistics.notVisitedVertices();
     }
 
     public double maxTimeEmpty() {
+        if (statistics == null) return 0;
         return statistics.maxTimeEmpty();
     }
 
     public double maxWaitingTime() {
+        if (statistics == null) return 0;
         return statistics.maxWaitingTime();
     }
 
