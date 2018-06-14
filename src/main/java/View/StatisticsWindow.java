@@ -49,12 +49,13 @@ public class StatisticsWindow extends JFrame {
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(0, cols, 1, 3));
-        panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        panel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         panel.setBackground(new Color(75, 75, 75));
         panel.setBorder(new MatteBorder(2, 2, 2, 2, new Color(75, 75, 75)));
 
         OpaqueLabel successLabel = new OpaqueLabel("RESULT", true);
-        OpaqueLabel successValue = success ? new OpaqueLabel("Success", true) : new OpaqueLabel("Not completed", true);
+        OpaqueLabel successValue = success ? new OpaqueLabel("Success", true)
+                : new OpaqueLabel("Not completed", true);
 
         panel.add(successLabel);
         panel.add(successValue);
@@ -88,7 +89,8 @@ public class StatisticsWindow extends JFrame {
 
         OpaqueLabel vertices1Label = new OpaqueLabel("VERTICES", true);
         panel.add(vertices1Label);
-        panel.add(new VarPanel("no. visited:", Long.toString(vertices), "no. not visited:", Long.toString(verticesNot)));
+        panel.add(new VarPanel("no. visited:", Long.toString(vertices), "no. not visited:",
+                Long.toString(verticesNot)));
 
         OpaqueLabel vertices2Label = new OpaqueLabel("VERTICES TIME EMPTY", true);
         panel.add(vertices2Label);
@@ -96,7 +98,8 @@ public class StatisticsWindow extends JFrame {
 
         OpaqueLabel vertices3Label = new OpaqueLabel("VERTICES VISITS", true);
         panel.add(vertices3Label);
-        panel.add(new VarPanel("most visited:", dec.format(vehiclesMax), "average:", dec.format(vehicles)));
+        panel.add(new VarPanel("most visited:", dec.format(vehiclesMax), "average:",
+                dec.format(vehicles)));
 
         LinkedList<String> idStringsTemp = new LinkedList<>();
         for (String s : idStrings) {
@@ -146,15 +149,6 @@ public class StatisticsWindow extends JFrame {
     }
 
     class VarPanel extends JPanel {
-        VarPanel(String desc, String val) {
-            super(new GridLayout(0, 1));
-            JPanel center = new JPanel(new GridLayout(0, 2));
-            center.add(new OpaqueLabel(desc, true));
-            center.add(new JLabel(val));
-            this.add(center);
-            setVisible(true);
-        }
-
         VarPanel(String desc1, String val1, String desc2, String val2) {
             super(new GridLayout(0, 1));
             JPanel north = new JPanel(new GridLayout(0, 2));
@@ -170,11 +164,6 @@ public class StatisticsWindow extends JFrame {
     }
 
     class OpaqueLabel extends JLabel {
-        OpaqueLabel(String s) {
-            super(s);
-            setOpaque(true);
-        }
-
         OpaqueLabel(String s, boolean c) {
             super(s, SwingConstants.CENTER);
             setOpaque(true);

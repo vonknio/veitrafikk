@@ -45,6 +45,8 @@ class MapPlanner extends JPanel {
     private ActionListener newSourceListener;
     private ActionListener showPathListener;
     private ActionListener showPathInnerListener;
+    private ActionListener mapVehicleStatsListener;
+    private ActionListener mapVehicleStatsInnerListener;
 
     boolean drawSink = false;
     boolean drawSource = false;
@@ -54,8 +56,8 @@ class MapPlanner extends JPanel {
 
     MapPlanner (int size, int dist, int width){
 
-        setBackground(new Color(75,75,75));
-        roadColor = new Color(115,115,115);
+        setBackground(new Color(70,70,70));
+        roadColor = new Color(100,100,100);
 
         this.width = width;
         this.size = size;
@@ -77,10 +79,16 @@ class MapPlanner extends JPanel {
 
                 if (blockDrawing) {
                     setGridCoordinates(curX, curY);
-                    if (SwingUtilities.isRightMouseButton(e))
+                    if (SwingUtilities.isRightMouseButton(e)) {
                         notifyAboutShowPathInner();
-                    else
+                        if (prevX == curX && prevY == curY)
+                            notifyAboutShowVehicleInnerStats();
+                    }
+                    else {
                         notifyAboutShowPath();
+                        if (prevX == curX && prevY == curY)
+                            notifyAboutShowVehicleStats();
+                    }
                     return;
                 }
 
@@ -302,12 +310,18 @@ class MapPlanner extends JPanel {
 
     public void showPath(ArrayList<int[]> path) {
         int id = path.get(0)[0];
+
+        Graphics2D graphics2D = (Graphics2D) gridLayers.get(3).getGraphics();
+        graphics2D.setColor(vehicleLayers.get(id).color);
+
+        int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+
         for (int i = 1; i < path.size(); ++i){
             boolean last = i == path.size()-1;
-            int x1 = path.get(i)[0];
-            int y1 = path.get(i)[1];
-            int x2 = path.get(i)[2];
-            int y2 = path.get(i)[3];
+            x1 = path.get(i)[0];
+            y1 = path.get(i)[1];
+            x2 = path.get(i)[2];
+            y2 = path.get(i)[3];
 
             if ((x1 != x2 && y1 != y2) || (x1 == x2 && y1 == y2))
                 continue;
@@ -319,6 +333,16 @@ class MapPlanner extends JPanel {
 
             drawPath(id, lx, uy, rx, dy, last);
         }
+
+        x2 = getPixelPosition(x2);
+        y2 = getPixelPosition(y2);
+
+        int xt = x2 + width*2-2;
+        int yt = y2 - width*2+1;
+
+        graphics2D.setFont(new Font("Monaco" , Font.BOLD, 15));
+        graphics2D.drawString(Integer.toString(id), xt, yt);
+
     }
 
     private void clearHighlight(){
@@ -586,6 +610,10 @@ class MapPlanner extends JPanel {
 
     void addShowPathInnerListener(ActionListener listener) { showPathInnerListener = listener; }
 
+    void addMapVehicleListener(ActionListener listener) { mapVehicleStatsListener = listener; }
+
+    void addMapVehicleInnerListener(ActionListener listener) { mapVehicleStatsInnerListener = listener; }
+
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Notify
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -618,6 +646,16 @@ class MapPlanner extends JPanel {
     private void notifyAboutShowPathInner() {
         if (showPathInnerListener != null)
             showPathInnerListener.actionPerformed(null);
+    }
+
+    private void notifyAboutShowVehicleStats() {
+        if (mapVehicleStatsListener != null)
+            mapVehicleStatsListener.actionPerformed(null);
+    }
+
+    private void notifyAboutShowVehicleInnerStats() {
+        if (mapVehicleStatsInnerListener != null)
+            mapVehicleStatsInnerListener.actionPerformed(null);
     }
 
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

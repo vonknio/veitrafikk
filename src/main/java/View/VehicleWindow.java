@@ -1,6 +1,7 @@
 package View;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.text.DecimalFormat;
 
@@ -13,7 +14,8 @@ public class VehicleWindow extends JFrame {
     private long ticksAlive;
     private Color color;
 
-    public VehicleWindow(int[] previous, boolean hasFinished, int[] currentPosition, int id, double velocity, long ticksAlive, Color color) {
+    public VehicleWindow(int[] previous, boolean hasFinished, int[] currentPosition, int id, double velocity,
+                         long ticksAlive, Color color) {
         this.previous = previous;
         this.hasFinished = hasFinished;
         this.currentPosition = currentPosition;
@@ -37,40 +39,38 @@ public class VehicleWindow extends JFrame {
 
     private void setup() {
         JPanel panel = new JPanel();
-        panel.setLayout(null);
 
-        JLabel idLabel = new JLabel();
-        idLabel.setText("Vehicle id: " + id);
-        idLabel.setBounds(20, 20, 250, 40);
+        panel.setLayout(new GridLayout(0, 2, 1, 2));
+        panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        panel.setBackground(color);
+        panel.setBorder(new MatteBorder(2, 2, 2, 2, color));
 
-        JLabel finishedLabel = new JLabel();
-        finishedLabel.setText("Finished: " + hasFinished);
-        finishedLabel.setBounds(20, 60, 250, 40);
+        panel.add(new OpaqueLabel("VEHICLE ID: "));
+        panel.add(new OpaqueLabel(Integer.toString(id)));
 
-        JLabel positionLabel = new JLabel();
-        positionLabel.setText("Current position: (" + currentPosition[0] + "," + currentPosition[1] + ")");
-        positionLabel.setBounds(20, 100, 250, 40);
+        panel.add(new OpaqueLabel("FINISHED: "));
+        panel.add(new OpaqueLabel(hasFinished ? "True" : "False"));
 
-        JLabel prevPositionLabel = new JLabel();
-        prevPositionLabel.setText("Previous position: (" + previous[0] + "," + previous[1] + ")");
-        prevPositionLabel.setBounds(20, 140, 250, 40);
+        panel.add(new OpaqueLabel("CURRENT POSITION: "));
+        panel.add(new OpaqueLabel("(" + currentPosition[0] + "," + currentPosition[1] + ")"));
 
-        JLabel velocityLabel = new JLabel();
-        velocityLabel.setText("Velocity: " + new DecimalFormat("#0.00").format(velocity));
-        velocityLabel.setBounds(20, 180, 250, 40);
+        panel.add(new OpaqueLabel("PREVIOUS POSITION: "));
+        panel.add(new OpaqueLabel("(" + previous[0] + "," + previous[1] + ")"));
 
-        JLabel ticksLabel = new JLabel();
-        ticksLabel.setText("Ticks alive: " + ticksAlive);
-        ticksLabel.setBounds(20, 220, 250, 40);
+        panel.add(new OpaqueLabel("VELOCITY: "));
+        panel.add(new OpaqueLabel(new DecimalFormat("#0.00").format(velocity)));
 
-        panel.add(idLabel);
-        panel.add(finishedLabel);
-        panel.add(positionLabel);
-        panel.add(prevPositionLabel);
-        panel.add(velocityLabel);
-        panel.add(ticksLabel);
+        panel.add(new OpaqueLabel("TICKS ALIVE: "));
+        panel.add(new OpaqueLabel(Long.toString(ticksAlive)));
 
         this.add(panel);
+    }
+
+    class OpaqueLabel extends JLabel {
+        OpaqueLabel(String s) {
+            super(s, SwingConstants.CENTER);
+            setOpaque(true);
+        }
     }
 
     public void update() {

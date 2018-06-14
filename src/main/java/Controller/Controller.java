@@ -62,6 +62,8 @@ public class Controller {
         view.addFirstTickListener(this::firstTick);
         view.addBackToMenuListener(this::goBackToMenu);
         view.addStatsListener(this::showStatistics);
+        view.addMapVehicleStatsListener(event -> showMapVehicleStatistics(event, false));
+        view.addMapVehicleStatsInnerListener(event -> showMapVehicleStatistics(event, true));
         view.addNewRoadListener(gridPlanner::newRoad);
         view.addRemoveListener(gridPlanner::remove);
         view.addNewSourceListener(gridPlanner::newSource);
@@ -73,8 +75,18 @@ public class Controller {
 
     private void showVehicleStatistics(ActionEvent event) {
         int id = view.getCurrentId();
+        view.showVehicleStatistics(model.previous(id), model.hasFinished(id), model.getPositionById(id), id,
+                model.getVelocityById(id), model.ticksAlive(id), model.color(id));
+    }
 
-        view.showVehicleStatistics(model.previous(id), model.hasFinished(id), model.getPositionById(id), id, model.getVelocityById(id), model.ticksAlive(id), model.color(id));
+    private void showMapVehicleStatistics(ActionEvent event, boolean inner) {
+        int[] coordinates = view.getCoordinates();
+        if (coordinates.length < 2)
+            throw new IllegalArgumentException();
+        int x1 = coordinates[0], y1 = coordinates[1];
+        int id = model.getVehicleId(x1, y1, inner);
+        view.showVehicleStatistics(model.previous(id), model.hasFinished(id), model.getPositionById(id), id,
+                model.getVelocityById(id), model.ticksAlive(id), model.color(id));
     }
 
     private void showStatistics(ActionEvent event) {
@@ -146,9 +158,8 @@ public class Controller {
 
     private void showPath(ActionEvent e, boolean inner){
         int[] coordinates = view.getCoordinates();
-        if (coordinates.length < 2) {
+        if (coordinates.length < 2)
             throw new IllegalArgumentException();
-        }
         int x1 = coordinates[0], y1 = coordinates[1];
         ArrayList<int[]> path = model.getVehiclePath(x1, y1, inner);
         if (path == null)
@@ -157,9 +168,15 @@ public class Controller {
     }
 
     private void nextTick(ActionEvent e) {
-        if (playingThread != null)
-            if (playingThread.isAlive())
-                return;
+        if (playingThread != null) {
+            if (playingThread.isAlive()) {
+                playingThread.interrupt();
+                try {
+                    if (playingThread.isAlive())
+                        playingThread.join();
+                } catch (Exception ex) {}
+            }
+        }
         playingThread = playOnce();
         playingThread.start();
     }

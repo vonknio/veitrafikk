@@ -6,16 +6,13 @@ import java.util.Random;
 class Sink extends Vertex {
 
     private static Color[] colors = new Color[]{
-            new Color(20, 70, 117),
-            new Color(126, 181, 209),
-            new Color(37, 164, 141),
-            new Color(152, 205, 183),
-            new Color(247, 223, 201),
-            new Color(170, 37, 41),
-            new Color(186, 149, 182),
-            new Color(189, 213, 86),
-            new Color(251, 223, 104),
-            new Color(244, 141, 88),
+            new Color(41,187,156),
+            new Color(93,213,143),
+            new Color(96,173,224),
+            new Color(154,92,180),
+            new Color(240,195,48),
+            new Color(228,126,48),
+            new Color(229,77,66)
     };
 
     Sink(int x, int y, Vertex.VertexType type) { super(x, y, type); }

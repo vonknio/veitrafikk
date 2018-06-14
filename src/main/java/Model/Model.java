@@ -185,11 +185,12 @@ public class Model {
     }
 
     /**
-     * @param x1 X coordinate of the vertex.
-     * @param y1 Y coordinate of the vertex.
-     * @return Id and path of the vehicle in chosen vertex.
+     * @param x1 X coordinate of the vehicle.
+     * @param y1 Y coordinate of the vehicle.
+     * @param inner vertex type preference (IN|OUT).
+     * @return Vehicle in the chosen vertex.
      */
-    public ArrayList<int[]> getVehiclePath(int x1, int y1, boolean inner) {
+    Vehicle getVehicle(int x1, int y1, boolean inner){
         Vertex vertexIn = grid.getVertexIn(x1, y1);
         Vertex vertexOut = grid.getVertexOut(x1, y1);
         if (inner ? vertexIn == null : vertexOut == null)
@@ -197,6 +198,26 @@ public class Model {
 
         Vehicle vehicle = inner ? (vertexIn.hasVehicle() ? vertexIn.getVehicle() : vertexOut.getVehicle())
                 : (vertexOut.hasVehicle() ? vertexOut.getVehicle() : vertexIn.getVehicle());
+
+        return vehicle;
+    }
+
+    /**
+     * @param x1 X coordinate of the vehicle.
+     * @param y1 Y coordinate of the vehicle.
+     * @param inner vertex type preference (IN|OUT).
+     * @return Id of the vehicle in the chosen vertex.
+     */
+    public int getVehicleId(int x1, int y1, boolean inner) { return getVehicle(x1, y1, inner).getId(); }
+
+    /**
+     * @param x1 X coordinate of the vertex.
+     * @param y1 Y coordinate of the vertex.
+     * @param inner vertex type preference (IN|OUT).
+     * @return Id and path of the vehicle in the chosen vertex.
+     */
+    public ArrayList<int[]> getVehiclePath(int x1, int y1, boolean inner) {
+        Vehicle vehicle = getVehicle(x1, y1, inner);
 
         if (vehicle == null)
             return null;

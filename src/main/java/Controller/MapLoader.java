@@ -216,7 +216,8 @@ class MapLoader {
             }
 
         } catch (Exception exception) {
-            exception.printStackTrace();
+            logger.config("Could not parse a grid from the file!");
+            //exception.printStackTrace();
         }
     }
 
