@@ -247,6 +247,8 @@ class MapEditor {
 
     void addShowPathListener(ActionListener listener) { mapPlanner.addShowPathListener(listener); }
 
+    void addShowPathInnerListener(ActionListener listener) { mapPlanner.addShowPathInnerListener(listener); }
+
     int getAnimationTime() { return mapPlanner.getAnimationTime(); }
 
     void setAnimationTime(int animationTime) { mapPlanner.setAnimationTime(animationTime); }

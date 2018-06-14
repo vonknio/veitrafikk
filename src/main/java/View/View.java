@@ -219,6 +219,8 @@ public class View {
 
     public void addShowPathListener(ActionListener listener) { mapEditor.addShowPathListener(listener); }
 
+    public void addShowPathInnerListener(ActionListener listener) { mapEditor.addShowPathInnerListener(listener); }
+
 
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Add Menu listeners

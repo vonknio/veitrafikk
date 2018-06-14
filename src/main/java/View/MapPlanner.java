@@ -44,6 +44,7 @@ class MapPlanner extends JPanel {
     private ActionListener newSinkListener;
     private ActionListener newSourceListener;
     private ActionListener showPathListener;
+    private ActionListener showPathInnerListener;
 
     boolean drawSink = false;
     boolean drawSource = false;
@@ -76,7 +77,10 @@ class MapPlanner extends JPanel {
 
                 if (blockDrawing) {
                     setGridCoordinates(curX, curY);
-                    notifyAboutShowPath();
+                    if (SwingUtilities.isRightMouseButton(e))
+                        notifyAboutShowPathInner();
+                    else
+                        notifyAboutShowPath();
                     return;
                 }
 
@@ -288,10 +292,10 @@ class MapPlanner extends JPanel {
 
         if (lx == rx)
             graphics2D.fillRect(lx-width, last ? uy+width+1 : uy-width,
-                    width*2+1, last ? dy-uy-width*2+1 : dy-uy+width*2+1);
+                    width*2+1, last ? dy-uy-width*2-1 : dy-uy+width*2+1);
         else
             graphics2D.fillRect(last ? lx+width+1 : lx-width, uy-width,
-                    last ? rx-lx-width*2+1 : rx-lx+width*2+1, width*2+1);
+                    last ? rx-lx-width*2-1 : rx-lx+width*2+1, width*2+1);
 
         repaint();
     }
@@ -580,6 +584,8 @@ class MapPlanner extends JPanel {
 
     void addShowPathListener(ActionListener listener) { showPathListener = listener; }
 
+    void addShowPathInnerListener(ActionListener listener) { showPathInnerListener = listener; }
+
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Notify
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -607,6 +613,11 @@ class MapPlanner extends JPanel {
     private void notifyAboutShowPath() {
         if (showPathListener != null)
         showPathListener.actionPerformed(null);
+    }
+
+    private void notifyAboutShowPathInner() {
+        if (showPathInnerListener != null)
+            showPathInnerListener.actionPerformed(null);
     }
 
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

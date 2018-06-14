@@ -65,7 +65,8 @@ public class Controller {
         view.addRemoveListener(gridPlanner::remove);
         view.addNewSourceListener(gridPlanner::newSource);
         view.addNewSinkListener(gridPlanner::newSink);
-        view.addShowPathListener(this::showPath);
+        view.addShowPathListener(e -> showPath(e, false));
+        view.addShowPathInnerListener(e -> showPath(e, true));
         view.addSettingsListener(this::showSettings);
     }
 
@@ -131,13 +132,13 @@ public class Controller {
         }
     }
 
-    private void showPath(ActionEvent e){
+    private void showPath(ActionEvent e, boolean inner){
         int[] coordinates = view.getCoordinates();
         if (coordinates.length < 2) {
             throw new IllegalArgumentException();
         }
         int x1 = coordinates[0], y1 = coordinates[1];
-        ArrayList<int[]> path = model.getVehiclePath(x1, y1);
+        ArrayList<int[]> path = model.getVehiclePath(x1, y1, inner);
         if (path == null)
             return;
         view.showPath(path);

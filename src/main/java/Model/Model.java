@@ -191,13 +191,14 @@ public class Model {
      * @param y1 Y coordinate of the vertex.
      * @return Id and path of the vehicle in chosen vertex.
      */
-    public ArrayList<int[]> getVehiclePath(int x1, int y1) {
+    public ArrayList<int[]> getVehiclePath(int x1, int y1, boolean inner) {
         Vertex vertexIn = grid.getVertexIn(x1, y1);
         Vertex vertexOut = grid.getVertexOut(x1, y1);
-        if (vertexIn == null)
+        if (inner ? vertexIn == null : vertexOut == null)
             return null;
 
-        Vehicle vehicle = vertexIn.hasVehicle() ? vertexIn.getVehicle() : vertexOut.getVehicle();
+        Vehicle vehicle = inner ? (vertexIn.hasVehicle() ? vertexIn.getVehicle() : vertexOut.getVehicle())
+                : (vertexOut.hasVehicle() ? vertexOut.getVehicle() : vertexIn.getVehicle());
 
         if (vehicle == null)
             return null;
