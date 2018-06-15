@@ -180,9 +180,7 @@ class MapLoader {
                     fixed = true;
             }
 
-            view.setVisible(false);
             controller.configureEditMode(size, distance, fixed);
-            view.setVisible(true);
 
             reader.readLine(); //wall
 
@@ -238,7 +236,6 @@ class MapLoader {
 
     private void loadRoad(int x1, int y1, int x2, int y2) {
         if (x1 != x2 && y1 != y2) { return; }
-
         logger.config("Loading road (" + x1 + ", " + y1 + ") <-> (" + x2 + ", " + y2 + ")");
         model.addRoad(x1, y1, x2, y2);
         model.addRoad(x2, y2, x1, y1);
