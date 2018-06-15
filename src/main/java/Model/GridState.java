@@ -42,7 +42,7 @@ class GridState {
     List<Vehicle> getVehicles() { return vehicles; }
 
     /**
-     * @return List of ghost vehicles.
+     * @return List of ghost vehicles - vehicles that died within one tick.
      */
     List<Vehicle> getGhostVehicles() { return ghostVehicles; }
 

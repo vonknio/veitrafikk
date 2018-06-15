@@ -23,9 +23,19 @@ public class View {
     public void setVisible(boolean b) {
         isVisible = b;
         if (b && active != null) {
-            if (active == menu) menu.setVisible(true);
-            else if (active == mapEditor) mapEditor.setVisible(true);
-            else if (active == statisticsWindow) statisticsWindow.setVisible(true);
+            if (active == menu){
+                menu.setVisible(true);
+                if (mapEditor != null) mapEditor.setVisible(false);
+                if (statisticsWindow != null) statisticsWindow.setVisible(false);
+            }
+            else if (active == mapEditor){
+                if (menu != null) menu.setVisible(false);
+                if (mapEditor != null) mapEditor.setVisible(true);
+            }
+            else if (active == statisticsWindow){
+                if (menu != null) menu.setVisible(false);
+                if (statisticsWindow != null) statisticsWindow.setVisible(true);
+            }
         } else {
             if (menu != null) menu.setVisible(false);
             if (mapEditor != null) mapEditor.setVisible(false);

@@ -183,7 +183,7 @@ class MapPlanner extends JPanel {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     public void animate() throws InterruptedException {
-        int subTicks = animationSmoothness;
+        int subTicks = animationSmoothness+1;
         while (subTicks >= 0){
             final boolean last = subTicks == 0;
             SwingUtilities.invokeLater(() -> animateVehicles(last));
@@ -311,9 +311,6 @@ class MapPlanner extends JPanel {
     public void showPath(ArrayList<int[]> path) {
         int id = path.get(0)[0];
 
-        Graphics2D graphics2D = (Graphics2D) gridLayers.get(3).getGraphics();
-        graphics2D.setColor(vehicleLayers.get(id).color);
-
         int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 
         for (int i = 1; i < path.size(); ++i){
@@ -333,6 +330,12 @@ class MapPlanner extends JPanel {
 
             drawPath(id, lx, uy, rx, dy, last);
         }
+
+        if (width < 7)
+            return;
+
+        Graphics2D graphics2D = (Graphics2D) gridLayers.get(3).getGraphics();
+        graphics2D.setColor(vehicleLayers.get(id).color);
 
         x2 = getPixelPosition(x2);
         y2 = getPixelPosition(y2);
