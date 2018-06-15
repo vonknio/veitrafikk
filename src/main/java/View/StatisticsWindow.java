@@ -43,7 +43,7 @@ public class StatisticsWindow extends JFrame {
 
     private void create() {
         setTitle("Statistics");
-        setSize(500, 500);
+        setSize(600, 500);
         setLocationRelativeTo(null);
     }
 
