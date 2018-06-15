@@ -560,4 +560,20 @@ public class Model {
         }
         return null;
     }
+
+    public int maxVelocityId() {
+        return statistics.maxVelocityId();
+    }
+
+    public int maxPathId() {
+        return statistics.maxPathId();
+    }
+
+    public int maxTickId() {
+        return statistics.maxTickId();
+    }
+
+    public int maxWaitId() {
+        return statistics.maxWaitId();
+    }
 }

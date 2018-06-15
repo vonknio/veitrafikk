@@ -174,4 +174,21 @@ class Statistics {
     int notVisitedVertices() {
         return grid.getVertices().size() - verticesVisited();
     }
+
+    public int maxVelocityId() {
+        return Collections.max(vehiclesStatistics(), Comparator.comparingDouble(o -> o.velocity())).getId();
+
+    }
+
+    public int maxPathId() {
+        return Collections.max(vehiclesStatistics(), Comparator.comparingDouble(o -> o.pathLength())).getId();
+    }
+
+    public int maxTickId() {
+        return Collections.max(vehiclesStatistics(), Comparator.comparingDouble(o -> o.ticksAlive())).getId();
+    }
+
+    public int maxWaitId() {
+        return Collections.max(vehiclesStatistics(), Comparator.comparingDouble(o -> o.getIdleTicks())).getId();
+    }
 }

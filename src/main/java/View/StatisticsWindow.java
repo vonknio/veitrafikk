@@ -28,6 +28,11 @@ public class StatisticsWindow extends JFrame {
     private double wait;
     private double waitMax;
     private boolean success;
+    private int maxVelId;
+    private int maxPathId;
+    private int maxTickId;
+    private int maxWaitId;
+
     private List<String> idStrings;
     private JButton jButton;
     private JComboBox<String> vehiclesBox;
@@ -73,19 +78,27 @@ public class StatisticsWindow extends JFrame {
         OpaqueLabel velocityLabel = new OpaqueLabel("VELOCITY", true);
 
         panel.add(velocityLabel);
-        panel.add(new VarPanel("max:", dec.format(velocityMax), "average:", dec.format(velocity)));
+        String s = dec.format(velocityMax);
+        if (total != 0) s += " (Vehicle " + maxVelId + ")";
+        panel.add(new VarPanel("max:", s, "average:", dec.format(velocity)));
 
+        s = dec.format(pathMax);
+        if (total != 0) s += " (Vehicle " + maxPathId + ")";
         OpaqueLabel pathLabel = new OpaqueLabel("PATH", true);
         panel.add(pathLabel);
-        panel.add(new VarPanel("max length:", dec.format(pathMax), "average length:", dec.format(path)));
+        panel.add(new VarPanel("max length:", s, "average length:", dec.format(path)));
 
         OpaqueLabel ticksAliveLabel = new OpaqueLabel("TICKS ALIVE", true);
         panel.add(ticksAliveLabel);
-        panel.add(new VarPanel("max:", dec.format(ticksMax), "average:", dec.format(ticks)));
+        s = dec.format(ticksMax);
+        if (total != 0) s += " (Vehicle " + maxTickId + ")";
+        panel.add(new VarPanel("max:", s, "average:", dec.format(ticks)));
 
         OpaqueLabel waitLabel = new OpaqueLabel("TICKS WAITING", true);
         panel.add(waitLabel);
-        panel.add(new VarPanel("max:", dec.format(waitMax), "average:", dec.format(wait)));
+        s = dec.format(waitMax);
+        if (total != 0) s += " (Vehicle " + maxWaitId + ")";
+        panel.add(new VarPanel("max:", s, "average:", dec.format(wait)));
 
         OpaqueLabel vertices1Label = new OpaqueLabel("VERTICES", true);
         panel.add(vertices1Label);
@@ -102,8 +115,8 @@ public class StatisticsWindow extends JFrame {
                 dec.format(vehicles)));
 
         LinkedList<String> idStringsTemp = new LinkedList<>();
-        for (String s : idStrings) {
-            idStringsTemp.add("Vehicle " + s);
+        for (String p : idStrings) {
+            idStringsTemp.add("Vehicle " + p);
         }
         vehiclesBox = new JComboBox<>(idStringsTemp.toArray(new String[0]));
         panel.add(vehiclesBox);
@@ -125,8 +138,7 @@ public class StatisticsWindow extends JFrame {
     void setValues(double velocity, int vertices, double path, double time, double vehicles,
                    double ticks, double velocityMax, int verticesNot, double pathMax,
                    double timeMax, double vehiclesMax, double ticksMax, boolean success,
-                   long ticksTotal, double wait, double waitMax, int total, int finished,
-                   List<String> idStrings) {
+                   long ticksTotal, double wait, double waitMax, int total, int finished, List<String> idStrings, int maxVelId, int maxPathId, int maxTickId, int maxWaitId) {
         this.velocity = velocity;
         this.vertices = vertices;
         this.path = path;
@@ -146,6 +158,10 @@ public class StatisticsWindow extends JFrame {
         this.total = total;
         this.finished = finished;
         this.idStrings = idStrings;
+        this.maxVelId = maxVelId;
+        this.maxPathId = maxPathId;
+        this.maxTickId = maxTickId;
+        this.maxWaitId = maxWaitId;
     }
 
     class VarPanel extends JPanel {
