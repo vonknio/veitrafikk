@@ -42,6 +42,7 @@ public class View {
         }
 
         if (!b) {
+            if (mapEditor != null) mapEditor.setVisible(false);
             if (statisticsWindow != null) statisticsWindow.setVisible(false);
             if (settings != null) settings.setVisible(false);
         }
