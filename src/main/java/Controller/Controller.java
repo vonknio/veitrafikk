@@ -97,17 +97,20 @@ public class Controller {
         List<String> idStrings = model.getSortedIdsOfPastVehicles().stream()
                 .map(String::valueOf).collect(Collectors.toList());
         if (model.getStatistics() == null || model.vehiclesStatistics().size() == 0) {
-            view.showStatistics(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false, 0, 0, 0, 0, 0, new LinkedList<>(), 0, 0, 0, 0);
+            view.showStatistics(0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, false, 0, 0, 0,
+                    0, 0, new LinkedList<>(), 0, 0, 0, 0);
             view.addVehicleStatsListener(this::showVehicleStatistics);
             return;
         }
 
         view.showStatistics(
-                model.averageVelocity(), model.verticesVisited(), model.averagePathLength(),
-                model.averageTimeEmpty(), model.averageVehicleCount(), model.averageTicksAlive(),
-                model.maxVelocity(), model.notVisitedVertices(), model.maxPathLength(),
-                model.maxTimeEmpty(), model.maxVehicleCount(), model.maxTicksAlive(), model.endedSuccessfully(),
-                model.getTime(), model.averageWaitingTime(), model.maxWaitingTime(), model.totalVehicles(), model.finishedVehicles(), idStrings, model.maxVelocityId(), model.maxPathId(), model.maxTickId(), model.maxWaitId()
+                model.averageVelocity(), model.verticesVisited(), model.averagePathLength(), model.averageTimeEmpty(),
+                model.averageVehicleCount(), model.averageTicksAlive(), model.maxVelocity(), model.notVisitedVertices(),
+                model.maxPathLength(), model.maxTimeEmpty(), model.maxVehicleCount(), model.maxTicksAlive(),
+                model.endedSuccessfully(), model.getTime(), model.averageWaitingTime(), model.maxWaitingTime(),
+                model.totalVehicles(), model.finishedVehicles(), idStrings, model.maxVelocityId(), model.maxPathId(),
+                model.maxTickId(), model.maxWaitId()
         );
         view.addVehicleStatsListener(this::showVehicleStatistics);
     }

@@ -48,7 +48,8 @@ class GridPlanner {
         }
         int x1 = coordinates[0], y1 = coordinates[1];
 
-        logger.config("Adding source (" + x1 + ", " + y1 + ") with probability " + sourceProbability + " and limit " + sourceLimit);
+        logger.config("Adding source (" + x1 + ", " + y1 + ") with probability " + sourceProbability
+                + " and limit " + sourceLimit);
         model.removeVertexClassifiers(x1, y1);
         model.addSource(x1, y1, sourceLimit, sourceProbability);
         view.removeSpecialVertex(x1, y1);

@@ -64,13 +64,15 @@ public class View {
         if (isVisible) mapEditor.setVisible(true);
     }
 
-    public void showStatistics(double velocity, int vertices, double path, double time, double vehicles,
-                               double ticks, double velocityMax, int verticesMax, double pathMax,
-                               double timeMax, double vehiclesMax, double ticksMax, boolean success,
-                               long ticksTotal, double wait, double waitMax, int total, int finished, List<String> listId, int maxVelId, int maxPathId, int maxTickId, int maxWaitId) {
+    public void showStatistics(double velocity, int vertices, double path, double time, double vehicles, double ticks,
+                               double velocityMax, int verticesMax, double pathMax, double timeMax, double vehiclesMax,
+                               double ticksMax, boolean success, long ticksTotal, double wait, double waitMax,
+                               int total, int finished, List<String> listId, int maxVelId, int maxPathId, int maxTickId,
+                               int maxWaitId) {
         statisticsWindow = new StatisticsWindow();
-        statisticsWindow.setValues(velocity, vertices, path, time, vehicles, ticks, velocityMax,
-                verticesMax, pathMax, timeMax, vehiclesMax, ticksMax, success, ticksTotal, wait, waitMax, total, finished, listId, maxVelId, maxPathId, maxTickId, maxWaitId);
+        statisticsWindow.setValues(velocity, vertices, path, time, vehicles, ticks, velocityMax, verticesMax, pathMax,
+                timeMax, vehiclesMax, ticksMax, success, ticksTotal, wait, waitMax, total, finished, listId, maxVelId,
+                maxPathId, maxTickId, maxWaitId);
         statisticsWindow.update();
         statisticsWindow.setVisible(true);
     }

@@ -135,10 +135,10 @@ public class StatisticsWindow extends JFrame {
         return Integer.parseInt(vehiclesBox.getSelectedItem().toString().substring(8));
     }
 
-    void setValues(double velocity, int vertices, double path, double time, double vehicles,
-                   double ticks, double velocityMax, int verticesNot, double pathMax,
-                   double timeMax, double vehiclesMax, double ticksMax, boolean success,
-                   long ticksTotal, double wait, double waitMax, int total, int finished, List<String> idStrings, int maxVelId, int maxPathId, int maxTickId, int maxWaitId) {
+    void setValues(double velocity, int vertices, double path, double time, double vehicles, double ticks,
+                   double velocityMax, int verticesNot, double pathMax, double timeMax, double vehiclesMax,
+                   double ticksMax, boolean success, long ticksTotal, double wait, double waitMax, int total,
+                   int finished, List<String> idStrings, int maxVelId, int maxPathId, int maxTickId, int maxWaitId) {
         this.velocity = velocity;
         this.vertices = vertices;
         this.path = path;
