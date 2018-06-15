@@ -122,6 +122,19 @@ abstract class God {
             vehicle.setPrev(vehicle.getCur());
             return false;
         }
+
+        if (TestUtils.compressedVertexHasVehicle(next, grid)) {
+            Vehicle other = next.hasVehicle() ? next.getVehicle() : grid.getOther(next).getVehicle();
+            Vertex otherPrev = other.getPrev();
+            Vertex otherNext= other.getNext();
+            // only allow two vehicles travelling from or in opposite directions enter a crossroad
+            if (otherPrev.x != vehicle.getCur().x && otherPrev.y != vehicle.getCur().y &&
+                    !(otherNext.x == next.x && Math.abs(otherNext.y - next.y) >= 1) &&
+                    !(otherNext.y == next.y && Math.abs(otherNext.x - next.x) >= 1)
+               )
+                return false;
+        }
+
         vehicle.getCur().removeVehicle();
 
         vehicle.setPrev(vehicle.getCur());
@@ -129,7 +142,6 @@ abstract class God {
         vehicle.setNext(vehicle.getNextNext());
         vehicle.setNextNext(getDestinationForNextTick(vehicle));
 
-        //vertex.removeVehicle();
         vehicle.getCur().setVehicle(vehicle);
 
         logger.config("Vehicle " + vehicle.getId() + " moved from "

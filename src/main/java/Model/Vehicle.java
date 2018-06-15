@@ -118,6 +118,10 @@ class Vehicle {
 
     int getId() { return id; }
 
+    static void resetIdCounter() {
+        idCounter = 0;
+    }
+
 
     class VehicleStatistics implements ObjectStatistics {
         private long idleTicks = 0;

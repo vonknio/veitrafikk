@@ -184,7 +184,7 @@ class MapLoader {
             controller.configureEditMode(size, distance, fixed);
             view.setVisible(true);
 
-            line = reader.readLine(); //wall
+            reader.readLine(); //wall
 
             for (int i = 0; i < size*2-1; ++i){
                 line = reader.readLine();
@@ -217,7 +217,6 @@ class MapLoader {
 
         } catch (Exception exception) {
             logger.config("Could not parse a grid from the file!");
-            //exception.printStackTrace();
         }
     }
 

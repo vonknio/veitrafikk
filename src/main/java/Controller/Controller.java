@@ -21,6 +21,8 @@ public class Controller {
     private final MapLoader mapLoader;
     private final GridPlanner gridPlanner;
     private Thread playingThread;
+    private int idleTickCounter = 0;
+    private final int IDLETICKS_LIMIT = 10;
 
     public Controller(View view, Model model) {
         this.view = view;
@@ -203,22 +205,28 @@ public class Controller {
     }
 
     private void gameEnd() {
-        showStatistics(null);
         pause(null);
+        showStatistics(null);
     }
 
     private Thread spawnPlayingThread() {
         return new Thread(() -> {
             boolean updated = true;
+
             while (!interrupted()) {
-                if (!updated && model.hasVehiclesOnGrid()  // fail
-                        || (!model.hasVehiclesOnGrid() && !model.hasUnspawnedVehicles())  // success
-                        ) {
+                if (!updated && !model.hasVehiclesOnGrid() && !model.hasUnspawnedVehicles()  // success
+                ) {
                     gameEnd();
                     break;
                 }
                 try {
                     updated = nextTick();
+                    if (updated)
+                        idleTickCounter = 0;
+                    else if (++idleTickCounter > IDLETICKS_LIMIT) {
+                        gameEnd();
+                        break;
+                    }
                 } catch (Exception ex) {
                     return;
                 }
@@ -231,8 +239,12 @@ public class Controller {
             boolean updated;
             try {
                 updated = nextTick();
-                if (!updated && model.hasVehiclesOnGrid()  // fail
-                        || (!model.hasVehiclesOnGrid() && !model.hasUnspawnedVehicles())  // success
+                if (updated)
+                    idleTickCounter = 0;
+                else if (++idleTickCounter > IDLETICKS_LIMIT)
+                    gameEnd();
+
+                if (!updated && !model.hasVehiclesOnGrid() && !model.hasUnspawnedVehicles()  // success
                         ) {
                     gameEnd();
                 }

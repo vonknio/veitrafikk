@@ -28,6 +28,7 @@ public class Model {
         grid = new Grid(size);
         gridState = new GridState(grid);
         statistics = new Statistics(grid, gridState);
+        Vehicle.resetIdCounter();
     }
 
     /**
