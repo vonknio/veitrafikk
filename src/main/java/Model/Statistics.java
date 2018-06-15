@@ -1,12 +1,9 @@
 package Model;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.*;
 
 class Statistics {
-    private static LinkedList<Vehicle.VehicleStatistics> removedVehiclesStatistics = new LinkedList<>();
+    private static List<Vehicle.VehicleStatistics> removedVehiclesStatistics = new LinkedList<>();
     private GridState gridState;
     private Grid grid;
 
@@ -15,10 +12,10 @@ class Statistics {
         setGridState(gridState);
         removedVehiclesStatistics = new LinkedList<>();
     }
+
     /**
      * Update all statistics related to given vertex for current timetick.
      */
-
     static void process(Vehicle vehicle) {
         if (vehicle.stats != null)
             vehicle.stats.process();
@@ -148,47 +145,57 @@ class Statistics {
     }
 
     double maxVelocity() {
-        return Collections.max(vehiclesStatistics(), Comparator.comparingDouble(o -> o.velocity())).velocity();
+        return Collections.max(vehiclesStatistics(),
+                Comparator.comparingDouble(Vehicle.VehicleStatistics::velocity)).velocity();
     }
 
     double maxTicksAlive() {
-        return Collections.max(vehiclesStatistics(), Comparator.comparingDouble(o -> o.ticksAlive())).ticksAlive();
+        return Collections.max(vehiclesStatistics(),
+                Comparator.comparingDouble(Vehicle.VehicleStatistics::ticksAlive)).ticksAlive();
     }
 
     double maxPathLength() {
-        return Collections.max(vehiclesStatistics(), Comparator.comparingDouble(o -> o.pathLength())).pathLength() - 1;
+        return Collections.max(vehiclesStatistics(),
+                Comparator.comparingDouble(Vehicle.VehicleStatistics::pathLength)).pathLength() - 1;
     }
 
     double maxVehicleCount() {
-        return Collections.max(verticesStatistics(), Comparator.comparingDouble(o -> o.vehicleCount())).vehicleCount();
+        return Collections.max(verticesStatistics(),
+                Comparator.comparingDouble(Vertex.VertexStatistics::vehicleCount)).vehicleCount();
     }
 
     double maxTimeEmpty() {
-        return Collections.max(verticesStatistics(), Comparator.comparingDouble(o -> o.timeEmpty())).timeEmpty();
+        return Collections.max(verticesStatistics(),
+                Comparator.comparingDouble(Vertex.VertexStatistics::timeEmpty)).timeEmpty();
     }
 
     double maxWaitingTime() {
-        return Collections.max(vehiclesStatistics(), Comparator.comparingDouble(o -> o.getIdleTicks())).getIdleTicks();
+        return Collections.max(vehiclesStatistics(),
+                Comparator.comparingDouble(Vehicle.VehicleStatistics::getIdleTicks)).getIdleTicks();
     }
 
     int notVisitedVertices() {
         return grid.getVertices().size() - verticesVisited();
     }
 
-    public int maxVelocityId() {
-        return Collections.max(vehiclesStatistics(), Comparator.comparingDouble(o -> o.velocity())).getId();
+    int maxVelocityId() {
+        return Collections.max(vehiclesStatistics(),
+                Comparator.comparingDouble(Vehicle.VehicleStatistics::velocity)).getId();
 
     }
 
-    public int maxPathId() {
-        return Collections.max(vehiclesStatistics(), Comparator.comparingDouble(o -> o.pathLength())).getId();
+    int maxPathId() {
+        return Collections.max(vehiclesStatistics(),
+                Comparator.comparingDouble(Vehicle.VehicleStatistics::pathLength)).getId();
     }
 
-    public int maxTickId() {
-        return Collections.max(vehiclesStatistics(), Comparator.comparingDouble(o -> o.ticksAlive())).getId();
+    int maxTickId() {
+        return Collections.max(vehiclesStatistics(),
+                Comparator.comparingDouble(Vehicle.VehicleStatistics::ticksAlive)).getId();
     }
 
-    public int maxWaitId() {
-        return Collections.max(vehiclesStatistics(), Comparator.comparingDouble(o -> o.getIdleTicks())).getId();
+    int maxWaitId() {
+        return Collections.max(vehiclesStatistics(),
+                Comparator.comparingDouble(Vehicle.VehicleStatistics::getIdleTicks)).getId();
     }
 }

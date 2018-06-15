@@ -8,8 +8,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class View {
-    Menu menu;
-    MapEditor mapEditor;
+    private Menu menu;
+    private MapEditor mapEditor;
     private StatisticsWindow statisticsWindow;
     private SettingsWindow settings;
     private Object active;

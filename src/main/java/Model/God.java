@@ -3,9 +3,6 @@ package Model;
 import java.util.*;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-
 /**
  * Deus ex machina, one and only. Manages the runtime state of the simulation.
  * Is responsible for all runtime events (e.g. moving vehicles) and algorithms.
@@ -57,13 +54,6 @@ abstract class God {
                 model.getGridState().removeVehicle(vertex.getVehicle());
             }
         }
-        for (Vertex v : grid.getVertices()) {
-            assertTrue(!v.hasVehicle() || (v.getVehicle().getCur() == v));
-        }
-
-        for (Vehicle vh : model.getGridState().getVehicles()) {
-            assertSame(vh.getCur().getVehicle(), vh);
-        }
 
         return update;
     }
@@ -78,7 +68,7 @@ abstract class God {
      */
     private static boolean moveVehicle(Vehicle vehicle, Set<Vehicle> processed) {
         if (vehicle == null) return true;
-        if (/*vehicle == null || */processed.contains(vehicle))
+        if (processed.contains(vehicle))
             return false;
 
         processed.add(vehicle);
@@ -96,11 +86,8 @@ abstract class God {
             nextNext = vehicle.getNextNext();
         }
 
-        TestUtils.assertSameOrUnitDistance(vehicle.getCur(), vehicle.getNext());
-
         if (vertex.getVertexType() == Vertex.VertexType.IN) {
             swapInAndOut(vertex);
-            vertex = grid.getVertexOut(vertex);
         }
 
         if (!grid.getVertexOut(next).hasVehicle())
@@ -134,6 +121,9 @@ abstract class God {
                )
                 return false;
         }
+
+        // one last sanity check
+        if (next.hasVehicle()) return false;
 
         vehicle.getCur().removeVehicle();
 
@@ -272,7 +262,7 @@ abstract class God {
     static Mode getMode() { return mode; }
 
     enum Mode {
-        // Each vehicle's path is a random walk generated on the go. If a vehicle gets stuck,
+        // Each vehicle's path is a ranfdom walk generated on the go. If a vehicle gets stuck,
         // the path won't be updated.
         RANDOM_STATIC {
             PathPlanner getPlanner() { return new RandomPlannerStatic(); }
